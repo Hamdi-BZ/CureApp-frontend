@@ -1,0 +1,33 @@
+import React, { Component } from "react";
+//--Importing BootStrap components
+import ListGroup from "react-bootstrap/ListGroup";
+//--------------------------------
+var listOfImages = [];
+export default class WristCover extends Component {
+  importAll(r) {
+    return r.keys().map(r);
+  }
+  componentWillMount() {
+    listOfImages = this.importAll(
+      require.context(
+        "../../../public/assets/wristcover",
+        false,
+        /\.(png|jpe?g|gif)$/
+      )
+    );
+  }
+
+  render() {
+    return (
+      <div className="scrollmenu">
+        <ListGroup horizontal>
+          {listOfImages.map((image, index) => (
+            <ListGroup.Item className="listgroupitem">
+              <img key={index} src={image} alt="info"></img>
+            </ListGroup.Item>
+          ))}
+        </ListGroup>
+      </div>
+    );
+  }
+}

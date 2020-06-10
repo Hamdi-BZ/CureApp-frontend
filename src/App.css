@@ -42,12 +42,12 @@ label {
 }
 
 .card-container.card {
-  max-width: 350px !important;
+  max-width: 360px !important;
   padding: 40px 40px;
 }
 
 .card {
-  background-color: #f7f7f7;
+  background-color: white;
   padding: 20px 25px 30px;
   margin: 0 auto 25px;
   margin-top: 50px;
@@ -67,4 +67,273 @@ label {
   -moz-border-radius: 50%;
   -webkit-border-radius: 50%;
   border-radius: 50%;
+}
+
+.container {
+  justify-content: center;
+}
+.nav-links {
+  width: 10%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  list-style: none;
+  color: #282c34;
+}
+.nav-links li {
+  color: white;
+  text-decoration: none;
+}
+.categories {
+  list-style: none;
+  color: #282c34;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+}
+.categories li {
+  margin: 1rem;
+  justify-content: center;
+}
+.categories-container {
+  width: 100%;
+  justify-content: center;
+}
+.coverimage {
+  width: 100%;
+  padding: 0;
+  margin-bottom: 10px;
+}
+.containercustom {
+  width: 90%;
+  height: 90%;
+  margin-bottom: 10px;
+  margin-left: 50px;
+  margin-right: 50px;
+}
+.containercustomrow {
+  padding: 0;
+  font-size: x-large;
+  width: 100%;
+  text-align: center;
+  justify-content: center;
+}
+.containerbtngroup {
+  padding: 1rem;
+  margin: auto;
+  padding-bottom: 5%;
+}
+.title {
+  margin: 1rem;
+  padding: 1rem;
+  font-size: 3rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #282c34;
+}
+.secondtitle {
+  color: #282c34;
+  font-size: 2.5rem;
+  text-transform: uppercase;
+}
+.sectiontitle {
+  padding: 1.5rem;
+  font-size: 35px;
+  color: rgb(17, 163, 140);
+  margin-bottom: 0;
+  text-transform: capitalize;
+  border: 5px solid rgb(143, 226, 205);
+}
+.sideimage {
+  text-align: center;
+  padding: 0.5rem;
+}
+.sideimage img {
+  margin-bottom: 1rem;
+}
+.sizebtngroup {
+  padding: 3%;
+  margin: auto;
+}
+.btns {
+  border: 3px solid #8fe2cd;
+  background-color: white;
+  color: #282c34;
+  padding: 14px 28px;
+  font-size: 25px;
+  cursor: pointer;
+  border-radius: 0;
+  display: inline-block;
+  text-transform: capitalize;
+}
+.right {
+  border-left: 0;
+}
+
+.cadre {
+  padding: 0;
+  border: 10px solid #8fe2cd;
+  border-top: none;
+  border-radius: 5px;
+  height: fit-content;
+}
+.colored {
+  background-color: rgb(143, 226, 205);
+  border-bottom: 5px solid rgb(143, 226, 205);
+}
+.btns:hover {
+  border: 3px solid rgb(17, 163, 140);
+  color: #282c34;
+  font-weight: 500;
+}
+.middle {
+  border: 0;
+  text-align: center;
+}
+.s {
+  border-right: none;
+}
+.m {
+  border-right: none;
+}
+.backbtn {
+  background-color: #0275d8;
+  color: white;
+  font-size: 25px;
+  font-weight: 500;
+  border-radius: 5px;
+  text-transform: capitalize;
+  margin: 3rem;
+  padding: 5px 15px;
+}
+.backbtn:hover {
+  background-color: white;
+  color: #282c34;
+  border: 5px solid #0275d8;
+}
+.size {
+  background-color: rgb(143, 226, 205);
+  width: auto;
+}
+.fixing {
+  margin-right: 0px;
+  padding-right: 0px;
+  margin-left: 0px;
+}
+.btn-size {
+  background-color: white;
+}
+.btn-confirm:hover {
+  border: 3px solid rgb(17, 163, 140);
+}
+@media (max-width: 1390px) {
+  /* CSS that should be displayed if width is equal to or less than 800px goes here */
+  .containersize {
+    padding-bottom: 45px;
+    padding-top: 15px;
+  }
+}
+@media (max-width: 730px) {
+  .m {
+    border-right: 3px solid rgb(17, 163, 140);
+  }
+  .containersize {
+    justify-content: center;
+  }
+}
+@media (max-width: 370px) {
+  .right {
+    border-left: 3px solid rgb(17, 163, 140);
+  }
+  .left {
+    width: 56%;
+    border-bottom: none;
+  }
+}
+.part {
+  padding: 0;
+  padding-bottom: 3%;
+  margin-right: 4px;
+}
+.wristcoverbtn {
+  padding-left: 45px;
+  padding-right: 49px;
+  margin-left: 3px;
+  border-right: none;
+}
+.handcoverbtn {
+  padding-left: 55px;
+  padding-right: 52px;
+}
+.leftarmbtn {
+  border-right: none;
+}
+.rightarm {
+  border-bottom: none;
+}
+.btnpart:hover {
+  border: 3px solid rgb(17, 163, 140);
+}
+.scrollmenu {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+  width: 96.2%;
+  margin-left: 15px;
+  border-top: 10px solid #8fe2cd;
+}
+.scrollmenu .listgroupitem {
+  background-color: rgb(247, 247, 247);
+  border-radius: 2%;
+  border: 2px solid rgb(247, 247, 247);
+}
+.scrollmenu .listgroupitem:hover {
+  transform: scale(1.2);
+  cursor: pointer;
+}
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #282c34 #8fe2cd;
+}
+*::-webkit-scrollbar {
+  width: 12px;
+}
+*::-webkit-scrollbar-track {
+  background: #8fe2cd;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: #282c34;
+  border-radius: 20px;
+  border: 3px solid #8fe2cd;
+}
+.listgroupitem img {
+  width: 150px;
+  height: 150px;
+}
+.active {
+  border: 3px solid rgb(17, 163, 140);
+}
+.imgspectrum {
+  padding-top: 7rem;
+}
+.card-body {
+  padding: 0;
+  padding-top: 1.25rem;
+}
+.containermt-3 {
+  max-width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+.submit-btn {
+  margin-left: 35%;
+  margin-top: 2rem;
+}
+.form-styling {
+  text-transform: capitalize;
+  font-size: large;
 }

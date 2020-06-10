@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 //-----------------------
 import "./App.css";
-//---Components
+//---Components-----
 import AuthService from "./services/auth-service";
 import Login from "./components/login.component";
 import Register from "./components/register.component";
@@ -13,7 +13,16 @@ import Profile from "./components/profile.component";
 import BoardUser from "./components/board-user.component";
 import BoardModerator from "./components/board-moderator.component";
 import BoardAdmin from "./components/board-admin.component";
-
+import Shop from "./components/Shop";
+import ArmFirst from "./components/armFifth";
+import armSecond from "./components/armSecond.js";
+import armThird from "./components/armThird.js";
+import armFourth from "./components/armFourth.js";
+import armFifth from "./components/armSpectrum";
+import armSixth from "./components/armFifth";
+import UpdateUser from "./components/UpdateUser";
+import NewPassword from "./components/childComponents/NewPassword";
+//---------------------------------------------------------------------
 class App extends Component {
   constructor(props) {
     super(props);
@@ -23,6 +32,7 @@ class App extends Component {
       showModeratorBoard: false,
       showAdminBoard: false,
       currentUser: undefined,
+      id: "",
     };
   }
 
@@ -34,6 +44,7 @@ class App extends Component {
         currentUser: AuthService.getCurrentUser(),
         showModeratorBoard: user.roles.includes("ROLE_MODERATOR"),
         showAdminBoard: user.roles.includes("ROLE_ADMIN"),
+        id: JSON.parse(localStorage.getItem("user")),
       });
     }
   }
@@ -44,18 +55,25 @@ class App extends Component {
 
   render() {
     const { currentUser, showModeratorBoard, showAdminBoard } = this.state;
-
+    const { id } = this.state;
+    // Reterive Username from LocalStorage
+    const users = id.id;
     return (
       <Router>
         <div>
           <nav className="navbar navbar-expand navbar-dark bg-primary">
             <Link to={"/"} className="navbar-brand">
-              Dashboard
+              Curebionics
             </Link>
             <div className="navbar-nav mr-auto">
               <li className="nav-item">
                 <Link to={"/home"} className="nav-link">
                   Home
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to={"/shop"} className="nav-link">
+                  Shop
                 </Link>
               </li>
 
@@ -113,9 +131,19 @@ class App extends Component {
               </div>
             )}
           </nav>
-
-          <div className="container mt-3">
-            <Switch>
+          <Switch>
+            <div className="containermt-3">
+              <Route path="/Shop" exact component={Shop} />
+              <Route path="/Shop/ironman" exact component={ArmFirst} />
+              <Route path="/shop/batman" exact component={armSecond} />
+              <Route path="/shop/superman" exact component={armThird} />
+              <Route path="/shop/lol" exact component={armFourth} />
+              <Route path="/shop/spectrum" exact component={armFifth} />
+              <Route path="/shop/fullycustomized" exact component={armSixth} />
+            </div>
+          </Switch>
+          <Switch>
+            <div className="container mt-3">
               <Route exact path={["/", "/home"]} component={Home} />
               <Route exact path="/login" component={Login} />
               <Route exact path="/register" component={Register} />
@@ -123,8 +151,14 @@ class App extends Component {
               <Route path="/user" component={BoardUser} />
               <Route path="/mod" component={BoardModerator} />
               <Route path="/admin" component={BoardAdmin} />
-            </Switch>
-          </div>
+              <Route exact path={"/users/" + users} component={UpdateUser} />
+              <Route
+                exact
+                path={"/users/success/" + users}
+                component={NewPassword}
+              />
+            </div>
+          </Switch>
         </div>
       </Router>
     );

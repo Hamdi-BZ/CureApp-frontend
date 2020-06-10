@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import AuthService from "./../services/auth-service";
+import { Link } from "react-router-dom";
 
 export default class Profile extends Component {
   constructor(props) {
@@ -7,12 +8,16 @@ export default class Profile extends Component {
 
     this.state = {
       currentUser: AuthService.getCurrentUser(),
+      user: JSON.parse(localStorage.getItem("user")),
+      id: JSON.parse(localStorage.getItem("user")),
     };
   }
 
   render() {
     const { currentUser } = this.state;
-
+    const { id } = this.state;
+    // Reterive Username from LocalStorage
+    const users = id.id;
     return (
       <div className="container">
         <header className="jumbotron">
@@ -30,11 +35,17 @@ export default class Profile extends Component {
         <p>
           <strong>Email:</strong> {currentUser.email}
         </p>
+        <p>Password: {currentUser.password}</p>
         <strong>Authorities:</strong>
         <ul>
           {currentUser.roles &&
             currentUser.roles.map((role, index) => <li key={index}>{role}</li>)}
         </ul>
+        <div>
+          <Link to={"/users/" + users} className="nav-link">
+            Edit
+          </Link>
+        </div>
       </div>
     );
   }

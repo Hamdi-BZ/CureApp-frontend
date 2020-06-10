@@ -19,6 +19,9 @@ class UserService {
   getAdminBoard() {
     return axios.get(API_URL + "admin", { headers: authHeader() });
   }
+  updatePassword() {
+    return axios.put(API_URL + "edit", { headers: authHeader() });
+  }
 }
 
 export default new UserService();

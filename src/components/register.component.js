@@ -86,12 +86,6 @@ export default class Register extends Component {
       confirmPassword: e.target.value,
     });
   }
-  /*handleConfirmPassword = (event) => {
-    if (event.target.value !== this.state.confirmPassword) {
-      alert("error password dosen't match");
-    }
-  };*/
-  //---------------
 
   //-----------------
   handleRegister(e) {
@@ -191,7 +185,7 @@ export default class Register extends Component {
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="confirmPassword">Confirm Password</label>
+                  <label htmlFor="confirmPassword">Retype Password</label>
                   <Input
                     type="password"
                     className="form-control"
@@ -201,7 +195,6 @@ export default class Register extends Component {
                     validations={[required, vpassword]}
                   />
                 </div>
-
                 <div className="form-group">
                   <button className="btn btn-primary btn-block">Sign Up</button>
                 </div>
