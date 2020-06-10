@@ -21,7 +21,6 @@ import armFourth from "./components/armFourth.js";
 import armFifth from "./components/armSpectrum";
 import armSixth from "./components/armFifth";
 import UpdateUser from "./components/UpdateUser";
-import NewPassword from "./components/childComponents/NewPassword";
 //---------------------------------------------------------------------
 class App extends Component {
   constructor(props) {
@@ -152,11 +151,6 @@ class App extends Component {
               <Route path="/mod" component={BoardModerator} />
               <Route path="/admin" component={BoardAdmin} />
               <Route exact path={"/users/" + users} component={UpdateUser} />
-              <Route
-                exact
-                path={"/users/success/" + users}
-                component={NewPassword}
-              />
             </div>
           </Switch>
         </div>
