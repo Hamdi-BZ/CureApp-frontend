@@ -68,7 +68,6 @@ export default class UpdateUser extends Component {
       });
       const usernow = this.state.currentUser;
       const id = usernow.id;
-      //console.log(this.state);
       var passwordIsValid = bcrypt.compareSync(
         this.state.testpassword,
         this.state.oldpassword

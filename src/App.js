@@ -21,6 +21,8 @@ import armFourth from "./components/armFourth.js";
 import armFifth from "./components/armSpectrum";
 import armSixth from "./components/armFifth";
 import UpdateUser from "./components/UpdateUser";
+import Cart from "./components/Cart";
+import PartsList from "./components/childComponents/PartsList";
 //---------------------------------------------------------------------
 class App extends Component {
   constructor(props) {
@@ -49,6 +51,7 @@ class App extends Component {
   }
 
   logOut() {
+    localStorage.clear();
     AuthService.logout();
   }
 
@@ -150,7 +153,9 @@ class App extends Component {
               <Route path="/user" component={BoardUser} />
               <Route path="/mod" component={BoardModerator} />
               <Route path="/admin" component={BoardAdmin} />
+              <Route exact path="/cart" component={Cart} />
               <Route exact path={"/users/" + users} component={UpdateUser} />
+              <Route exact path={"/covers"} component={PartsList} />
             </div>
           </Switch>
         </div>

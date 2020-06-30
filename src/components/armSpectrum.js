@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-
+//---Services
+import AuthService from "../services/auth-service";
+//import OrderDataService from "../services/Order.service";
 //---BootStrap Components --------
 import { Container, Row, Col } from "react-bootstrap";
 //---Components
@@ -13,11 +15,24 @@ export default class armSpectrum extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedpart: "left",
+      currentUser: AuthService.getCurrentUser(),
+      coverid: "Spectrum Cover",
+      selectedpart: "",
       side: "left",
       size: "small",
+      setModalShow: false,
     };
   }
+
+  openModal = () => {
+    this.setState({ setModalShow: true });
+  };
+  closeModal = () => {
+    this.setState({
+      setModalShow: false,
+      confirmingChoice: false,
+    });
+  };
   //---Methods
   handleLeftSideClick = () => {
     this.setState({
@@ -65,14 +80,14 @@ export default class armSpectrum extends Component {
     });
   };
   ConfirmClickHandler = () => {
-    if (this.state.side === "" && this.state.size === "") {
-      alert("please make a choice before confirming");
-    } else if (this.state.side === "") {
-      alert("please select a Side");
-    } else if (this.state.size === "") {
-      alert("please select a Size");
+    if (this.state.currentUser === null) {
+      this.setState({
+        setModalShow: true,
+      });
     } else {
-      console.log(this.state.side, this.state.size);
+      localStorage.setItem("size", this.state.size);
+      localStorage.setItem("side", this.state.side);
+      //console.log(JSON.stringify(this.state));
     }
   };
   render() {
@@ -263,13 +278,15 @@ export default class armSpectrum extends Component {
               />
               <Row className="justify-content-md-center">
                 <Col md="auto">
-                  <button
-                    className="btns"
-                    id="x"
-                    onClick={this.ConfirmClickHandler}
-                  >
-                    Confirm
-                  </button>
+                  <Link to="/cart">
+                    <button
+                      className="btns"
+                      id="x"
+                      onClick={this.ConfirmClickHandler}
+                    >
+                      Confirm
+                    </button>
+                  </Link>
                 </Col>
               </Row>
             </Col>

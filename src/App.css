@@ -154,6 +154,9 @@ label {
 }
 .sideimage img {
   margin-bottom: 1rem;
+  width: 50%;
+  height: auto;
+  margin-top: 1rem;
 }
 .sizebtngroup {
   padding: 3%;
@@ -336,4 +339,94 @@ label {
 .form-styling {
   text-transform: capitalize;
   font-size: large;
+}
+.modalclose {
+  float: right;
+}
+.modallogin {
+  float: right;
+}
+.modalsignup {
+  float: right;
+  margin-right: 1rem;
+}
+
+.modaldesc {
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  font-size: large;
+  font-weight: 400;
+}
+.modalconfirmingorder {
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  right: 40px;
+  bottom: 40px;
+  border: 1px solid #007bff;
+  background: rgba(234, 238, 238, 0.924);
+  overflow: auto;
+  border-radius: 4px;
+  outline: none;
+  padding: 20px;
+  width: 50%;
+  height: initial;
+  margin: auto;
+}
+.order-infos {
+  margin: auto;
+  font-size: xx-large;
+  color: black;
+  margin-left: 1.5rem;
+}
+.itemImage img {
+  width: inherit;
+  margin: 1rem;
+}
+.greyColor {
+  background-color: #f7f7f7;
+  margin-top: 0.5rem;
+}
+.cartHeader {
+  color: #282c34;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.cartItems {
+  text-align: center;
+  margin: auto;
+  color: #282c34;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.cartItems div {
+  border: 2px solid #61dafb;
+  border-radius: 15%;
+  box-sizing: border-box;
+  margin-right: 2rem;
+  margin-left: 2rem;
+}
+.cartFooter {
+  color: #282c34;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.cartFooter .cartTotal {
+  padding-left: 2rem;
+}
+.cartFooter .cartTotalValue {
+  float: right;
+  padding: inherit;
+}
+.cartBtns {
+  padding: 1rem;
+  margin-left: 1rem;
+}
+.cartCheckoutBtn {
+  float: right;
+}
+.greyColor {
+  display: flex;
+  flex-wrap: wrap;
 }
