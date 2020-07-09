@@ -1,78 +1,167 @@
 import React, { Component } from "react";
-import axios from "axios";
-import Table from "react-bootstrap/Table";
-import Button from "react-bootstrap/Button";
-
-class PostList extends Component {
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faChartPie,
+  faUser,
+  faBook,
+  faUsers,
+  faArchive,
+  faCartPlus,
+  /*faBars,*/
+} from "@fortawesome/free-solid-svg-icons";
+//import Form from "react-bootstrap/Form";
+// Child Components
+import Employees from "./childComponents/Employees.Manager";
+import Statics from "./childComponents/Statics";
+import Products from "./childComponents/Products.Manager";
+//import Orders from "./childComponents/Orders.manager";
+import Profile from "./profile.component";
+import Content from "./childComponents/Content.Manager";
+import ClientOrders from "./childComponents/ClientOrders";
+//-----------------
+export default class boardAdmin extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      posts: [],
-      currentEmployee: {
-        employeeId: null,
-        employeeName: "",
-        employeeEmail: "",
-        employeePhone: "",
-      },
+      selected: "dashboard",
     };
   }
-  componentDidMount() {
-    axios
-      .get("http://localhost:8080/api/tutorials/")
-      .then((response) => {
-        console.log(response);
-        this.setState({ posts: response.data });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-  deleData() {
-    axios
-      .delete("http://localhost:8080/api/tutorials/8")
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
+  componentDidMount = () => {
+    this.setState({
+      selected: localStorage.getItem("selected"),
+    });
+  };
+  dashboardClick = () => {
+    localStorage.setItem("selected", this.state.selected);
+
+    this.setState({
+      selected: "dashboard",
+    });
+  };
+  employeesClick = () => {
+    localStorage.setItem("selected", this.state.selected);
+
+    this.setState({
+      selected: "employees",
+    });
+  };
+  ordersClick = () => {
+    localStorage.setItem("selected", this.state.selected);
+
+    this.setState({
+      selected: "orders",
+    });
+  };
+  profileClick = () => {
+    localStorage.setItem("selected", this.state.selected);
+
+    this.setState({
+      selected: "profile",
+    });
+  };
+  productsClick = () => {
+    localStorage.setItem("selected", this.state.selected);
+
+    this.setState({
+      selected: "products",
+    });
+  };
+  contentClick = () => {
+    localStorage.setItem("selected", this.state.selected);
+
+    this.setState({
+      selected: "content",
+    });
+  };
+
   render() {
-    const { posts } = this.state;
+    const selected = this.state.selected;
+    let component;
+    if (selected === "dashboard") {
+      component = <Statics />;
+    } else if (selected === "employees") {
+      component = <Employees />;
+    } else if (selected === "products") {
+      component = <Products />;
+    } else if (selected === "profile") {
+      //with user props to (id)
+      component = <Profile />;
+    } else if (selected === "orders") {
+      component = <ClientOrders />;
+    } else {
+      component = <Content />;
+    }
     return (
       <div>
-        <h3>List of Employees</h3>
-        <Table responsive striped bordered hover>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Phone</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {posts.length
-              ? posts.map((post) => (
-                  <tr>
-                    <td>{post.employeeName}</td>
-                    <td>{post.employeeEmail}</td>
-                    <td>{post.employeePhone}</td>
-                    <td>
-                      <Button variant="primary"> Edit </Button>
-                      <Button variant="danger" onClick={this.deleData}>
-                        Delete
-                      </Button>
-                    </td>
-                  </tr>
-                ))
-              : null}
-          </tbody>
-        </Table>
+        <div className="split left">
+          {/*<div>
+            <Form.Check type="switch" id="custom-switch" label="Menu" />
+          </div>*/}
+          <div
+            onClick={this.dashboardClick}
+            className={
+              this.state.selected === "dashboard"
+                ? "sidebar-item selected"
+                : "sidebar-item  "
+            }
+          >
+            <FontAwesomeIcon icon={faChartPie} /> Dashboard
+          </div>
+          <div
+            onClick={this.ordersClick}
+            className={
+              this.state.selected === "orders"
+                ? "sidebar-item selected"
+                : "sidebar-item  "
+            }
+          >
+            <FontAwesomeIcon icon={faArchive} /> Orders
+          </div>
+          <div
+            onClick={this.productsClick}
+            className={
+              this.state.selected === "products"
+                ? "sidebar-item selected"
+                : "sidebar-item  "
+            }
+          >
+            <FontAwesomeIcon icon={faCartPlus} /> Products
+          </div>
+          <div
+            onClick={this.employeesClick}
+            className={
+              this.state.selected === "employees"
+                ? "sidebar-item selected"
+                : "sidebar-item  "
+            }
+          >
+            <FontAwesomeIcon icon={faUsers} /> Emlpoyees
+          </div>
+
+          <div
+            onClick={this.contentClick}
+            className={
+              this.state.selected === "content"
+                ? "sidebar-item selected"
+                : "sidebar-item  "
+            }
+          >
+            <FontAwesomeIcon icon={faBook} /> Content
+          </div>
+
+          <div
+            onClick={this.profileClick}
+            className={
+              this.state.selected === "profile"
+                ? "sidebar-item selected"
+                : "sidebar-item  "
+            }
+          >
+            <FontAwesomeIcon icon={faUser} /> Profile
+          </div>
+        </div>
+        <div className="right-side">{component}</div>
       </div>
     );
   }
 }
-
-export default PostList;

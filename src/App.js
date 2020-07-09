@@ -23,6 +23,8 @@ import armSixth from "./components/armFifth";
 import UpdateUser from "./components/UpdateUser";
 import Cart from "./components/Cart";
 import PartsList from "./components/childComponents/PartsList";
+import EditEmployee from "./components/childComponents/Edit.Employee";
+import SignupEmployee from "./components/childComponents/SignupEmployee";
 //---------------------------------------------------------------------
 class App extends Component {
   constructor(props) {
@@ -156,6 +158,13 @@ class App extends Component {
               <Route exact path="/cart" component={Cart} />
               <Route exact path={"/users/" + users} component={UpdateUser} />
               <Route exact path={"/covers"} component={PartsList} />
+              <Route exact path={"/edit"} component={EditEmployee} />
+
+              <Route
+                exact
+                path={"/signupemployee"}
+                component={SignupEmployee}
+              />
             </div>
           </Switch>
         </div>
