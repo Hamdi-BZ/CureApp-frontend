@@ -23,7 +23,7 @@ export default class SignupEmployee extends Component {
       employeeconfirmpassword: "",
       employeePhone: "",
       employeeBirthdate: "",
-      roleId: "Admin",
+      roleId: 1,
       employeeProfileImage: "",
     };
   }

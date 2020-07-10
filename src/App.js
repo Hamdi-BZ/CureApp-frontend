@@ -13,6 +13,8 @@ import Profile from "./components/profile.component";
 import BoardUser from "./components/board-user.component";
 import BoardModerator from "./components/board-moderator.component";
 import BoardAdmin from "./components/board-admin.component";
+import Content from "./components/childComponents/Content.Manager";
+import Orders from "./components/childComponents/Orders.manager";
 import Shop from "./components/Shop";
 import ArmFirst from "./components/armFifth";
 import armSecond from "./components/armSecond.js";
@@ -47,6 +49,8 @@ class App extends Component {
         currentUser: AuthService.getCurrentUser(),
         showModeratorBoard: user.roles.includes("ROLE_MODERATOR"),
         showAdminBoard: user.roles.includes("ROLE_ADMIN"),
+        showSalesBoard: user.roles.includes("ROLE_SALESMANAGER"),
+        showContentBoard: user.roles.includes("ROLE_CONTENTMANAGER"),
         id: JSON.parse(localStorage.getItem("user")),
       });
     }
@@ -58,7 +62,13 @@ class App extends Component {
   }
 
   render() {
-    const { currentUser, showModeratorBoard, showAdminBoard } = this.state;
+    const {
+      currentUser,
+      showModeratorBoard,
+      showAdminBoard,
+      showContentBoard,
+      showSalesBoard,
+    } = this.state;
     const { id } = this.state;
     // Reterive Username from LocalStorage
     const users = id.id;
@@ -96,7 +106,20 @@ class App extends Component {
                   </Link>
                 </li>
               )}
-
+              {showContentBoard && (
+                <li className="nav-item">
+                  <Link to={"/contentmanager"} className="nav-link">
+                    Content Board
+                  </Link>
+                </li>
+              )}
+              {showSalesBoard && (
+                <li className="nav-item">
+                  <Link to={"/ordersmanager"} className="nav-link">
+                    Sales Board
+                  </Link>
+                </li>
+              )}
               {currentUser && (
                 <li className="nav-item">
                   <Link to={"/user"} className="nav-link">
@@ -155,11 +178,12 @@ class App extends Component {
               <Route path="/user" component={BoardUser} />
               <Route path="/mod" component={BoardModerator} />
               <Route path="/admin" component={BoardAdmin} />
+              <Route path="/ordersmanager" component={Orders} />
+              <Route path="/contentmanager" component={Content} />
               <Route exact path="/cart" component={Cart} />
               <Route exact path={"/users/" + users} component={UpdateUser} />
               <Route exact path={"/covers"} component={PartsList} />
               <Route exact path={"/edit"} component={EditEmployee} />
-
               <Route
                 exact
                 path={"/signupemployee"}
