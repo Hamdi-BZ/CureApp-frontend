@@ -3,13 +3,6 @@ import React, { Component } from "react";
 import CoversDisplay from "./childComponents/BasicCoversDisplay";
 //--------------
 export default class armSecond extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { coverid: "ironmancover" };
-  }
-  method = () => {
-    this.setState({ coverid: "ironmancover" });
-  };
   render() {
     return (
       <div>

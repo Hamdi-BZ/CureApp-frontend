@@ -4,6 +4,16 @@ import ListGroup from "react-bootstrap/ListGroup";
 //--------------------------------
 var listOfImages = [];
 export default class WristCover extends Component {
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
+      wristcoverimgsrc: "",
+    };
+  }
+  greet() {
+    alert("clicked");
+  }
+
   importAll(r) {
     return r.keys().map(r);
   }
@@ -23,7 +33,19 @@ export default class WristCover extends Component {
         <ListGroup horizontal>
           {listOfImages.map((image, index) => (
             <ListGroup.Item className="listgroupitem">
-              <img key={index} src={image} alt="info"></img>
+              <img
+                key={index}
+                src={image}
+                alt="info"
+                onClick={() => {
+                  const imgsrc = image;
+                  this.setState({
+                    wristcoverimgsrc: imgsrc,
+                  });
+                  localStorage.setItem("wristimgpath", imgsrc);
+                  console.log(imgsrc);
+                }}
+              ></img>
             </ListGroup.Item>
           ))}
         </ListGroup>

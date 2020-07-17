@@ -4,6 +4,13 @@ import ListGroup from "react-bootstrap/ListGroup";
 //--------------------------------
 var listOfImages = [];
 export default class HandPalm extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      handpalmimgsrc: "",
+    };
+  }
+
   importAll(r) {
     return r.keys().map(r);
   }
@@ -16,14 +23,24 @@ export default class HandPalm extends Component {
       )
     );
   }
-
   render() {
     return (
       <div className="scrollmenu">
         <ListGroup horizontal>
-          {listOfImages.map((image, index) => (
+          {listOfImages.map((image) => (
             <ListGroup.Item className="listgroupitem">
-              <img key={index} src={image} alt="info"></img>
+              <img
+                src={image}
+                alt="info"
+                onClick={() => {
+                  const imgsrc = image;
+                  this.setState({
+                    handpalmimgsrc: imgsrc,
+                  });
+                  localStorage.setItem("handcoverimgpath", imgsrc);
+                  console.log(imgsrc);
+                }}
+              ></img>
             </ListGroup.Item>
           ))}
         </ListGroup>

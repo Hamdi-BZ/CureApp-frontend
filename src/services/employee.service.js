@@ -1,29 +1,37 @@
-import http from "../http-common";
+import axios from "axios";
 
-class EmployeeDataService {
-  getAll() {
-    return http.get("/tutorials");
+const API_URL = "http://localhost:8080/api/auth/";
+
+class AuthService {
+  login(username, password) {
+    return axios
+      .post(API_URL + "signin", {
+        username,
+        password,
+      })
+      .then((response) => {
+        if (response.data.accessToken) {
+          localStorage.setItem("user", JSON.stringify(response.data));
+        }
+        return response.data;
+      });
   }
 
-  get(employeeId) {
-    return http.get(`/tutorials/${employeeId}`);
+  logout() {
+    localStorage.removeItem("user");
   }
 
-  create(data) {
-    return http.post("/tutorials", data);
+  register(username, email, password) {
+    return axios.post(API_URL + "signup", {
+      username,
+      email,
+      password,
+    });
   }
 
-  update(employeeId, data) {
-    return http.put(`/tutorials/${employeeId}`, data);
-  }
-
-  delete(employeeId) {
-    return http.delete(`/tutorials/${employeeId}`);
-  }
-
-  deleteAll() {
-    return http.delete(`/tutorials`);
+  getCurrentUser() {
+    return JSON.parse(localStorage.getItem("user"));
   }
 }
 
-export default new EmployeeDataService();
+export default new AuthService();

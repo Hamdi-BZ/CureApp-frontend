@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import AuthService from "./../services/auth-service";
 import { Link } from "react-router-dom";
-
+//import ClientOrders from "./childComponents/ClientOrders";
 export default class Profile extends Component {
   constructor(props) {
     super(props);
@@ -35,15 +35,17 @@ export default class Profile extends Component {
         <p>
           <strong>Email:</strong> {currentUser.email}
         </p>
-        <p>Password: {currentUser.password}</p>
         <strong>Authorities:</strong>
         <ul>
           {currentUser.roles &&
             currentUser.roles.map((role, index) => <li key={index}>{role}</li>)}
         </ul>
+        {/*<div>
+          <ClientOrders />
+        </div>*/}
         <div>
           <Link to={"/users/" + users} className="nav-link">
-            Edit
+            Change Password
           </Link>
         </div>
       </div>

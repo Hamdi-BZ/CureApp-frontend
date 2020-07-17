@@ -1,18 +1,40 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-
+import Axios from "axios";
+//---Components
+import Modal from "react-modal";
+//---Services
+import AuthService from "../../services/auth-service";
+//import OrderDataService from "../../services/Order.service";
 //---BootStrap Components --------
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Button } from "react-bootstrap";
 //--------------------------------
 export default class CoversDisplay extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      currentUser: AuthService.getCurrentUser(),
       coverid: "",
       side: "left",
       size: "small",
+      setModalShow: false,
+      confirmingChoice: false,
+      submitted: false,
     };
   }
+
+  openModal = () => {
+    this.setState({ setModalShow: true });
+  };
+  closeModal = () => {
+    this.setState({ setModalShow: false, confirmingChoice: false });
+  };
+  componentDidMount = () => {
+    const id = window.location.pathname;
+    this.setState({
+      coverid: id.substring(6, id.length),
+    });
+  };
   handleLeftSideClick = () => {
     this.setState({
       side: "left",
@@ -38,19 +60,54 @@ export default class CoversDisplay extends Component {
       size: "large",
     });
   };
+
   handleConfirmClick = () => {
-    if (this.state.side === "" && this.state.size === "") {
-      alert("please make a choice before confirming");
-    } else if (this.state.side === "") {
-      alert("please select a Side");
-    } else if (this.state.size === "") {
-      alert("please select a Size");
+    if (this.state.currentUser === null) {
+      this.setState({
+        setModalShow: true,
+      });
     } else {
+      this.setState({
+        confirmingChoice: true,
+      });
       console.log(JSON.stringify(this.state));
     }
   };
-
+  // Data Service
+  saveOrder = () => {
+    const data = {
+      userid: this.state.currentUser.id,
+      coverid: this.state.coverid,
+      side: this.state.side,
+      size: this.state.size,
+      total: 450,
+      status: "pending",
+      category: "Super Hero Covers",
+    };
+    Axios.post("http://localhost:8080/api/test/orders", data)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  //-------------
   render() {
+    const customStyles = {
+      content: {
+        top: "50%",
+        left: "50%",
+        right: "auto",
+        bottom: "auto",
+        marginRight: "-50%",
+        transform: "translate(-50%, -50%)",
+      },
+    };
+    const setModalShow = this.state.setModalShow;
+    const confirmingChoice = this.state.confirmingChoice;
+    const side = this.state.side;
+    const size = this.state.size;
     return (
       <div>
         <img
@@ -65,7 +122,7 @@ export default class CoversDisplay extends Component {
             </Col>
           </Row>
           <Row className="justify-content-md-center ">
-            <Col sm={8} className="cadre">
+            <Col sm={7} className="cadre">
               <div className="containerform">
                 <Row className="justify-content-md-center fixing size">
                   <Col md="auto" className="containercustomrow size">
@@ -153,7 +210,7 @@ export default class CoversDisplay extends Component {
                 </Row>
               </div>
             </Col>
-            <Col sm={4} className="sideimage">
+            <Col sm={5} className="sideimage">
               <img
                 className="img"
                 src={`${process.env.PUBLIC_URL}${this.props.imgpath}`}
@@ -179,6 +236,78 @@ export default class CoversDisplay extends Component {
             </Col>
           </Row>
         </Container>
+        {/*---------- Login if Not*/}
+        {setModalShow && (
+          <Modal
+            style={customStyles}
+            isOpen={true}
+            onAfterClose={this.closeModal}
+          >
+            <Button
+              className="modalclose"
+              variant="danger"
+              onClick={this.closeModal}
+            >
+              X
+            </Button>
+            <div>
+              <div>
+                <p className="modaldesc">Login or Signup to get your Cover</p>
+                <Link to="/login">
+                  <Button className="modallogin" variant="primary">
+                    Login
+                  </Button>
+                </Link>
+                <Link to="/register">
+                  <Button className="modalsignup" variant="outline-success">
+                    Sign up{" "}
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </Modal>
+        )}
+        {/*-------------Modal Confirming Choice-----------------*/}
+        {confirmingChoice && (
+          <Modal
+            className="modalconfirmingorder"
+            isOpen={true}
+            onAfterClose={this.closeModal}
+          >
+            <Button
+              className="modalclose"
+              variant="danger"
+              onClick={this.closeModal}
+            >
+              X
+            </Button>
+            <div>
+              <div>
+                <Row>
+                  <Col>
+                    <img
+                      className="img"
+                      src={`${process.env.PUBLIC_URL}${this.props.imgpath}`}
+                      alt={this.props.title}
+                    />
+                  </Col>
+                  <Col className="order-infos">
+                    <p>Side : {side}</p>
+                    <p>Size : {size}</p>
+                    <p>Price : X</p>
+                  </Col>
+                </Row>
+                <Button
+                  className="modalsignup"
+                  variant="success"
+                  onClick={this.saveOrder}
+                >
+                  Order{" "}
+                </Button>
+              </div>
+            </div>
+          </Modal>
+        )}
       </div>
     );
   }
