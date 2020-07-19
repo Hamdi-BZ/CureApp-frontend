@@ -8,14 +8,7 @@ import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from "react-bootstrap/FormControl";
 
-import {
-  faEnvelope,
-  faPhone,
-  faTools,
-  faAddressCard,
-  faEdit,
-  faPlus,
-} from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
@@ -43,7 +36,10 @@ export default class Products extends Component {
                 <FontAwesomeIcon
                   id="product-add-btn"
                   onClick={() => {
-                    this.setState({ addShow: !this.state.addShow });
+                    this.setState({
+                      addShow: !this.state.addShow,
+                      editShow: false,
+                    });
                   }}
                   icon={faPlus}
                 />
@@ -73,10 +69,16 @@ export default class Products extends Component {
                   <Button
                     variant="outline-light"
                     onClick={() => {
-                      this.setState({ editShow: !this.state.editShow });
+                      this.setState({
+                        editShow: !this.state.editShow,
+                        addShow: false,
+                      });
                     }}
                   >
                     Edit
+                  </Button>
+                  <Button className="float-right-btn" variant="outline-danger">
+                    Delete
                   </Button>
                 </Card.Body>
               </Card>
@@ -98,7 +100,20 @@ export default class Products extends Component {
                   <Card.Text className="product-details">
                     Quantity : 35 piece(s)
                   </Card.Text>
-                  <Button variant="outline-light">Edit</Button>
+                  <Button
+                    variant="outline-light"
+                    onClick={() => {
+                      this.setState({
+                        editShow: !this.state.editShow,
+                        addShow: false,
+                      });
+                    }}
+                  >
+                    Edit
+                  </Button>
+                  <Button className="float-right-btn" variant="outline-danger">
+                    Delete
+                  </Button>
                 </Card.Body>
               </Card>
               <Card className="product-manager-card" style={{ width: "20rem" }}>
@@ -119,7 +134,20 @@ export default class Products extends Component {
                   <Card.Text className="product-details">
                     Quantity : 35 piece(s)
                   </Card.Text>
-                  <Button variant="outline-light">Edit</Button>
+                  <Button
+                    variant="outline-light"
+                    onClick={() => {
+                      this.setState({
+                        editShow: !this.state.editShow,
+                        addShow: false,
+                      });
+                    }}
+                  >
+                    Edit
+                  </Button>
+                  <Button className="float-right-btn" variant="outline-danger">
+                    Delete
+                  </Button>
                 </Card.Body>
               </Card>
             </Col>

@@ -742,3 +742,6 @@ label {
 .custom-select {
   height: 100%;
 }
+.float-right-btn {
+  float: right;
+}
