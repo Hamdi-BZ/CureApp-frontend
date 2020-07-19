@@ -7,7 +7,7 @@ import "./App.css";
 //---Components-----
 import AuthService from "./services/auth-service";
 import Login from "./components/login.component";
-import Register from "./components/register.component";
+//import Register from "./components/register.component";
 import Home from "./components/home.component";
 import Profile from "./components/profile.component";
 import BoardUser from "./components/board-user.component";
@@ -27,6 +27,8 @@ import Cart from "./components/Cart";
 import PartsList from "./components/childComponents/PartsList";
 import EditEmployee from "./components/childComponents/Edit.Employee";
 import SignupEmployee from "./components/childComponents/SignupEmployee";
+import SignupClient from "./components/childComponents/SignupClient";
+import ProfileManager from "./components/childComponents/Profile.Manager";
 //---------------------------------------------------------------------
 class App extends Component {
   constructor(props) {
@@ -36,6 +38,8 @@ class App extends Component {
     this.state = {
       showModeratorBoard: false,
       showAdminBoard: false,
+      showUserBoard: false,
+      showContentBoard: false,
       currentUser: undefined,
       id: "",
     };
@@ -51,6 +55,8 @@ class App extends Component {
         showAdminBoard: user.roles.includes("ROLE_ADMIN"),
         showSalesBoard: user.roles.includes("ROLE_SALESMANAGER"),
         showContentBoard: user.roles.includes("ROLE_CONTENTMANAGER"),
+        showUserBoard: user.roles.includes("ROLE_USER"),
+
         id: JSON.parse(localStorage.getItem("user")),
       });
     }
@@ -68,6 +74,7 @@ class App extends Component {
       showAdminBoard,
       showContentBoard,
       showSalesBoard,
+      showUserBoard,
     } = this.state;
     const { id } = this.state;
     // Reterive Username from LocalStorage
@@ -120,7 +127,7 @@ class App extends Component {
                   </Link>
                 </li>
               )}
-              {currentUser && (
+              {showUserBoard && (
                 <li className="nav-item">
                   <Link to={"/user"} className="nav-link">
                     User
@@ -173,7 +180,7 @@ class App extends Component {
             <div className="container mt-3">
               <Route exact path={["/", "/home"]} component={Home} />
               <Route exact path="/login" component={Login} />
-              <Route exact path="/register" component={Register} />
+              <Route exact path="/register" component={SignupClient} />
               <Route exact path="/profile" component={Profile} />
               <Route path="/user" component={BoardUser} />
               <Route path="/mod" component={BoardModerator} />
@@ -181,14 +188,20 @@ class App extends Component {
               <Route path="/ordersmanager" component={Orders} />
               <Route path="/contentmanager" component={Content} />
               <Route exact path="/cart" component={Cart} />
-              <Route exact path={"/users/" + users} component={UpdateUser} />
+              <Route
+                exact
+                path={"/passwordupdate/" + users}
+                component={UpdateUser}
+              />
               <Route exact path={"/covers"} component={PartsList} />
               <Route exact path={"/edit"} component={EditEmployee} />
+              <Route exact path={"/userprofile"} component={ProfileManager} />
               <Route
                 exact
                 path={"/signupemployee"}
                 component={SignupEmployee}
               />
+              <Route exact path={"/signupclient"} component={SignupClient} />
             </div>
           </Switch>
         </div>

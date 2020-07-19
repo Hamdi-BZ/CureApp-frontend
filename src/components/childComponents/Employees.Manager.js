@@ -109,7 +109,7 @@ class Employees extends Component {
     this.setState({
       showdelete: false,
     });
-    window.location.reload();
+    //window.location.reload();
   };
   render() {
     const employeeUserName = this.state.employeeUserName;
@@ -128,8 +128,7 @@ class Employees extends Component {
                 <thead>
                   <tr className="table-head">
                     <th>ID</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
+                    <th>Full Name</th>
                     <th>Username</th>
                     <th>Phone Number</th>
                     <th>Role</th>
@@ -141,8 +140,11 @@ class Employees extends Component {
                     ? posts.map((employee) => (
                         <tr>
                           <td>{employee.id} </td>{" "}
-                          <td>{employee.employeeFirstName} </td>{" "}
-                          <td>{employee.employeeLastName} </td>{" "}
+                          <td>
+                            {employee.employeeFirstName +
+                              " " +
+                              employee.employeeLastName}{" "}
+                          </td>
                           <td>{employee.employeeUserName} </td>{" "}
                           <td>{employee.employeePhone}</td>{" "}
                           <td>{employee.roleId}</td>
@@ -177,7 +179,7 @@ class Employees extends Component {
                                     });
                                   }
                                   this.setState({
-                                    show: true,
+                                    show: !this.state.show,
                                     edit: edited,
                                     role: edited.roleId,
                                   });
@@ -192,11 +194,12 @@ class Employees extends Component {
                                 variant="danger"
                                 onClick={() => {
                                   this.setState({
+                                    employeeId: employee.id,
                                     show: false,
                                     showdelete: true,
-                                    employeeId: employee.id,
                                     employeeUserName: employee.employeeUserName,
                                   });
+                                  console.log(this.state.employeeId);
                                 }}
                               >
                                 Delete

@@ -94,15 +94,10 @@ export default class UpdateUser extends Component {
 
   render() {
     // Reterive Username from LocalStorage
-    const currentUser = this.state.currentUser;
+    //const currentUser = this.state.currentUser;
     return (
       <div className="col-md-12">
-        <header className="jumbotron">
-          <h3>
-            <strong>{currentUser.username}</strong> Profile
-          </h3>
-        </header>
-        <div className="card card-container">
+        <div id="cardPassword" className="card card-container">
           <Form>
             <div className="form-group form-styling">
               <label htmlFor="password">Current Password</label>
@@ -147,7 +142,7 @@ export default class UpdateUser extends Component {
             ) : null}
             {this.state.success === false ? (
               <div className="submit-btn">
-                <Button variant="primary" onClick={this.onClickConfirm}>
+                <Button variant="outline-light" onClick={this.onClickConfirm}>
                   Confirm
                 </Button>
               </div>

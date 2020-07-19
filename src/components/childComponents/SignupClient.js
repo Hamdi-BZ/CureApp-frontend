@@ -15,52 +15,75 @@ export default class SignupEmployee extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      employeeFirstName: "",
-      employeeLastName: "",
-      employeeUserName: "",
-      employeeEmail: "",
-      employeePassword: "",
-      employeeconfirmpassword: "",
-      employeePhone: "",
-      employeeBirthdate: "",
-      roleId: 1,
-      employeeProfileImage: "",
+      clientFirstName: "",
+      clientLastName: "",
+      clientUserName: "",
+      clientEmail: "",
+      clientPassword: "",
+      clientconfirmpassword: "",
+      clientPhone: "",
+      clientBirthdate: "",
+      clientAddressCountry: "",
+      clientAddressState: "",
+      clientAddressZip: "",
+      clientAddress: "",
+      roleId: 4,
+      clientProfileImage: "",
     };
   }
   handleChangeFirstname = (event) => {
-    this.setState({ employeeFirstName: event.target.value });
+    this.setState({ clientFirstName: event.target.value });
   };
   handleChangeLastname = (event) => {
-    this.setState({ employeeLastName: event.target.value });
+    this.setState({ clientLastName: event.target.value });
   };
   handleChangeUsername = (event) => {
-    this.setState({ employeeUserName: event.target.value });
+    this.setState({ clientUserName: event.target.value });
   };
   handleChangeEmail = (event) => {
-    this.setState({ employeeEmail: event.target.value });
+    this.setState({ clientEmail: event.target.value });
   };
   handleChangePhone = (event) => {
-    this.setState({ employeePhone: event.target.value });
+    this.setState({ clientPhone: event.target.value });
   };
   handleChangePassword = (event) => {
-    this.setState({ employeePassword: event.target.value });
+    this.setState({ clientPassword: event.target.value });
   };
   handleChangeConfirmPassword = (event) => {
-    this.setState({ employeeconfirmpassword: event.target.value });
+    this.setState({ clientconfirmpassword: event.target.value });
   };
   handleChangeDate = (event) => {
-    this.setState({ employeeBirthdate: event.target.value });
+    this.setState({ clientBirthdate: event.target.value });
   };
   handleChangeRole = (event) => {
     this.setState({ roleId: event.target.value });
   };
   handleChangePic = (event) => {
-    this.setState({ employeeProfileImage: event.target.value });
+    this.setState({ clientProfileImage: event.target.value });
+  };
+  handleChangeCountry = (event) => {
+    this.setState({ clientAddressCountry: event.target.value });
+  };
+  handleChangeState = (event) => {
+    this.setState({ clientAddressState: event.target.value });
+  };
+  handleChangeZip = (event) => {
+    this.setState({ clientAddressZip: event.target.value });
   };
   SubmitHandler = (event) => {
     event.preventDefault();
+    const state = this.state.clientAddressState;
+    const zip = this.state.clientAddressZip;
+    const country = this.state.clientAddressCountry;
+    if (this.state.clientAddress === "") {
+      this.setState({
+        clientAddress: state + "," + country + "," + zip,
+      });
+      console.log(this.state);
+    }
     console.log(this.state);
-    Axios.post("http://localhost:8080/api/employees/", this.state)
+
+    Axios.post("http://localhost:8080/api/clients/", this.state)
       .then((response) => {
         console.log(response.data);
         console.log("//////////////////////////");
@@ -90,7 +113,7 @@ export default class SignupEmployee extends Component {
 
                     <Form.Control
                       placeholder="First name"
-                      value={this.state.employeeFirstName}
+                      value={this.state.clientFirstName}
                       onChange={this.handleChangeFirstname}
                     />
                   </Col>
@@ -99,7 +122,7 @@ export default class SignupEmployee extends Component {
 
                     <Form.Control
                       placeholder="Last name"
-                      value={this.state.employeeLastName}
+                      value={this.state.clientLastName}
                       onChange={this.handleChangeLastname}
                     />
                   </Col>
@@ -110,7 +133,7 @@ export default class SignupEmployee extends Component {
                     <Form.Control
                       type="text"
                       placeholder="Enter Username"
-                      value={this.state.employeeUserName}
+                      value={this.state.clientUserName}
                       onChange={this.handleChangeUsername}
                     />
                   </Form.Group>
@@ -121,7 +144,7 @@ export default class SignupEmployee extends Component {
                     <Form.Control
                       type="email"
                       placeholder="Enter email"
-                      value={this.state.employeeEmail}
+                      value={this.state.clientEmail}
                       onChange={this.handleChangeEmail}
                     />
                   </Form.Group>
@@ -135,7 +158,7 @@ export default class SignupEmployee extends Component {
                       <Form.Control
                         type="password"
                         placeholder="Password"
-                        value={this.state.employeePassword}
+                        value={this.state.clientPassword}
                         onChange={this.handleChangePassword}
                       />
                     </Col>
@@ -145,7 +168,7 @@ export default class SignupEmployee extends Component {
                       <Form.Control
                         type="password"
                         placeholder="Confirm Password"
-                        value={this.state.employeeconfirmpassword}
+                        value={this.state.clientconfirmpassword}
                         onChange={this.handleChangeConfirmPassword}
                       />
                     </Col>
@@ -157,7 +180,7 @@ export default class SignupEmployee extends Component {
 
                     <Form.Control
                       placeholder="Phone"
-                      value={this.state.employeePhone}
+                      value={this.state.clientPhone}
                       onChange={this.handleChangePhone}
                     />
                   </Col>
@@ -171,7 +194,7 @@ export default class SignupEmployee extends Component {
                         name="date"
                         id="exampleDate"
                         placeholder="date placeholder"
-                        value={this.state.employeeBirthdate}
+                        value={this.state.clientBirthdate}
                         onChange={this.handleChangeDate}
                       />
                     </FormGroup>
@@ -179,17 +202,34 @@ export default class SignupEmployee extends Component {
                 </Form.Row>
                 <Form.Row>
                   <Form.Group as={Col} controlId="formGridState">
-                    <Form.Label>Role</Form.Label>
+                    <Form.Label>Country</Form.Label>
                     <Form.Control
                       as="select"
-                      defaultValue="Admin"
-                      value={this.state.employeeRole}
-                      onChange={this.handleChangeRole}
+                      defaultValue="Tunisia"
+                      onChange={this.handleChangeCountry}
                     >
-                      <option value="1">Admin</option>
-                      <option value="2">Sales Manager</option>
-                      <option value="3">Content Manager</option>
+                      <option value="Tunisia">Tunisia</option>
+                      <option value="Algeria">Algeria</option>
+                      <option value="Libya">Libya</option>
+                      <option value="Egypt">Egypt</option>
                     </Form.Control>
+                  </Form.Group>
+                  <Form.Group
+                    as={Col}
+                    controlId="formGridCity"
+                    onChange={this.handleChangeState}
+                  >
+                    <Form.Label>City</Form.Label>
+                    <Form.Control />
+                  </Form.Group>
+
+                  <Form.Group
+                    as={Col}
+                    controlId="formGridZip"
+                    onChange={this.handleChangeZip}
+                  >
+                    <Form.Label>Zip</Form.Label>
+                    <Form.Control />
                   </Form.Group>
                 </Form.Row>
                 <Form.Row>
@@ -198,14 +238,14 @@ export default class SignupEmployee extends Component {
                       Profile Picture
                     </Form.File.Label>
                     <Form.File.Input
-                      value={this.state.employeeProfileImage}
+                      value={this.state.clientProfileImage}
                       onChange={this.handleChangePic}
                     />
                   </Form.File>
                 </Form.Row>
                 <Button
                   className="formcheck-fixbtn"
-                  variant="primary"
+                  variant="outline-light"
                   type="submit"
                   onClick={this.SubmitHandler}
                 >
@@ -219,3 +259,5 @@ export default class SignupEmployee extends Component {
     );
   }
 }
+// Note:
+// Address still not fixed
