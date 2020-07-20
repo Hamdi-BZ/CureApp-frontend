@@ -3,10 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChartPie,
   faUser,
-  faBook,
-  faUsers,
   faArchive,
-  faCartPlus,
   /*faBars,*/
 } from "@fortawesome/free-solid-svg-icons";
 //import Form from "react-bootstrap/Form";
@@ -127,16 +124,6 @@ export default class boardAdmin extends Component {
           >
             <FontAwesomeIcon icon={faArchive} />
             My Orders
-          </div>
-          <div
-            onClick={this.productsClick}
-            className={
-              this.state.selected === "products"
-                ? "sidebar-item selected"
-                : "sidebar-item  "
-            }
-          >
-            <FontAwesomeIcon icon={faCartPlus} /> Products
           </div>
         </div>
         <div className="right-side">{component}</div>

@@ -702,7 +702,8 @@ label {
   margin-left: 1rem;
   font-weight: 500;
 }
-#product-add-btn {
+#product-add-btn,
+#product-add-btn-2 {
   color: #25a042;
   font-size: 35px;
   float: right;
@@ -744,4 +745,8 @@ label {
 }
 .float-right-btn {
   float: right;
+}
+#product-add-btn-2 {
+  font-size: 25px;
+  margin-left: 1rem;
 }
