@@ -7,6 +7,7 @@ import {
   faUsers,
   faArchive,
   faCartPlus,
+  faBoxes,
   /*faBars,*/
 } from "@fortawesome/free-solid-svg-icons";
 //import Form from "react-bootstrap/Form";
@@ -18,6 +19,7 @@ import Products from "./childComponents/Products.Manager";
 import Profile from "./profile.component";
 import Content from "./childComponents/Content.Manager";
 import ClientOrders from "./childComponents/ClientOrders";
+import Stock from "./childComponents/Stock.manager";
 //-----------------
 export default class boardAdmin extends Component {
   constructor(props) {
@@ -66,6 +68,13 @@ export default class boardAdmin extends Component {
       selected: "products",
     });
   };
+  stockClick = () => {
+    localStorage.setItem("selected", this.state.selected);
+
+    this.setState({
+      selected: "stock",
+    });
+  };
   contentClick = () => {
     localStorage.setItem("selected", this.state.selected);
 
@@ -88,6 +97,8 @@ export default class boardAdmin extends Component {
       component = <Profile />;
     } else if (selected === "orders") {
       component = <ClientOrders />;
+    } else if (selected === "stock") {
+      component = <Stock />;
     } else {
       component = <Content />;
     }
@@ -126,6 +137,16 @@ export default class boardAdmin extends Component {
             }
           >
             <FontAwesomeIcon icon={faCartPlus} /> Products
+          </div>
+          <div
+            onClick={this.stockClick}
+            className={
+              this.state.selected === "stock"
+                ? "sidebar-item selected"
+                : "sidebar-item  "
+            }
+          >
+            <FontAwesomeIcon icon={faBoxes} /> Stock
           </div>
           <div
             onClick={this.employeesClick}
