@@ -29,6 +29,7 @@ import EditEmployee from "./components/childComponents/Edit.Employee";
 import SignupEmployee from "./components/childComponents/SignupEmployee";
 import SignupClient from "./components/childComponents/SignupClient";
 import ProfileManager from "./components/childComponents/Profile.Manager";
+import SuperHero from "./components/childComponents/SuperHero.form";
 //---------------------------------------------------------------------
 class App extends Component {
   constructor(props) {
@@ -186,6 +187,7 @@ class App extends Component {
               <Route path="/mod" component={BoardModerator} />
               <Route path="/admin" component={BoardAdmin} />
               <Route path="/ordersmanager" component={Orders} />
+              <Route path="/addproducts" component={SuperHero} />
               <Route path="/contentmanager" component={Content} />
               <Route exact path="/cart" component={Cart} />
               <Route

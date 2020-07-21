@@ -29,8 +29,12 @@ export default class Products extends Component {
       productTitle: "",
       productDescription: "",
       productPrice: "",
+      productSize: "",
+      productColor: "",
       productQuantity: "",
       editId: "",
+      Quantity: "",
+      category: "",
     };
   }
   //******************************
@@ -41,6 +45,7 @@ export default class Products extends Component {
           references: Response.data,
           products: Response.data,
         });
+        console.log(this.state.references);
       })
       .catch((err) => {
         console.log(err);
@@ -66,19 +71,31 @@ export default class Products extends Component {
       productPrice: this.state.productPrice,
       productImg: this.state.productImg,
       productQuantity: this.state.productQuantity,
+      productSize: this.state.productSize,
+      productColor: this.state.productColor,
     };
     console.log(product);
 
-    Axios.post("http://localhost:8080/api/products/", product)
+    /*Axios.post("http://localhost:8080/api/products/", product)
       .then((response) => {
         console.log(response.data);
         console.log("//////////////////////////");
         alert("product add to database with success");
+        window.location.reload(true);
       })
       .catch((err) => {
         alert("something went wrong !");
         console.log(err);
-      });
+      });*/
+    this.setState({
+      productReference: "",
+      productCategory: "",
+      productTitle: "",
+      productDescription: "",
+      productImg: "",
+      productPrice: "",
+      editShow: false,
+    });
   };
   //------- Update & Edit Handler
   EditProductHandler = () => {
@@ -89,6 +106,7 @@ export default class Products extends Component {
       productImg: this.state.productImg,
     };
     console.log(product);
+    let verify;
     Axios.put(`http://localhost:8080/api/products/${this.state.editId}`, {
       productTitle: this.state.productTitle,
       productDescription: this.state.productDescription,
@@ -96,13 +114,44 @@ export default class Products extends Component {
       productImg: this.state.productImg,
     })
       .then((response) => {
-        console.log(response.data);
+        console.log(response);
+        verify = response.status;
+        if (verify === 200) {
+          this.setState({
+            productReference: "",
+            productCategory: "",
+            productTitle: "",
+            productDescription: "",
+            productImg: "",
+            productPrice: "",
+            editShow: false,
+          });
+          alert("Updated Successfully");
+          window.location.reload(true);
+        } else {
+          alert("Couldn't Update this Product");
+        }
       })
       .catch((err) => {
         console.log(err);
       });
   };
+  //---------Delete Products-----
+  deleteClick = () => {
+    let Quantity = this.state.Quantity;
+    Axios.delete(
+      `http://localhost:8080/api/products/${this.state.editId}/${this.state.Quantity}`
+    );
+    this.setState({
+      deleteShow: false,
+      qteDelete: "all",
+    });
+    //window.location.reload();
+  };
   //-----------------------------
+  categoryOnChangeHandler = (event) => {
+    this.setState({ category: event.target.value });
+  };
   productReferenceHandler = (event) => {
     this.setState({ productReference: event.target.value });
   };
@@ -122,11 +171,22 @@ export default class Products extends Component {
   productQuantityHandler = (event) => {
     this.setState({ productQuantity: event.target.value });
   };
+  QteDeleteHandler = (event) => {
+    this.setState({ Quantity: event.target.value });
+  };
   productImgHandler = (event) => {
     this.setState({ productImg: event.target.value });
   };
+  sizeOnChangeHandler = (event) => {
+    this.setState({ productSize: event.target.value });
+  };
+  productColorHandler = (event) => {
+    this.setState({ productColor: event.target.value });
+  };
   render() {
     const references = this.state.references;
+    const products = this.state.products;
+    const state = this.state;
     return (
       <div>
         <Container>
@@ -153,7 +213,7 @@ export default class Products extends Component {
           </Row>
           <Row>
             <Col className="products-manager">
-              <Card className="product-manager-card" style={{ width: "20rem" }}>
+              {/*<Card className="product-manager-card" style={{ width: "20rem" }}>
                 <Card.Img
                   id="product-img-card"
                   variant="top"
@@ -161,6 +221,7 @@ export default class Products extends Component {
                 />
                 <Card.Body>
                   <Card.Title>Wrist Cover</Card.Title>
+
                   <Card.Text>
                     Some quick example text to build on the card title and make
                     up the bulk of the card's content.
@@ -198,7 +259,7 @@ export default class Products extends Component {
                 <Card.Img
                   id="product-img-card"
                   variant="top"
-                  src={`${process.env.PUBLIC_URL}/assets/wristcover/openbionics2.png`}
+                  src={`${process.env.PUBLIC_URL}/assets/wristcover/openbionics.png`}
                 />
                 <Card.Body>
                   <Card.Title>Wrist Cover</Card.Title>
@@ -206,6 +267,7 @@ export default class Products extends Component {
                     Some quick example text to build on the card title and make
                     up the bulk of the card's content.
                   </Card.Text>
+
                   <Card.Text className="product-details">
                     Price : 500$
                   </Card.Text>
@@ -218,55 +280,371 @@ export default class Products extends Component {
                       this.setState({
                         editShow: !this.state.editShow,
                         addShow: false,
-                        editId: 2,
+                        editId: 1,
                       });
                     }}
                   >
                     Edit
                   </Button>
-                  <Button className="float-right-btn" variant="outline-danger">
-                    Delete
-                  </Button>
-                </Card.Body>
-              </Card>
-              <Card className="product-manager-card" style={{ width: "20rem" }}>
-                <Card.Img
-                  id="product-img-card"
-                  variant="top"
-                  src={`${process.env.PUBLIC_URL}/assets/wristcover/openbionics3.png`}
-                />
-                <Card.Body>
-                  <Card.Title>Wrist Cover</Card.Title>
-                  <Card.Text>
-                    Some quick example text to build on the card title and make
-                    up the bulk of the card's content.
-                  </Card.Text>
-                  <Card.Text className="product-details">
-                    Price : 500$
-                  </Card.Text>
-                  <Card.Text className="product-details">
-                    Quantity : 35 piece(s)
-                  </Card.Text>
                   <Button
-                    variant="outline-light"
+                    className="float-right-btn"
+                    variant="outline-danger"
                     onClick={() => {
-                      this.setState({
-                        editShow: !this.state.editShow,
-                        addShow: false,
-                      });
+                      this.setState({ deleteShow: !this.state.deleteShow });
                     }}
                   >
-                    Edit
-                  </Button>
-                  <Button className="float-right-btn" variant="outline-danger">
                     Delete
                   </Button>
                 </Card.Body>
-              </Card>
+              </Card>}
+              {/**************Products************************/}
+
+              {products.length
+                ? products.map((prod) => (
+                    <Card
+                      className="product-manager-card"
+                      style={{ width: "20rem" }}
+                    >
+                      <Card.Img
+                        id="product-img-card"
+                        variant="top"
+                        src={`${process.env.PUBLIC_URL}/assets/wristcover/openbionics.png`}
+                      />
+                      <Card.Body>
+                        <Card.Title>{prod.productTitle}</Card.Title>
+                        <Card.Text className="product-details">
+                          <span className={"product-details-titles"}>
+                            Reference :{" "}
+                          </span>
+                          {prod.productReference}
+                        </Card.Text>
+                        <Card.Text className="product-details">
+                          <span className={"product-details-titles"}>
+                            Description :{" "}
+                          </span>
+                          {prod.productDescription}
+                        </Card.Text>
+                        <Card.Text className="product-details">
+                          <span className={"product-details-titles"}>
+                            Price :{" "}
+                          </span>
+                          {prod.productPrice}$
+                        </Card.Text>
+                        <Card.Text className="product-details">
+                          <span className={"product-details-titles"}>
+                            Quantity :{" "}
+                          </span>
+                          {prod.productQuantity} piece(s)
+                        </Card.Text>
+                        <Button
+                          variant="outline-light"
+                          onClick={() => {
+                            this.setState({
+                              editShow: !this.state.editShow,
+                              addShow: false,
+                              editId: prod.id,
+                              productReference: prod.productReference,
+                              productTitle: prod.productTitle,
+                              productCategory: prod.productCategory,
+                              productDescription: prod.productDescription,
+                              productImg: prod.productImg,
+                              productQuantity: prod.productQuantity,
+                            });
+                          }}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          className="float-right-btn"
+                          variant="outline-danger"
+                          onClick={() => {
+                            this.setState({
+                              deleteShow: !this.state.deleteShow,
+                              editId: prod.id,
+                              productReference: prod.productReference,
+                              productTitle: prod.productTitle,
+                              productCategory: prod.productCategory,
+                              productDescription: prod.productDescription,
+                              productImg: prod.productImg,
+                              productQuantity: prod.productQuantity,
+                            });
+                          }}
+                        >
+                          Delete
+                        </Button>
+                      </Card.Body>
+                    </Card>
+                  ))
+                : null}
+
+              {/**************ENd Products***********************/}
             </Col>
           </Row>
           <Row>
             <Col>
+              {/*----------------Add Product-------------------------------*/}
+              <Card
+                className={
+                  this.state.addShow === true
+                    ? "product-manager-card"
+                    : "product-manager-card hide"
+                }
+                style={{ width: "40rem" }}
+              >
+                <Card.Body>
+                  <Card.Title id="product-title">Add Product</Card.Title>
+                  <Form inline className="margin-bottom">
+                    <InputGroup.Text
+                      className="addon3-edit product-add-category border-rad-none"
+                      id="basic-addon3"
+                    >
+                      Category :
+                    </InputGroup.Text>
+                    <Form.Control
+                      as="select"
+                      className="my-1 mr-sm-2 border-rad-none "
+                      id="inlineFormCustomSelectPref-2"
+                      custom
+                      onChange={this.categoryOnChangeHandler}
+                    >
+                      {" "}
+                      <option value={""}>Choose Cover Category ...</option>
+                      <option value={"Superhero"}>Superhero Cover</option>
+                      <option value={"Basic Cover"}>Basic Cover</option>
+                    </Form.Control>
+                  </Form>
+                  {/*------------------SuperHero Cover--------------------------*/}
+                  <div
+                    className={
+                      this.state.category === "Superhero" ? "" : "hide"
+                    }
+                  >
+                    <Form inline className="margin-bottom">
+                      <InputGroup.Text
+                        className="addon3-edit product-add-category border-rad-none"
+                        id="basic-addon3"
+                      >
+                        Type :
+                      </InputGroup.Text>
+                      <Form.Control
+                        as="select"
+                        className="my-1 mr-sm-2 border-rad-none "
+                        custom
+                        onChange={this.productCategoryHandler}
+                      >
+                        {" "}
+                        <option value={""}>Choose Cover Type ...</option>
+                        <option value={"Batman"}>Batman Cover</option>
+                        <option value={"Superman"}>Superman Cover</option>
+                        <option value={"Ironman"}>Ironman Cover</option>
+                        <option value={"League of Legends"}>
+                          League of Legends Cover
+                        </option>
+                      </Form.Control>
+                    </Form>
+                    <Form inline className="margin-bottom">
+                      <InputGroup.Text
+                        className="addon3-edit product-add-category border-rad-none"
+                        id="basic-addon3"
+                      >
+                        Size :
+                      </InputGroup.Text>
+                      <Form.Control
+                        as="select"
+                        className="my-1 mr-sm-2 border-rad-none "
+                        custom
+                        onChange={this.sizeOnChangeHandler}
+                      >
+                        {" "}
+                        <option value={""}>Choose Cover Size ...</option>
+                        <option value={"Small"}>Small Cover</option>
+                        <option value={"Medium"}>Medium Cover</option>
+                        <option value={"Large"}>Large Cover</option>
+                      </Form.Control>
+                    </Form>
+                    <InputGroup className="mb-3 input-groupe-product">
+                      <InputGroup.Append>
+                        <InputGroup.Text
+                          className="addon3-edit"
+                          id="basic-addon3"
+                        >
+                          Price :
+                        </InputGroup.Text>
+                      </InputGroup.Append>
+                      <FormControl
+                        required
+                        onChange={this.productPriceHandler}
+                        aria-label="Amount (to the nearest dollar)"
+                      />
+                      <InputGroup.Append>
+                        <InputGroup.Text className="addon3-edit">
+                          $
+                        </InputGroup.Text>
+                      </InputGroup.Append>
+                    </InputGroup>
+                    <InputGroup className="mb-3 input-groupe-product">
+                      <InputGroup.Append>
+                        <InputGroup.Text
+                          className="addon3-edit"
+                          id="basic-addon3"
+                        >
+                          Quantity :
+                        </InputGroup.Text>
+                      </InputGroup.Append>
+                      <FormControl
+                        required
+                        onChange={this.productQuantityHandler}
+                        aria-label="Amount (to the nearest dollar)"
+                      />
+                    </InputGroup>
+                    <Form.Group>
+                      <Form.File
+                        className="product-add-pic"
+                        required
+                        name="file"
+                        id="validationFormik107"
+                        feedbackTooltip
+                        onChange={this.productImgHandler}
+                      />
+                    </Form.Group>
+                    <Button
+                      className="btn-submit-product"
+                      variant="success"
+                      onClick={this.AddProductHandler}
+                    >
+                      Submit
+                    </Button>
+                  </div>
+                  <div
+                    className={
+                      this.state.category === "Basic Cover" ? "" : "hide"
+                    }
+                  >
+                    <Form inline className="margin-bottom">
+                      <InputGroup.Text
+                        className="addon3-edit product-add-category border-rad-none"
+                        id="basic-addon3"
+                      >
+                        Part :
+                      </InputGroup.Text>
+                      <Form.Control
+                        as="select"
+                        className="my-1 mr-sm-2 border-rad-none "
+                        custom
+                        onChange={this.productCategoryHandler}
+                      >
+                        {" "}
+                        <option value={""}>Choose Cover Type ...</option>
+                        <option value={"Hand Palm"}>Hand Palm Cover</option>
+                        <option value={"Left Cover"}>Left Cover</option>
+                        <option value={"Right Cover"}>Rigth Cover</option>
+                        <option value={"Wrist Cover"}>Wrist Cover</option>
+                      </Form.Control>
+                    </Form>
+                    <Form inline className="margin-bottom">
+                      <InputGroup.Text
+                        className="addon3-edit product-add-category border-rad-none"
+                        id="basic-addon3"
+                      >
+                        Size :
+                      </InputGroup.Text>
+                      <Form.Control
+                        as="select"
+                        className="my-1 mr-sm-2 border-rad-none "
+                        custom
+                        onChange={this.sizeOnChangeHandler}
+                      >
+                        {" "}
+                        <option value={""}>Choose Cover Size ...</option>
+                        <option value={"Small"}>Small Cover</option>
+                        <option value={"Medium"}>Medium Cover</option>
+                        <option value={"Large"}>Large Cover</option>
+                      </Form.Control>
+                    </Form>
+                    <InputGroup className="mb-3 input-groupe-product">
+                      <InputGroup.Append>
+                        <InputGroup.Text
+                          className="addon3-edit"
+                          id="basic-addon3"
+                        >
+                          Color :
+                        </InputGroup.Text>
+                      </InputGroup.Append>
+                      <FormControl
+                        onChange={this.productColorHandler}
+                        aria-label="Amount (to the nearest dollar)"
+                      />
+                    </InputGroup>
+                    <InputGroup className="mb-3 product-add-pic input-groupe-product">
+                      <InputGroup.Append>
+                        <InputGroup.Text
+                          id="basic-addon3  "
+                          className="addon3-edit desc"
+                        >
+                          Description :
+                        </InputGroup.Text>
+                      </InputGroup.Append>
+                      <FormControl
+                        as="textarea"
+                        aria-label="Amount (to the nearest dollar)"
+                        onChange={this.productDescriptionHandler}
+                      />
+                    </InputGroup>
+                    <InputGroup className="mb-3 input-groupe-product">
+                      <InputGroup.Append>
+                        <InputGroup.Text
+                          className="addon3-edit"
+                          id="basic-addon3"
+                        >
+                          Price :
+                        </InputGroup.Text>
+                      </InputGroup.Append>
+                      <FormControl
+                        onChange={this.productPriceHandler}
+                        aria-label="Amount (to the nearest dollar)"
+                      />
+                      <InputGroup.Append>
+                        <InputGroup.Text className="addon3-edit">
+                          $
+                        </InputGroup.Text>
+                      </InputGroup.Append>
+                    </InputGroup>
+
+                    <InputGroup className="mb-3 input-groupe-product">
+                      <InputGroup.Append>
+                        <InputGroup.Text
+                          className="addon3-edit"
+                          id="basic-addon3"
+                        >
+                          Quantity :
+                        </InputGroup.Text>
+                      </InputGroup.Append>
+                      <FormControl
+                        onChange={this.productQuantityHandler}
+                        aria-label="Amount (to the nearest dollar)"
+                      />
+                    </InputGroup>
+                    <Form.Group>
+                      <Form.File
+                        className="product-add-pic"
+                        required
+                        name="file"
+                        id="validationFormik107"
+                        feedbackTooltip
+                        //value={this.state.productImg}
+                        onChange={this.productImgHandler}
+                      />
+                    </Form.Group>
+                    <Button
+                      className="btn-submit-product"
+                      variant="success"
+                      onClick={this.AddProductHandler}
+                    >
+                      Submit
+                    </Button>
+                  </div>
+                </Card.Body>
+              </Card>
               {/*----------------Edit Product-------------------------------*/}
               <Card
                 className={
@@ -283,7 +661,10 @@ export default class Products extends Component {
                 />
                 <FontAwesomeIcon id="imageEdit" icon={faEdit} />
                 <Card.Body>
-                  <Card.Title id="product-title">Wrist Cover</Card.Title>
+                  <Card.Title id="product-title-2">Edit Product</Card.Title>
+                  <Card.Title id="product-title">
+                    {state.productTitle}
+                  </Card.Title>
                   <InputGroup className="mb-3 input-groupe-product">
                     <InputGroup.Append>
                       <InputGroup.Text
@@ -325,9 +706,8 @@ export default class Products extends Component {
                       </InputGroup.Text>
                     </InputGroup.Append>
                     <FormControl
-                      value={this.state.productPrice}
+                      value={state.productPrice}
                       onChange={this.productPriceHandler}
-                      aria-label="Amount (to the nearest dollar)"
                     />
                     <InputGroup.Append>
                       <InputGroup.Text className="addon3-edit">
@@ -339,190 +719,6 @@ export default class Products extends Component {
                     className="btn-submit-product"
                     variant="success"
                     onClick={this.EditProductHandler}
-                  >
-                    Submit
-                  </Button>
-                </Card.Body>
-              </Card>
-              {/*----------------Add Product-------------------------------*/}
-              <Card
-                className={
-                  this.state.addShow === false
-                    ? "product-manager-card hide"
-                    : "product-manager-card"
-                }
-                style={{ width: "40rem" }}
-              >
-                <Card.Body>
-                  <Card.Title id="product-title">Add Product</Card.Title>
-                  <Form inline className="margin-bottom">
-                    <InputGroup.Text
-                      className="addon3-edit product-add-category border-rad-none"
-                      id="basic-addon3"
-                    >
-                      Reference :
-                    </InputGroup.Text>
-                    <Form.Control
-                      as="select"
-                      className="my-1 mr-sm-2 border-rad-none "
-                      id="inlineFormCustomSelectPref-2"
-                      custom
-                      value={this.state.productReference}
-                      onChange={this.productReferenceHandler}
-                    >
-                      {references.length
-                        ? references.map((ref) => (
-                            <option value={ref.productReference}>
-                              {ref.productReference}
-                            </option>
-                          ))
-                        : null}
-                    </Form.Control>
-                    <OverlayTrigger
-                      placement="top"
-                      delay={{ show: 250, hide: 400 }}
-                      overlay={renderTip}
-                    >
-                      <FontAwesomeIcon
-                        id="product-add-btn-2"
-                        onClick={() => {
-                          this.setState({
-                            addRefShow: !this.state.addRefShow,
-                          });
-                        }}
-                        icon={faPlus}
-                      />
-                    </OverlayTrigger>
-                  </Form>
-
-                  {/*--------------Add a REFRENCE----------------*/}
-                  <InputGroup
-                    className={
-                      this.state.addRefShow === false
-                        ? "mb-2 input-groupe-product hide"
-                        : "mb-2 input-groupe-product"
-                    }
-                  >
-                    <InputGroup.Append>
-                      <InputGroup.Text
-                        className="addon3-edit"
-                        id="basic-addon3"
-                      >
-                        New Reference :
-                      </InputGroup.Text>
-                    </InputGroup.Append>
-                    <FormControl
-                      value={this.state.productReference}
-                      onChange={this.productReferenceHandler}
-                    />
-                    <InputGroup.Append>
-                      <Button variant="outline-light">Add</Button>
-                    </InputGroup.Append>
-                  </InputGroup>
-                  {/*--------------------------------------------*/}
-                  <Form inline className="margin-bottom">
-                    <InputGroup.Text
-                      className="addon3-edit product-add-category border-rad-none"
-                      id="basic-addon3"
-                    >
-                      Category :
-                    </InputGroup.Text>
-                    <Form.Control
-                      as="select"
-                      className="my-1 mr-sm-2 border-rad-none "
-                      id="inlineFormCustomSelectPref"
-                      custom
-                      value={this.state.productCategory}
-                      onChange={this.productCategoryHandler}
-                    >
-                      <option value="Wrist Cover">Wrist Cover</option>
-                      <option value="Right Cover">Right Cover</option>
-                      <option value="Left Cover">Left Cover</option>
-                      <option value="Hand Palm">Hand Palm</option>
-                    </Form.Control>
-                  </Form>
-                  <InputGroup className="mb-3 input-groupe-product">
-                    <InputGroup.Append>
-                      <InputGroup.Text
-                        className="addon3-edit"
-                        id="basic-addon3"
-                      >
-                        Title :
-                      </InputGroup.Text>
-                    </InputGroup.Append>
-                    <FormControl
-                      onChange={this.productTitleHandler}
-                      value={this.state.productTitle}
-                      aria-label="Amount (to the nearest dollar)"
-                    />
-                  </InputGroup>
-                  <InputGroup className="mb-3 product-add-pic input-groupe-product">
-                    <InputGroup.Append>
-                      <InputGroup.Text
-                        id="basic-addon3 "
-                        className="addon3-edit"
-                      >
-                        Description :
-                      </InputGroup.Text>
-                    </InputGroup.Append>
-                    <FormControl
-                      as="textarea"
-                      aria-label="Amount (to the nearest dollar)"
-                      value={this.state.productDescription}
-                      onChange={this.productDescriptionHandler}
-                    />
-                  </InputGroup>
-                  <InputGroup className="mb-3 input-groupe-product">
-                    <InputGroup.Append>
-                      <InputGroup.Text
-                        className="addon3-edit"
-                        id="basic-addon3"
-                      >
-                        Price :
-                      </InputGroup.Text>
-                    </InputGroup.Append>
-                    <FormControl
-                      value={this.state.productPrice}
-                      onChange={this.productPriceHandler}
-                      aria-label="Amount (to the nearest dollar)"
-                    />
-                    <InputGroup.Append>
-                      <InputGroup.Text className="addon3-edit">
-                        $
-                      </InputGroup.Text>
-                    </InputGroup.Append>
-                  </InputGroup>
-
-                  <InputGroup className="mb-3 input-groupe-product">
-                    <InputGroup.Append>
-                      <InputGroup.Text
-                        className="addon3-edit"
-                        id="basic-addon3"
-                      >
-                        Quantity :
-                      </InputGroup.Text>
-                    </InputGroup.Append>
-                    <FormControl
-                      value={this.state.productQuantity}
-                      onChange={this.productQuantityHandler}
-                      aria-label="Amount (to the nearest dollar)"
-                    />
-                  </InputGroup>
-                  <Form.Group>
-                    <Form.File
-                      className="product-add-pic"
-                      required
-                      name="file"
-                      id="validationFormik107"
-                      feedbackTooltip
-                      value={this.state.productImg}
-                      onChange={this.productImgHandler}
-                    />
-                  </Form.Group>
-                  <Button
-                    className="btn-submit-product"
-                    variant="success"
-                    onClick={this.AddProductHandler}
                   >
                     Submit
                   </Button>
@@ -545,10 +741,10 @@ export default class Products extends Component {
                 <Card.Body>
                   <Card.Title id="product-title">Wrist Cover</Card.Title>
                   <Card.Text className="product-details">
-                    Reference : #MH52B1
+                    Reference : {state.productReference}
                   </Card.Text>
                   <Card.Text className="product-details">
-                    Available Quantity : 26 piece(s)
+                    Available Quantity : {state.productQuantity} piece(s)
                   </Card.Text>
                   <InputGroup className="mb-3 input-groupe-product">
                     <InputGroup.Append>
@@ -559,9 +755,16 @@ export default class Products extends Component {
                         Quantity :
                       </InputGroup.Text>
                     </InputGroup.Append>
-                    <FormControl aria-label="Amount (to the nearest dollar)" />
+                    <FormControl
+                      value={this.state.Quantity}
+                      onChange={this.QteDeleteHandler}
+                    />
                   </InputGroup>
-                  <Button className="btn-submit-product" variant="success">
+                  <Button
+                    className="btn-submit-product"
+                    variant="success"
+                    onClick={this.deleteClick}
+                  >
                     Delete
                   </Button>
                 </Card.Body>
