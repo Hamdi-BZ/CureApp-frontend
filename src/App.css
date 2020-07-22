@@ -762,3 +762,10 @@ label {
 .desc {
   margin-left: 1%;
 }
+.research-tool {
+  margin-left: 39.5%;
+  margin-bottom: 1rem;
+}
+#col-add-prod {
+  max-width: 10%;
+}
