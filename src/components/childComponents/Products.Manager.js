@@ -2,6 +2,7 @@ import React, { Component } from "react";
 //----- Axios---------
 import Axios from "axios";
 //--------------------
+import { ScrollTo } from "react-scroll-to";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
@@ -37,6 +38,7 @@ export default class Products extends Component {
       Quantity: "",
       category: "",
       search: "",
+      message: "",
     };
   }
   //******************************
@@ -51,10 +53,12 @@ export default class Products extends Component {
         console.log(err);
       });
   };
+  //*****-------------------------
+
   //Add Product --****************
   AddProductHandler = () => {
     var product = {
-      productCategory: this.state.productCategory,
+      productCategory: this.state.category,
       productTitle: this.state.productTitle,
       productDescription: this.state.productDescription,
       productPrice: this.state.productPrice,
@@ -67,17 +71,30 @@ export default class Products extends Component {
     console.log(product);
     var msg;
     Axios.post("http://localhost:8080/api/products/", product)
-      .then((response) => {
-        console.log(response.data);
-        msg = response.message;
-        console.log("//////////////////////////");
-        alert("product add to database with success");
-        window.location.reload(true);
-      })
+      .then(
+        (response) => {
+          console.log(response.data);
+          msg = response.message;
+          console.log("//////////////////////////");
+          alert("product add to database with success");
+          window.location.reload(true);
+        },
+        (error) => {
+          const resMessage =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
+
+          this.setState({
+            message: resMessage,
+          });
+        }
+      )
       .catch((err) => {
-        //alert("something went wrong !");
         console.log(err);
-        alert(msg);
+        alert(this.state.message);
       });
     this.setState({
       productReference: "",
@@ -149,17 +166,20 @@ export default class Products extends Component {
   };
   //-----------------------------
 
-  searchProductCategory = () => {};
+  searchProductCategorySuperHero = () => {
+    Axios.get(`http://localhost:8080/api/products/`)
+      .then((Response) => {
+        this.setState({
+          products: Response.data,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   //-------------------------------
   categoryOnChangeHandler = (event) => {
-    this.setState({
-      category: event.target.value,
-      productCategory: event.target.value,
-    });
-  };
-  productSearchHandler = (event) => {
-    this.setState({ search: event.target.value });
     Axios.get(
       `http://localhost:8080/api/products/category/${this.state.search}`
     )
@@ -171,6 +191,24 @@ export default class Products extends Component {
       .catch((err) => {
         console.log(err);
       });
+  };
+  productSearchHandler = (event) => {
+    this.setState({ search: event.target.value });
+    console.log(this.state.search);
+    Axios.get(
+      `http://localhost:8080/api/products/category/${this.state.search}`
+    )
+      .then((Response) => {
+        this.setState({
+          products: Response.data,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  categoryHandler = (event) => {
+    this.setState({ category: event.target.value });
   };
   productReferenceHandler = (event) => {
     this.setState({ productReference: event.target.value });
@@ -215,7 +253,8 @@ export default class Products extends Component {
         <Container>
           <Row className="justify-content-md-cente">
             <Col>
-              <Form inline className="margin-bottom research-tool">
+              {/*<Form inline className="margin-bottom research-tool">
+                <span>Filter Products </span>
                 <InputGroup.Text
                   className="addon3-edit product-add-category border-rad-none"
                   id="basic-addon3"
@@ -230,39 +269,43 @@ export default class Products extends Component {
                 >
                   {" "}
                   <option value={""}>Choose Cover Size ...</option>
-                  <option value={"superhero"}>Superhero Cover</option>
+                  <option value={"Superhero"}>Superhero Cover</option>
                   <option value={"Basic Cover"}>Basic Cover</option>
                 </Form.Control>
-              </Form>
+              </Form>*}
               <Form className="research-tool" inline>
+                Category :
                 <FormControl
                   type="text"
-                  placeholder="Search"
+                  placeholder="Search Category"
                   className=" mr-sm-1"
+                  onChange={this.productSearchHandler}
                 />
-                <Button type="submit" onClick={this.searchProductCategory}>
-                  Search
-                </Button>
-              </Form>{" "}
+              </Form>{" */}
             </Col>
             <Col id="col-add-prod">
               {/**********************Add Button ------------------*/}
-              <OverlayTrigger
-                placement="top"
-                delay={{ show: 250, hide: 400 }}
-                overlay={renderTooltip}
-              >
-                <FontAwesomeIcon
-                  id="product-add-btn"
-                  onClick={() => {
-                    this.setState({
-                      addShow: !this.state.addShow,
-                      editShow: false,
-                    });
-                  }}
-                  icon={faPlus}
-                />
-              </OverlayTrigger>
+              <ScrollTo>
+                {({ scroll }) => (
+                  <OverlayTrigger
+                    placement="top"
+                    delay={{ show: 250, hide: 400 }}
+                    overlay={renderTooltip}
+                  >
+                    <FontAwesomeIcon
+                      id="product-add-btn"
+                      onClick={() => {
+                        this.setState({
+                          addShow: !this.state.addShow,
+                          editShow: false,
+                        });
+                        scroll({ x: 20, y: 500, smooth: true });
+                      }}
+                      icon={faPlus}
+                    />
+                  </OverlayTrigger>
+                )}
+              </ScrollTo>
             </Col>
           </Row>
           <Row>
@@ -311,25 +354,30 @@ export default class Products extends Component {
                           </span>
                           {prod.productQuantity} piece(s)
                         </Card.Text>
-                        <Button
-                          variant="outline-light"
-                          onClick={() => {
-                            this.setState({
-                              editShow: !this.state.editShow,
-                              addShow: false,
-                              editId: prod.id,
-                              productReference: prod.productReference,
-                              productTitle: prod.productTitle,
-                              productCategory: prod.productCategory,
-                              productDescription: prod.productDescription,
-                              productImgPath: prod.productImgPath,
-                              productQuantity: prod.productQuantity,
-                              productPrice: prod.productPrice,
-                            });
-                          }}
-                        >
-                          Edit
-                        </Button>
+                        <ScrollTo>
+                          {({ scroll }) => (
+                            <Button
+                              variant="outline-light"
+                              onClick={() => {
+                                this.setState({
+                                  editShow: !this.state.editShow,
+                                  addShow: false,
+                                  editId: prod.id,
+                                  productReference: prod.productReference,
+                                  productTitle: prod.productTitle,
+                                  productCategory: prod.productCategory,
+                                  productDescription: prod.productDescription,
+                                  productImgPath: prod.productImgPath,
+                                  productQuantity: prod.productQuantity,
+                                  productPrice: prod.productPrice,
+                                });
+                                scroll({ x: 100, y: 2000, smooth: true });
+                              }}
+                            >
+                              Edit
+                            </Button>
+                          )}
+                        </ScrollTo>
                         <Button
                           className="float-right-btn"
                           variant="outline-danger"
@@ -381,7 +429,7 @@ export default class Products extends Component {
                       className="my-1 mr-sm-2 border-rad-none "
                       id="inlineFormCustomSelectPref-2"
                       custom
-                      onChange={this.categoryOnChangeHandler}
+                      onChange={this.categoryHandler}
                     >
                       {" "}
                       <option value={""}>Choose Cover Category ...</option>
@@ -777,7 +825,10 @@ export default class Products extends Component {
                 <Card.Body>
                   <Card.Title id="product-title">Wrist Cover</Card.Title>
                   <Card.Text className="product-details">
-                    Reference : {state.productReference}
+                    Product Name : {state.productTitle}
+                  </Card.Text>
+                  <Card.Text className="product-details">
+                    Product Type : {state.productType}
                   </Card.Text>
                   <Card.Text className="product-details">
                     Available Quantity : {state.productQuantity} piece(s)

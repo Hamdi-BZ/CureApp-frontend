@@ -138,7 +138,7 @@ class Employees extends Component {
                 <tbody>
                   {posts.length
                     ? posts.map((employee) => (
-                        <tr>
+                        <tr className="table-bg">
                           <td>{employee.id} </td>{" "}
                           <td>
                             {employee.employeeFirstName +
