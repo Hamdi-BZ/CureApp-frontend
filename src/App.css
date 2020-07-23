@@ -241,6 +241,12 @@ label {
 .btn-confirm:hover {
   border: 3px solid rgb(17, 163, 140);
 }
+#border-red {
+  border: 2px solid rgb(245, 53, 53);
+}
+.table-bg {
+  background-color: rgb(236, 234, 234);
+}
 @media (max-width: 1390px) {
   /* CSS that should be displayed if width is equal to or less than 800px goes here */
   .containersize {
@@ -763,7 +769,7 @@ label {
   margin-left: 1%;
 }
 .research-tool {
-  margin-left: 39.5%;
+  margin-left: 20%;
   margin-bottom: 1rem;
 }
 #col-add-prod {

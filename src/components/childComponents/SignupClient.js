@@ -6,6 +6,8 @@ import { Col, Button, Container, Row } from "react-bootstrap/";
 import Jumbotron from "react-bootstrap/Jumbotron";
 //---Component ReactStrap ----
 import { FormGroup, Label, Input } from "reactstrap";
+import Alert from "react-bootstrap/Alert";
+
 //---NPM Packages-------------
 //import "react-phone-number-input/style.css";
 //import PhoneInput from "react-phone-number-input";
@@ -29,6 +31,11 @@ export default class SignupEmployee extends Component {
       clientAddress: "",
       roleId: 4,
       clientProfileImage: "",
+      alertPassword: false,
+      alert: false,
+      passwordLength: false,
+      CpasswordLength: false,
+      message: "",
     };
   }
   handleChangeFirstname = (event) => {
@@ -38,19 +45,27 @@ export default class SignupEmployee extends Component {
     this.setState({ clientLastName: event.target.value });
   };
   handleChangeUsername = (event) => {
-    this.setState({ clientUserName: event.target.value });
+    this.setState({ clientUserName: event.target.value, alert: false });
   };
   handleChangeEmail = (event) => {
-    this.setState({ clientEmail: event.target.value });
+    this.setState({ clientEmail: event.target.value, alert: false });
   };
   handleChangePhone = (event) => {
     this.setState({ clientPhone: event.target.value });
   };
   handleChangePassword = (event) => {
-    this.setState({ clientPassword: event.target.value });
+    this.setState({
+      clientPassword: event.target.value,
+      alertPassword: false,
+      passwordLength: true,
+    });
   };
   handleChangeConfirmPassword = (event) => {
-    this.setState({ clientconfirmpassword: event.target.value });
+    this.setState({
+      clientconfirmpassword: event.target.value,
+      alertPassword: false,
+      CpasswordLength: true,
+    });
   };
   handleChangeDate = (event) => {
     this.setState({ clientBirthdate: event.target.value });
@@ -72,29 +87,62 @@ export default class SignupEmployee extends Component {
   };
   SubmitHandler = (event) => {
     event.preventDefault();
-    const state = this.state.clientAddressState;
-    const zip = this.state.clientAddressZip;
-    const country = this.state.clientAddressCountry;
-    if (this.state.clientAddress === "") {
+    if (this.state.clientPassword.length < 6) {
       this.setState({
-        clientAddress: state + "," + country + "," + zip,
+        alert: true,
+        message: "password should be between 6-20",
       });
+    } else if (this.state.clientPassword.length > 20) {
+      this.setState({
+        alert: true,
+        message: "password should be between 6-20",
+      });
+    } else if (this.state.clientPassword === this.state.clientconfirmpassword) {
+      const state = this.state.clientAddressState;
+      const zip = this.state.clientAddressZip;
+      const country = this.state.clientAddressCountry;
+      if (this.state.clientAddress === "") {
+        this.setState({
+          clientAddress: state + "," + country + "," + zip,
+        });
+        console.log(this.state);
+      }
       console.log(this.state);
-    }
-    console.log(this.state);
 
-    Axios.post("http://localhost:8080/api/clients/", this.state)
-      .then((response) => {
-        console.log(response.data);
-        console.log("//////////////////////////");
-        alert("account created with success");
-      })
-      .catch((err) => {
-        alert("something went wrong !");
-        console.log(err);
+      Axios.post("http://localhost:8080/api/clients/", this.state)
+        .then(
+          (response) => {
+            console.log(response);
+            //console.log(response.data);
+            console.log("//////////////////////////");
+            alert("account created with successfully");
+          },
+          (error) => {
+            const resMessage =
+              (error.response &&
+                error.response.data &&
+                error.response.data.message) ||
+              error.message ||
+              error.toString();
+
+            this.setState({
+              alert: true,
+              message: resMessage,
+            });
+          }
+        )
+        .catch((err) => {
+          alert("something went wrong !");
+          console.log(err);
+        });
+    } else {
+      this.setState({
+        alertPassword: true,
       });
+    }
   };
   render() {
+    let message = this.state.message;
     return (
       <Container fluid="md">
         <div id="signup-employee-container">
@@ -149,23 +197,36 @@ export default class SignupEmployee extends Component {
                     />
                   </Form.Group>
                 </Form.Row>
-
                 <Form.Group>
                   <Form.Row>
                     <Col>
                       <Form.Label>Password</Form.Label>
-
                       <Form.Control
+                        id={
+                          this.state.clientPassword.length < 6 &&
+                          this.state.passwordLength === true
+                            ? "border-red"
+                            : ""
+                        }
                         type="password"
                         placeholder="Password"
                         value={this.state.clientPassword}
                         onChange={this.handleChangePassword}
                       />
+                      <Form.Text id="passwordHelpBlock" muted>
+                        Your password must be 6-20 characters long
+                      </Form.Text>
                     </Col>
                     <Col>
                       <Form.Label>Confirm Password</Form.Label>
 
                       <Form.Control
+                        id={
+                          this.state.clientconfirmpassword.length < 6 &&
+                          this.state.CpasswordLength === true
+                            ? "border-red"
+                            : ""
+                        }
                         type="password"
                         placeholder="Confirm Password"
                         value={this.state.clientconfirmpassword}
@@ -243,6 +304,18 @@ export default class SignupEmployee extends Component {
                     />
                   </Form.File>
                 </Form.Row>
+                <Alert
+                  className={this.state.alertPassword === true ? "" : "hide"}
+                  variant={"danger"}
+                >
+                  Passwords Don't match !
+                </Alert>
+                <Alert
+                  className={this.state.alert === true ? "" : "hide"}
+                  variant={"danger"}
+                >
+                  {message}
+                </Alert>
                 <Button
                   className="formcheck-fixbtn"
                   variant="outline-light"
