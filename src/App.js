@@ -31,6 +31,7 @@ import SignupClient from "./components/childComponents/SignupClient";
 import ProfileManager from "./components/childComponents/Profile.Manager";
 import ReactUploadImage from "./components/childComponents/SuperHero.form";
 import Register from "./components/register.component";
+
 //---------------------------------------------------------------------
 class App extends Component {
   constructor(props) {
@@ -191,6 +192,7 @@ class App extends Component {
               <Route path="/upload" component={ReactUploadImage} />
               <Route path="/registerr" component={Register} />
               <Route path="/contentmanager" component={Content} />
+
               <Route exact path="/cart" component={Cart} />
               <Route
                 exact

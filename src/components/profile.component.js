@@ -56,6 +56,7 @@ export default class Profile extends Component {
     }).then((response) => {
       console.log(response.data);
     });
+    window.location.reload(true);
   };
   PhoneOnChangeHandler = (e) => {
     this.setState({
@@ -69,6 +70,7 @@ export default class Profile extends Component {
     }).then((response) => {
       console.log(response.data);
     });
+    window.location.reload(true);
   };
   AddressOnChangeHandler = (e) => {
     this.setState({
