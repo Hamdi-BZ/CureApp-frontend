@@ -775,3 +775,37 @@ label {
 #col-add-prod {
   max-width: 10%;
 }
+/* SuperCArt styling */
+.cart-superhero {
+  display: flex;
+  position: relative;
+  flex-wrap: wrap;
+  background-image: linear-gradient(to top, #1d77d6, #007bff, #007bff, #2e91fb);
+}
+.supercart-img {
+  width: 9rem;
+}
+.super-cart-title {
+  text-align: left;
+  color: #000;
+  font-size: large;
+  font-weight: 600;
+}
+.cart-card-details {
+  margin-top: 3rem;
+}
+.details {
+  text-align: left;
+  color: #f7f7f7;
+  font-size: large;
+}
+.cart-total {
+  padding-left: 3rem;
+}
+.super-cart-btns {
+  margin-left: 1rem;
+}
+.ordered-prod-details {
+  color: #fff;
+  font-size: large;
+}

@@ -74,8 +74,8 @@ export default class Products extends Component {
       .then(
         (response) => {
           console.log(response.data);
+          console.log(msg);
           msg = response.message;
-          console.log("//////////////////////////");
           alert("product add to database with success");
           window.location.reload(true);
         },
@@ -245,7 +245,6 @@ export default class Products extends Component {
     this.setState({ productColor: event.target.value });
   };
   render() {
-    const references = this.state.references;
     const products = this.state.products;
     const state = this.state;
     return (
@@ -868,13 +867,6 @@ function renderTooltip(props) {
   return (
     <Tooltip id="button-tooltip" {...props}>
       Add a new Product
-    </Tooltip>
-  );
-}
-function renderTip(props) {
-  return (
-    <Tooltip id="button-tooltip" {...props}>
-      Add a new Reference
     </Tooltip>
   );
 }

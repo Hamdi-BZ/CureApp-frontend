@@ -38,6 +38,9 @@ export default class SignupEmployee extends Component {
       message: "",
     };
   }
+  //-----Google Signup/Login
+
+  //------------------------
   handleChangeFirstname = (event) => {
     this.setState({ clientFirstName: event.target.value });
   };
