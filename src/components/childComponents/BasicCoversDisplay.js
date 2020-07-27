@@ -8,6 +8,7 @@ import AuthService from "../../services/auth-service";
 //import OrderDataService from "../../services/Order.service";
 //---BootStrap Components --------
 import { Container, Row, Col, Button } from "react-bootstrap";
+import SuperheroCart from "../Superhero.cart";
 //--------------------------------
 export default class CoversDisplay extends Component {
   constructor(props) {
@@ -20,9 +21,21 @@ export default class CoversDisplay extends Component {
       setModalShow: false,
       confirmingChoice: false,
       submitted: false,
+      producttype: props.producttype,
     };
   }
-
+  componentDidMount = () => {
+    Axios.get(`http://localhost:8080/api/products/${this.state.producttype}`)
+      .then((Response) => {
+        this.setState({
+          products: Response.data,
+        });
+        console.log(this.state.products);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   openModal = () => {
     this.setState({ setModalShow: true });
   };
@@ -34,6 +47,7 @@ export default class CoversDisplay extends Component {
     this.setState({
       coverid: id.substring(6, id.length),
     });
+    console.log("+++++" + this.props.products);
   };
   handleLeftSideClick = () => {
     this.setState({
@@ -67,14 +81,20 @@ export default class CoversDisplay extends Component {
         setModalShow: true,
       });
     } else {
-      this.setState({
+      /* this.setState({
         confirmingChoice: true,
       });
-      console.log(JSON.stringify(this.state));
+      console.log(JSON.stringify(this.state));*/
+      var order = {
+        type: this.state.coverid,
+        side: this.state.side,
+        size: this.state.size,
+      };
+      localStorage.setItem("order", JSON.stringify(order));
     }
   };
   // Data Service
-  saveOrder = () => {
+  /*saveOrder = () => {
     const data = {
       userid: this.state.currentUser.id,
       coverid: this.state.coverid,
@@ -91,7 +111,7 @@ export default class CoversDisplay extends Component {
       .catch((err) => {
         console.log(err);
       });
-  };
+  };*/
   //-------------
   render() {
     const customStyles = {
@@ -218,12 +238,14 @@ export default class CoversDisplay extends Component {
               />
               <Row className="justify-content-md-center confirmation">
                 <Col md="auto">
-                  <button
-                    className="btns btn-confirm"
-                    onClick={this.handleConfirmClick}
-                  >
-                    Confirm
-                  </button>
+                  <Link to="/supercart">
+                    <button
+                      className="btns btn-confirm"
+                      onClick={this.handleConfirmClick}
+                    >
+                      Add To Cart
+                    </button>
+                  </Link>
                 </Col>
               </Row>
             </Col>
@@ -267,7 +289,7 @@ export default class CoversDisplay extends Component {
             </div>
           </Modal>
         )}
-        {/*-------------Modal Confirming Choice-----------------*/}
+        {/*-------------Modal Confirming Choice-----------------
         {confirmingChoice && (
           <Modal
             className="modalconfirmingorder"
@@ -307,7 +329,7 @@ export default class CoversDisplay extends Component {
               </div>
             </div>
           </Modal>
-        )}
+        )}*/}
       </div>
     );
   }
