@@ -148,9 +148,8 @@ export default class Products extends Component {
   };
   //---------Delete Products-----
   deleteClick = () => {
-    let Quantity = this.state.Quantity;
     let editId = this.state.editId;
-    Axios.delete(`http://localhost:8080/api/products/${editId}/${Quantity}`)
+    Axios.delete(`http://localhost:8080/api/products/${editId}`)
       .then(() => {
         alert("Product deleted");
       })
@@ -160,7 +159,6 @@ export default class Products extends Component {
       });
     this.setState({
       deleteShow: false,
-      qteDelete: "",
     });
     window.location.reload();
   };
@@ -832,20 +830,7 @@ export default class Products extends Component {
                   <Card.Text className="product-details">
                     Available Quantity : {state.productQuantity} piece(s)
                   </Card.Text>
-                  <InputGroup className="mb-3 input-groupe-product">
-                    <InputGroup.Append>
-                      <InputGroup.Text
-                        className="addon3-edit"
-                        id="basic-addon3"
-                      >
-                        Quantity :
-                      </InputGroup.Text>
-                    </InputGroup.Append>
-                    <FormControl
-                      value={this.state.Quantity}
-                      onChange={this.QteDeleteHandler}
-                    />
-                  </InputGroup>
+
                   <Button
                     className="btn-submit-product"
                     variant="success"

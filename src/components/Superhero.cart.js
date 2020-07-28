@@ -12,7 +12,10 @@ import {
   InputGroup,
   FormControl,
 } from "react-bootstrap";
-//-------------
+// Icons-------------
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
+//---------------------
 export default class SuperheroCart extends Component {
   constructor(props, context) {
     super(props, context);
@@ -79,13 +82,15 @@ export default class SuperheroCart extends Component {
                     />
                   </Col>
                   <Col xs={9}>
+                    <FontAwesomeIcon id="exitIcon" icon={faTimesCircle} />
                     <Card.Body>
                       <Row className="cart-card-details">
                         <Col xs={5}>
                           <Card.Text className="super-cart-title">
                             Details
                           </Card.Text>
-                          <Card.Text className="details">
+                          <hr />
+                          <Card.Text className="details details-title">
                             {title} Cover
                           </Card.Text>
                           <Card.Text className="details">
@@ -101,6 +106,8 @@ export default class SuperheroCart extends Component {
                           <Card.Text className="super-cart-title">
                             Qty
                           </Card.Text>
+                          <hr />
+
                           <InputGroup className="mb-3">
                             <FormControl
                               aria-label="Default"
@@ -113,12 +120,16 @@ export default class SuperheroCart extends Component {
                           <Card.Text className="super-cart-title ">
                             Price
                           </Card.Text>
+                          <hr />
+
                           <Card.Text className="details">{price} $</Card.Text>
                         </Col>
                         <Col xs={3} className="cart-total">
                           <Card.Text className="super-cart-title">
                             Total
                           </Card.Text>
+                          <hr />
+
                           <Card.Text className="details">{total} $</Card.Text>
                         </Col>
                       </Row>

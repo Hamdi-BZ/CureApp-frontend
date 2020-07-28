@@ -796,8 +796,9 @@ label {
 }
 .details {
   text-align: left;
-  color: #f7f7f7;
-  font-size: large;
+  color: #000;
+  font-weight: 400;
+  font-size: 24px;
 }
 .cart-total {
   padding-left: 3rem;
@@ -808,4 +809,19 @@ label {
 .ordered-prod-details {
   color: #fff;
   font-size: large;
+}
+hr {
+  border: 0.5px solid #282c34;
+}
+#exitIcon {
+  float: right;
+  font-size: xx-large;
+  color: #d9534f;
+}
+#exitIcon:hover {
+  color: #df2e27;
+  cursor: pointer;
+}
+.details-title {
+  text-transform: capitalize;
 }

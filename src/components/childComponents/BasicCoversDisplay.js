@@ -81,16 +81,21 @@ export default class CoversDisplay extends Component {
         setModalShow: true,
       });
     } else {
-      /* this.setState({
-        confirmingChoice: true,
-      });
-      console.log(JSON.stringify(this.state));*/
-      var order = {
-        type: this.state.coverid,
+      var cartitem = {
+        productId: this.state.coverid,
+        clientId: this.state.currentUser.id,
         side: this.state.side,
         size: this.state.size,
       };
-      localStorage.setItem("order", JSON.stringify(order));
+      Axios.post(`http://localhost:8080/api/cart/`, cartitem)
+        .then((Response) => {
+          console.log(Response.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+      localStorage.setItem("order", JSON.stringify(cartitem));
     }
   };
   // Data Service
@@ -238,14 +243,12 @@ export default class CoversDisplay extends Component {
               />
               <Row className="justify-content-md-center confirmation">
                 <Col md="auto">
-                  <Link to="/supercart">
-                    <button
-                      className="btns btn-confirm"
-                      onClick={this.handleConfirmClick}
-                    >
-                      Add To Cart
-                    </button>
-                  </Link>
+                  <button
+                    className="btns btn-confirm"
+                    onClick={this.handleConfirmClick}
+                  >
+                    Add To Cart
+                  </button>
                 </Col>
               </Row>
             </Col>
