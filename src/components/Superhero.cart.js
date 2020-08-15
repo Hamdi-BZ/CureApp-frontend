@@ -12,10 +12,7 @@ import {
   InputGroup,
   FormControl,
 } from "react-bootstrap";
-// Icons-------------
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
-//---------------------
+//-------------
 export default class SuperheroCart extends Component {
   constructor(props, context) {
     super(props, context);
@@ -34,10 +31,9 @@ export default class SuperheroCart extends Component {
     };
   }
   componentDidMount = () => {
-    var order = JSON.parse(localStorage.getItem("order"));
-    console.log(order);
+    var order = JSON.parse(this.state.order);
     var check = {
-      type: order.productId,
+      type: order.type,
       //side: order.side,
       size: order.size,
     };
@@ -54,49 +50,17 @@ export default class SuperheroCart extends Component {
         console.log(err);
       });
   };
-  saveCartItemHandler = () => {
-    var prod = localStorage.getItem("order");
-    var item = {
-      clientId: this.state.currentUser.id,
-      productId: prod.productId,
-      quantity: this.state.qty,
-      total: this.state.total,
-      side: prod.side,
-      size: prod.size,
-    };
-    Axios.post(`http://localhost:8080/api/test/cart/`, item)
-      .then((data) => {
-        data.status(200).send("Cart Item added");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
   qtyChangeHandler = (event) => {
     this.setState({
       qty: event.target.value,
     });
-  };
-  cartItemsHandler = () => {
-    var order = JSON.parse(localStorage.getItem("order"));
-
-    Axios.post(`http://localhost:8080/api/products/orders`, order).then(
-      (data) => {
-        data
-          .status(200)
-          .send("Cart Item added")
-          .catch((err) => {
-            data.status(500).send("error");
-          });
-      }
-    );
   };
   render() {
     const price = this.state.price;
     const qty = this.state.qty;
     var total = qty * price;
     var order = JSON.parse(this.state.order);
-    var title = order.productId;
+    var title = order.type;
     var side = order.side;
     var size = order.size;
 
@@ -115,15 +79,13 @@ export default class SuperheroCart extends Component {
                     />
                   </Col>
                   <Col xs={9}>
-                    <FontAwesomeIcon id="exitIcon" icon={faTimesCircle} />
                     <Card.Body>
                       <Row className="cart-card-details">
                         <Col xs={5}>
                           <Card.Text className="super-cart-title">
                             Details
                           </Card.Text>
-                          <hr />
-                          <Card.Text className="details details-title">
+                          <Card.Text className="details">
                             {title} Cover
                           </Card.Text>
                           <Card.Text className="details">
@@ -139,8 +101,6 @@ export default class SuperheroCart extends Component {
                           <Card.Text className="super-cart-title">
                             Qty
                           </Card.Text>
-                          <hr />
-
                           <InputGroup className="mb-3">
                             <FormControl
                               aria-label="Default"
@@ -153,16 +113,12 @@ export default class SuperheroCart extends Component {
                           <Card.Text className="super-cart-title ">
                             Price
                           </Card.Text>
-                          <hr />
-
                           <Card.Text className="details">{price} $</Card.Text>
                         </Col>
                         <Col xs={3} className="cart-total">
                           <Card.Text className="super-cart-title">
                             Total
                           </Card.Text>
-                          <hr />
-
                           <Card.Text className="details">{total} $</Card.Text>
                         </Col>
                       </Row>
@@ -176,11 +132,7 @@ export default class SuperheroCart extends Component {
                 </Col>
                 <Col>
                   <Link to="/shop">
-                    <Button
-                      onClick={this.saveCartItemHandler}
-                      className="super-cart-btns"
-                      variant="success"
-                    >
+                    <Button className="super-cart-btns" variant="success">
                       Continue Shopping
                     </Button>{" "}
                   </Link>
