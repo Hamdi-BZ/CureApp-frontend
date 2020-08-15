@@ -3,6 +3,13 @@ import React, { Component } from "react";
 import CoversDisplay from "./childComponents/BasicCoversDisplay";
 //--------------
 export default class armSecond extends Component {
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
+      try: "try works from parent",
+    };
+  }
+
   render() {
     return (
       <div>
