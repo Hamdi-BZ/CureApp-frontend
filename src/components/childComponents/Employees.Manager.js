@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 //--- Services ----------
 import { Link } from "react-router-dom";
+import AuthService from "../../services/auth-service";
+
 //--- BootStrap Component
 import Table from "react-bootstrap/Table";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Button from "react-bootstrap/Button";
 import { Container, Row, Col } from "react-bootstrap";
 import Card from "react-bootstrap/Card";
@@ -12,17 +13,15 @@ import Form from "react-bootstrap/Form";
 //import EditEmployee from "./Edit.Employee"
 //---------------------
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faEnvelope,
-  faPhone,
-  /*faBars,*/
-} from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope, faPhone } from "@fortawesome/free-solid-svg-icons";
 import Axios from "axios";
+//---Services
 
 class Employees extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      currentUser: AuthService.getCurrentUser(),
       employees: [],
       show: false,
       edit: [],
@@ -109,7 +108,7 @@ class Employees extends Component {
     this.setState({
       showdelete: false,
     });
-    //window.location.reload();
+    window.location.reload();
   };
   render() {
     const employeeUserName = this.state.employeeUserName;
@@ -149,62 +148,66 @@ class Employees extends Component {
                           <td>{employee.employeePhone}</td>{" "}
                           <td>{employee.roleId}</td>
                           <td>
-                            <ButtonGroup className="mb-2">
-                              <Button variant="success">Email</Button>
-                              <Button
-                                variant="info"
-                                onClick={() => {
+                            <Button variant="success">Email</Button>
+                            <Button
+                              variant="info"
+                              onClick={() => {
+                                this.setState({
+                                  roleContentManager: false,
+                                  roleSalesManager: false,
+                                  roleAdmin: false,
+                                  employeeId: employee.id,
+                                  showdelete: false,
+                                });
+                                edited = employee;
+                                console.log(edited);
+                                if (employee.roleId === 1) {
                                   this.setState({
-                                    roleContentManager: false,
-                                    roleSalesManager: false,
-                                    roleAdmin: false,
-                                    employeeId: employee.id,
-                                    showdelete: false,
+                                    roleAdmin: !this.state.roleAdmin,
                                   });
-                                  edited = employee;
-                                  console.log(edited);
-                                  if (employee.roleId === 1) {
-                                    this.setState({
-                                      roleAdmin: !this.state.roleAdmin,
-                                    });
-                                  } else if (employee.roleId === 2) {
-                                    this.setState({
-                                      roleSalesManager: !this.state
-                                        .roleSalesManager,
-                                    });
-                                  } else {
-                                    this.setState({
-                                      roleContentManager: !this.state
-                                        .roleContentManager,
-                                    });
-                                  }
+                                } else if (employee.roleId === 2) {
                                   this.setState({
-                                    show: !this.state.show,
-                                    edit: edited,
-                                    role: edited.roleId,
+                                    roleSalesManager: !this.state
+                                      .roleSalesManager,
                                   });
+                                } else {
+                                  this.setState({
+                                    roleContentManager: !this.state
+                                      .roleContentManager,
+                                  });
+                                }
+                                this.setState({
+                                  show: !this.state.show,
+                                  edit: edited,
+                                  role: edited.roleId,
+                                });
 
-                                  console.log(edited);
-                                  console.log(this.state.role);
-                                }}
-                              >
-                                Edit
-                              </Button>
-                              <Button
-                                variant="danger"
-                                onClick={() => {
-                                  this.setState({
-                                    employeeId: employee.id,
-                                    show: false,
-                                    showdelete: true,
-                                    employeeUserName: employee.employeeUserName,
-                                  });
-                                  console.log(this.state.employeeId);
-                                }}
-                              >
-                                Delete
-                              </Button>
-                            </ButtonGroup>
+                                console.log(edited);
+                                console.log(this.state.role);
+                              }}
+                            >
+                              Edit
+                            </Button>
+
+                            <Button
+                              className={
+                                employee.id === this.state.currentUser.id
+                                  ? "hide"
+                                  : ""
+                              }
+                              variant="danger"
+                              onClick={() => {
+                                this.setState({
+                                  employeeId: employee.id,
+                                  show: false,
+                                  showdelete: true,
+                                  employeeUserName: employee.employeeUserName,
+                                });
+                                console.log(this.state.employeeId);
+                              }}
+                            >
+                              Delete
+                            </Button>
                           </td>{" "}
                         </tr>
                       ))
@@ -234,7 +237,7 @@ class Employees extends Component {
                     <div>
                       <Form.Label>Roles :</Form.Label>
                       <Form.Check
-                        inline
+                        inlines
                         aria-label="Admin"
                         checked={roleAdmin}
                         onClick={this.adminRoleClick}

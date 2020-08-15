@@ -243,12 +243,14 @@ export default class CoversDisplay extends Component {
               />
               <Row className="justify-content-md-center confirmation">
                 <Col md="auto">
-                  <button
-                    className="btns btn-confirm"
-                    onClick={this.handleConfirmClick}
-                  >
-                    Add To Cart
-                  </button>
+                  <Link to="/supercart">
+                    <button
+                      className="btns btn-confirm"
+                      onClick={this.handleConfirmClick}
+                    >
+                      Add To Cart
+                    </button>
+                  </Link>
                 </Col>
               </Row>
             </Col>
