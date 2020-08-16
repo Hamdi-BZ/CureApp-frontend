@@ -81,21 +81,16 @@ export default class CoversDisplay extends Component {
         setModalShow: true,
       });
     } else {
-      var cartitem = {
-        productId: this.state.coverid,
-        clientId: this.state.currentUser.id,
+      /* this.setState({
+        confirmingChoice: true,
+      });
+      console.log(JSON.stringify(this.state));*/
+      var order = {
+        type: this.state.coverid,
         side: this.state.side,
         size: this.state.size,
       };
-      Axios.post(`http://localhost:8080/api/cart/`, cartitem)
-        .then((Response) => {
-          console.log(Response.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-
-      localStorage.setItem("order", JSON.stringify(cartitem));
+      localStorage.setItem("order", JSON.stringify(order));
     }
   };
   // Data Service

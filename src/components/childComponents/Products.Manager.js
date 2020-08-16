@@ -11,11 +11,7 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from "react-bootstrap/FormControl";
-import {
-  faEdit,
-  faPlus,
-  faArrowCircleLeft,
-} from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
@@ -23,16 +19,12 @@ export default class Products extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      typetitle: "",
-      next: false,
       products: [],
       references: [],
       editShow: false,
       addShow: false,
       addRefShow: false,
       deleteShow: false,
-      addCategoryShow: false,
-      addNewTypeShow: false,
       productReference: "",
       productCategory: "",
       productTitle: "",
@@ -44,92 +36,29 @@ export default class Products extends Component {
       productQuantity: "",
       editId: "",
       Quantity: "",
-      category: 1,
+      category: "",
       search: "",
       message: "",
-      newcategory: "",
-      newcategorytitle: "",
-      newtypetitle: "",
-      categorieadded: false,
-      categorieId: "",
-      types: [],
-      Specifiedtypes: [],
-      Alltypes: [],
-      categories: [],
-      supercover: [],
-      basiccovers: [],
-      showSpecialCover: false,
-      title: "Category",
-      typeId: null,
     };
   }
   //******************************
-  getSpecifiedTypes = () => {
-    Axios.get(`http://localhost:8080/api/test/type/${this.state.categorieId}`)
-      .then((Response) => {
-        this.setState({
-          Specifiedtypes: Response.data,
-        });
-        console.log(Response.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-  /*getAllTypes = () => {
-    Axios.get(`http://localhost:8080/api/test/category/types`)
-      .then((Response) => {
-        this.setState({
-          Alltypes: Response.data,
-        });
-        console.log(Response.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };*/
-  getTypesApi = () => {
-    Axios.get(
-      `http://localhost:8080/api/test/category/types/${this.state.category}`
-    )
-      .then((Response) => {
-        this.setState({
-          types: Response.data,
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-  getCategoriesApi = () => {
-    Axios.get(`http://localhost:8080/api/test/category`)
-      .then((Response) => {
-        this.setState({
-          categories: Response.data,
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
   componentDidMount = () => {
-    this.getCategoriesApi();
-    this.getTypesApi();
-    //this.getAllTypes();
     Axios.get(`http://localhost:8080/api/products/`)
       .then((Response) => {
         this.setState({
           products: Response.data,
         });
-        console.log("types here ===>" + Response.data);
       })
       .catch((err) => {
         console.log(err);
       });
   };
   //*****-------------------------
-  SubmitAddProductHandler = () => {
+
+  //Add Product --****************
+  AddProductHandler = () => {
     var product = {
+      productCategory: this.state.category,
       productTitle: this.state.productTitle,
       productDescription: this.state.productDescription,
       productPrice: this.state.productPrice,
@@ -137,7 +66,7 @@ export default class Products extends Component {
       productQuantity: this.state.productQuantity,
       productSize: this.state.productSize,
       productColor: this.state.productColor,
-      typeId: this.state.typeId,
+      productType: this.state.productType,
     };
     console.log(product);
     var msg;
@@ -148,7 +77,7 @@ export default class Products extends Component {
           console.log(msg);
           msg = response.message;
           alert("product add to database with success");
-          //  window.location.reload(true);
+          window.location.reload(true);
         },
         (error) => {
           const resMessage =
@@ -176,29 +105,6 @@ export default class Products extends Component {
       productPrice: "",
       editShow: false,
     });
-  };
-  //Add Product --****************
-  AddProductHandler = () => {
-    if (this.state.typeId !== null) {
-      this.SubmitAddProductHandler();
-    } else {
-      Axios.post(`http://localhost:8080/api/test/category/type`, {
-        title: this.state.newtypetitle,
-        categorieId: this.state.category,
-      })
-        .then((data) => {
-          this.setState({
-            typeId: data.data.id,
-          });
-
-          console.log("created new type");
-          this.SubmitAddProductHandler();
-          //alert("created new type and new product");
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
   };
   //------- Update & Edit Handler
   EditProductHandler = () => {
@@ -242,8 +148,9 @@ export default class Products extends Component {
   };
   //---------Delete Products-----
   deleteClick = () => {
+    let Quantity = this.state.Quantity;
     let editId = this.state.editId;
-    Axios.delete(`http://localhost:8080/api/products/${editId}`)
+    Axios.delete(`http://localhost:8080/api/products/${editId}/${Quantity}`)
       .then(() => {
         alert("Product deleted");
       })
@@ -253,13 +160,13 @@ export default class Products extends Component {
       });
     this.setState({
       deleteShow: false,
+      qteDelete: "",
     });
     window.location.reload();
   };
   //-----------------------------
 
-  //-------------------------------
-  /*searchProductCategorySuperHero = () => {
+  searchProductCategorySuperHero = () => {
     Axios.get(`http://localhost:8080/api/products/`)
       .then((Response) => {
         this.setState({
@@ -269,46 +176,10 @@ export default class Products extends Component {
       .catch((err) => {
         console.log(err);
       });
-  };*/
-  //----------
-  addNewCategoryHandler = (e) => {
-    e.preventDefault();
-    Axios.post(`http://localhost:8080/api/test/category`, {
-      title: this.state.newcategorytitle,
-    })
-      .then((Reponse) => {
-        this.setState({
-          newcategoryId: Reponse.data.id,
-          categorieadded: !this.state.categorieadded,
-        });
-        console.log(this.state.newcategory);
-      })
-      .catch(() => {
-        alert("Couldn't add new Category");
-      });
-    this.setState({
-      addCategoryShow: false,
-    });
-    //window.location.reload(true);
   };
-  //------ Add new Type if there's a new category added
-  addNewType = () => {
-    Axios.post(`http://localhost:8080/api/test/category/type`, {
-      title: this.state.newtypetitle,
-      categorieId: this.state.category,
-    })
-      .then((data) => {
-        this.setState({
-          typeId: data.data.id,
-        });
-        console.log("created new type");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+
   //-------------------------------
-  /*categoryOnChangeHandler = (event) => {
+  categoryOnChangeHandler = (event) => {
     Axios.get(
       `http://localhost:8080/api/products/category/${this.state.search}`
     )
@@ -321,7 +192,7 @@ export default class Products extends Component {
         console.log(err);
       });
   };
-  /*productSearchHandler = (event) => {
+  productSearchHandler = (event) => {
     this.setState({ search: event.target.value });
     console.log(this.state.search);
     Axios.get(
@@ -335,34 +206,9 @@ export default class Products extends Component {
       .catch((err) => {
         console.log(err);
       });
-  };*/
-  //------------------------------------
-  onClickNextHandler = () => {
-    this.setState({
-      next: true,
-      title: "Type",
-    });
-    this.getSpecifiedTypes();
-  };
-  //-----------------------------------
-  newTypeTitleHandler = (event) => {
-    this.setState({ typeTitle: event.target.value });
-  };
-  TypeTitleHandler = (event) => {
-    this.setState({ newtypetitle: event.target.value });
-  };
-  categoryTitleHandler = (event) => {
-    this.setState({ newcategorytitle: event.target.value });
-  };
-  categoryDescriptionHandler = (event) => {
-    this.setState({ typetitle: event.target.value });
   };
   categoryHandler = (event) => {
-    this.setState({
-      category: event.target.value,
-      showSpecialCover: event.target.value,
-    });
-    this.getSpecifiedTypes();
+    this.setState({ category: event.target.value });
   };
   productReferenceHandler = (event) => {
     this.setState({ productReference: event.target.value });
@@ -376,7 +222,6 @@ export default class Products extends Component {
   };
   productTypeHandler = (event) => {
     this.setState({ productType: event.target.value });
-    this.getSpecifiedTypes();
   };
   productDescriptionHandler = (event) => {
     this.setState({ productDescription: event.target.value });
@@ -401,13 +246,42 @@ export default class Products extends Component {
   };
   render() {
     const products = this.state.products;
-    const categories = this.state.categories;
     const state = this.state;
     return (
       <div>
         <Container>
           <Row className="justify-content-md-cente">
-            <Col></Col>
+            <Col>
+              {/*<Form inline className="margin-bottom research-tool">
+                <span>Filter Products </span>
+                <InputGroup.Text
+                  className="addon3-edit product-add-category border-rad-none"
+                  id="basic-addon3"
+                >
+                  Category :
+                </InputGroup.Text>
+                <Form.Control
+                  as="select"
+                  className="my-1 mr-sm-2 border-rad-none "
+                  custom
+                  onChange={this.productSearchHandler}
+                >
+                  {" "}
+                  <option value={""}>Choose Cover Size ...</option>
+                  <option value={"Superhero"}>Superhero Cover</option>
+                  <option value={"Basic Cover"}>Basic Cover</option>
+                </Form.Control>
+              </Form>*}
+              <Form className="research-tool" inline>
+                Category :
+                <FormControl
+                  type="text"
+                  placeholder="Search Category"
+                  className=" mr-sm-1"
+                  onChange={this.productSearchHandler}
+                />
+              </Form>{" */}
+            </Col>
             <Col id="col-add-prod">
               {/**********************Add Button ------------------*/}
               <ScrollTo>
@@ -424,7 +298,6 @@ export default class Products extends Component {
                           addShow: !this.state.addShow,
                           editShow: false,
                         });
-
                         scroll({ x: 20, y: 500, smooth: true });
                       }}
                       icon={faPlus}
@@ -466,7 +339,7 @@ export default class Products extends Component {
                           <span className={"product-details-titles"}>
                             Type :{" "}
                           </span>
-                          {prod.typeId}
+                          {prod.productType}
                         </Card.Text>
                         <Card.Text className="product-details">
                           <span className={"product-details-titles"}>
@@ -534,324 +407,311 @@ export default class Products extends Component {
             <Col>
               {/*----------------Add Product-------------------------------*/}
               <Card
-                className={state.addShow ? "add-product-card" : "hide"}
+                className={
+                  this.state.addShow === true
+                    ? "product-manager-card"
+                    : "product-manager-card hide"
+                }
                 style={{ width: "40rem" }}
               >
-                <Card.Title>Add Product</Card.Title>
-                <Container>
-                  <Row>
-                    <Col xs={10}>
-                      <Form.Label
-                        className={
-                          state.next && state.Specifiedtypes.length
-                            ? ""
-                            : "hide"
-                        }
+                <Card.Body>
+                  <Card.Title id="product-title">Add Product</Card.Title>
+                  <Form inline className="margin-bottom">
+                    <InputGroup.Text
+                      className="addon3-edit product-add-category border-rad-none"
+                      id="basic-addon3"
+                    >
+                      Category :
+                    </InputGroup.Text>
+                    <Form.Control
+                      as="select"
+                      className="my-1 mr-sm-2 border-rad-none "
+                      id="inlineFormCustomSelectPref-2"
+                      custom
+                      onChange={this.categoryHandler}
+                    >
+                      {" "}
+                      <option value={""}>Choose Cover Category ...</option>
+                      <option value={"Superhero"}>Superhero Cover</option>
+                      <option value={"Basic Cover"}>Basic Cover</option>
+                    </Form.Control>
+                  </Form>
+                  {/*------------------SuperHero Cover--------------------------*/}
+                  <div
+                    className={
+                      this.state.category === "Superhero" ? "" : "hide"
+                    }
+                  >
+                    <Form inline className="margin-bottom">
+                      <InputGroup.Text
+                        className="addon3-edit product-add-category border-rad-none"
+                        id="basic-addon3"
                       >
-                        Choose {state.title} :
-                      </Form.Label>
+                        Type :
+                      </InputGroup.Text>
+                      <Form.Control
+                        as="select"
+                        className="my-1 mr-sm-2 border-rad-none "
+                        custom
+                        onChange={this.productTypeHandler}
+                      >
+                        {" "}
+                        <option value={""}>Choose Cover Type ...</option>
+                        <option value={"Batman"}>Batman Cover</option>
+                        <option value={"Superman"}>Superman Cover</option>
+                        <option value={"Ironman"}>Ironman Cover</option>
+                        <option value={"League of Legends"}>
+                          League of Legends Cover
+                        </option>
+                      </Form.Control>
+                    </Form>
+                    <InputGroup className="mb-3 input-groupe-product">
+                      <InputGroup.Append>
+                        <InputGroup.Text
+                          className="addon3-edit"
+                          id="basic-addon3"
+                        >
+                          Product Name :
+                        </InputGroup.Text>
+                      </InputGroup.Append>
+                      <FormControl
+                        required
+                        onChange={this.productTitleHandler}
+                        aria-label="Amount (to the nearest dollar)"
+                      />
+                    </InputGroup>
+                    <InputGroup className="mb-3 product-add-pic input-groupe-product">
+                      <InputGroup.Append>
+                        <InputGroup.Text
+                          id="basic-addon3  "
+                          className="addon3-edit desc"
+                        >
+                          Description :
+                        </InputGroup.Text>
+                      </InputGroup.Append>
+                      <FormControl
+                        as="textarea"
+                        aria-label="Amount (to the nearest dollar)"
+                        onChange={this.productDescriptionHandler}
+                      />
+                    </InputGroup>
+                    <Form inline className="margin-bottom">
+                      <InputGroup.Text
+                        className="addon3-edit product-add-category border-rad-none"
+                        id="basic-addon3"
+                      >
+                        Size :
+                      </InputGroup.Text>
+                      <Form.Control
+                        as="select"
+                        className="my-1 mr-sm-2 border-rad-none "
+                        custom
+                        onChange={this.sizeOnChangeHandler}
+                      >
+                        {" "}
+                        <option value={""}>Choose Cover Size ...</option>
+                        <option value={"Small"}>Small Cover</option>
+                        <option value={"Medium"}>Medium Cover</option>
+                        <option value={"Large"}>Large Cover</option>
+                      </Form.Control>
+                    </Form>
+                    <InputGroup className="mb-3 input-groupe-product">
+                      <InputGroup.Append>
+                        <InputGroup.Text
+                          className="addon3-edit"
+                          id="basic-addon3"
+                        >
+                          Price :
+                        </InputGroup.Text>
+                      </InputGroup.Append>
+                      <FormControl
+                        required
+                        onChange={this.productPriceHandler}
+                        aria-label="Amount (to the nearest dollar)"
+                      />
+                      <InputGroup.Append>
+                        <InputGroup.Text className="addon3-edit">
+                          $
+                        </InputGroup.Text>
+                      </InputGroup.Append>
+                    </InputGroup>
+                    <InputGroup className="mb-3 input-groupe-product">
+                      <InputGroup.Append>
+                        <InputGroup.Text
+                          className="addon3-edit"
+                          id="basic-addon3"
+                        >
+                          Quantity :
+                        </InputGroup.Text>
+                      </InputGroup.Append>
+                      <FormControl
+                        required
+                        onChange={this.productQuantityHandler}
+                        aria-label="Amount (to the nearest dollar)"
+                      />
+                    </InputGroup>
+                    <Form.Group>
+                      <Form.File
+                        className="product-add-pic"
+                        required
+                        name="file"
+                        id="validationFormik107"
+                        feedbackTooltip
+                        onChange={this.productImgHandler}
+                      />
+                    </Form.Group>
+                    <Button
+                      className="btn-submit-product"
+                      variant="success"
+                      onClick={this.AddProductHandler}
+                    >
+                      Submit
+                    </Button>
+                  </div>
+                  <div
+                    className={
+                      this.state.category === "Basic Cover" ? "" : "hide"
+                    }
+                  >
+                    <Form inline className="margin-bottom">
+                      <InputGroup.Text
+                        className="addon3-edit product-add-category border-rad-none"
+                        id="basic-addon3"
+                      >
+                        Part :
+                      </InputGroup.Text>
+                      <Form.Control
+                        as="select"
+                        className="my-1 mr-sm-2 border-rad-none "
+                        custom
+                        onChange={this.productCategoryHandler}
+                      >
+                        {" "}
+                        <option value={""}>Choose Cover Type ...</option>
+                        <option value={"Hand Palm"}>Hand Palm Cover</option>
+                        <option value={"Left Cover"}>Left Cover</option>
+                        <option value={"Right Cover"}>Rigth Cover</option>
+                        <option value={"Wrist Cover"}>Wrist Cover</option>
+                      </Form.Control>
+                    </Form>
+                    <InputGroup className="mb-3 input-groupe-product">
+                      <InputGroup.Append>
+                        <InputGroup.Text
+                          className="addon3-edit"
+                          id="basic-addon3"
+                        >
+                          Product Name :
+                        </InputGroup.Text>
+                      </InputGroup.Append>
+                      <FormControl
+                        required
+                        onChange={this.productTitleHandler}
+                        aria-label="Amount (to the nearest dollar)"
+                      />
+                    </InputGroup>
+                    <Form inline className="margin-bottom">
+                      <InputGroup.Text
+                        className="addon3-edit product-add-category border-rad-none"
+                        id="basic-addon3"
+                      >
+                        Size :
+                      </InputGroup.Text>
+                      <Form.Control
+                        as="select"
+                        className="my-1 mr-sm-2 border-rad-none "
+                        custom
+                        onChange={this.sizeOnChangeHandler}
+                      >
+                        {" "}
+                        <option value={""}>Choose Cover Size ...</option>
+                        <option value={"Small"}>Small Cover</option>
+                        <option value={"Medium"}>Medium Cover</option>
+                        <option value={"Large"}>Large Cover</option>
+                      </Form.Control>
+                    </Form>
+                    <InputGroup className="mb-3 input-groupe-product">
+                      <InputGroup.Append>
+                        <InputGroup.Text
+                          className="addon3-edit"
+                          id="basic-addon3"
+                        >
+                          Color :
+                        </InputGroup.Text>
+                      </InputGroup.Append>
+                      <FormControl
+                        onChange={this.productColorHandler}
+                        aria-label="Amount (to the nearest dollar)"
+                      />
+                    </InputGroup>
+                    <InputGroup className="mb-3 product-add-pic input-groupe-product">
+                      <InputGroup.Append>
+                        <InputGroup.Text
+                          id="basic-addon3  "
+                          className="addon3-edit desc"
+                        >
+                          Description :
+                        </InputGroup.Text>
+                      </InputGroup.Append>
+                      <FormControl
+                        as="textarea"
+                        aria-label="Amount (to the nearest dollar)"
+                        onChange={this.productDescriptionHandler}
+                      />
+                    </InputGroup>
+                    <InputGroup className="mb-3 input-groupe-product">
+                      <InputGroup.Append>
+                        <InputGroup.Text
+                          className="addon3-edit"
+                          id="basic-addon3"
+                        >
+                          Price :
+                        </InputGroup.Text>
+                      </InputGroup.Append>
+                      <FormControl
+                        onChange={this.productPriceHandler}
+                        aria-label="Amount (to the nearest dollar)"
+                      />
+                      <InputGroup.Append>
+                        <InputGroup.Text className="addon3-edit">
+                          $
+                        </InputGroup.Text>
+                      </InputGroup.Append>
+                    </InputGroup>
 
-                      <Form
-                        className={
-                          !state.next ? "category-select form-role" : "hide"
-                        }
-                      >
-                        {categories.length
-                          ? categories.map((categorie) => (
-                              <div>
-                                <Form.Check
-                                  className="category-select"
-                                  inline
-                                  aria-label="Special Cover"
-                                  onClick={() => {
-                                    this.setState({
-                                      categorieId: categorie.id,
-                                    });
-                                  }}
-                                  checked={
-                                    state.categorieId === categorie.id
-                                      ? true
-                                      : false
-                                  }
-                                />
-                                {categorie.title}
-                              </div>
-                            ))
-                          : null}
-                      </Form>
-                      <Form>
-                        <Form.Row
-                          className={
-                            state.addCategoryShow
-                              ? "align-items-center "
-                              : "align-items-center hide"
-                          }
+                    <InputGroup className="mb-3 input-groupe-product">
+                      <InputGroup.Append>
+                        <InputGroup.Text
+                          className="addon3-edit"
+                          id="basic-addon3"
                         >
-                          <Col xs="auto">
-                            <InputGroup className="mb-3 add-category-filed">
-                              <FormControl
-                                onChange={this.categoryTitleHandler}
-                                placeholder="New Category"
-                              />
-                              <InputGroup.Append>
-                                <Button
-                                  onClick={this.addNewCategoryHandler}
-                                  variant="outline-light"
-                                >
-                                  Add
-                                </Button>
-                              </InputGroup.Append>
-                            </InputGroup>
-                          </Col>
-                        </Form.Row>
-                      </Form>
-
-                      <Form
-                        className={
-                          state.next ? "category-select form-role" : "hide"
-                        }
-                      >
-                        {state.Specifiedtypes.length ? (
-                          state.Specifiedtypes.map((type) => (
-                            <div>
-                              <Form.Check
-                                className="category-select"
-                                inline
-                                aria-label="Special Cover"
-                                onClick={() => {
-                                  this.setState({
-                                    newtypetitle: type.title,
-                                    typeId: type.id,
-                                  });
-                                }}
-                                checked={
-                                  state.newtypetitle === type.title
-                                    ? true
-                                    : false
-                                }
-                              />
-                              {type.title}
-                            </div>
-                          ))
-                        ) : (
-                          <InputGroup className="mb-3 input-groupe-product margin-fix-input">
-                            <InputGroup.Append>
-                              <InputGroup.Text
-                                className="addon3-edit"
-                                id="basic-addon3"
-                              >
-                                New Type :
-                              </InputGroup.Text>
-                            </InputGroup.Append>
-                            <FormControl
-                              required
-                              onChange={this.TypeTitleHandler}
-                            />
-                          </InputGroup>
-                        )}
-                      </Form>
-                      <Form>
-                        <Form.Row
-                          className={
-                            state.addNewTypeShow
-                              ? "align-items-center "
-                              : "align-items-center hide"
-                          }
-                        >
-                          <Col xs="auto">
-                            <InputGroup className={"mb-3 add-category-filed"}>
-                              <FormControl
-                                onChange={this.TypeTitleHandler}
-                                placeholder="New Type"
-                              />
-                              <InputGroup.Append>
-                                <Button
-                                  onClick={this.addNewType}
-                                  variant="outline-light"
-                                >
-                                  Add
-                                </Button>
-                              </InputGroup.Append>
-                            </InputGroup>
-                          </Col>
-                        </Form.Row>
-                      </Form>
-                    </Col>
-                    <Col>
-                      <OverlayTrigger
-                        placement="top"
-                        delay={{ show: 250, hide: 400 }}
-                        overlay={renderCategoryTooltip}
-                      >
-                        <FontAwesomeIcon
-                          className={!state.next ? "" : "hide"}
-                          id="category-add-btn"
-                          onClick={() => {
-                            this.setState({
-                              addCategoryShow: !this.state.addCategoryShow,
-                              editShow: false,
-                            });
-                          }}
-                          icon={faPlus}
-                        />
-                      </OverlayTrigger>
-
-                      <OverlayTrigger
-                        placement="top"
-                        delay={{ show: 250, hide: 400 }}
-                        overlay={renderTypeTooltip}
-                      >
-                        <FontAwesomeIcon
-                          className={
-                            state.next && state.Specifiedtypes.length
-                              ? ""
-                              : "hide"
-                          }
-                          id="category-add-btn"
-                          onClick={() => {
-                            this.setState({
-                              addNewTypeShow: !this.state.addNewTypeShow,
-                            });
-                          }}
-                          icon={faPlus}
-                        />
-                      </OverlayTrigger>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col>
-                      <Button
-                        className={!state.next ? "next-btn" : "hide"}
-                        onClick={this.onClickNextHandler}
-                        variant="success"
-                      >
-                        Next
-                      </Button>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col>
-                      <div className={state.next ? "trans-form" : "hide"}>
-                        <InputGroup
-                          className={
-                            "mb-3 input-groupe-product margin-fix-input"
-                          }
-                        >
-                          <InputGroup.Append>
-                            <InputGroup.Text
-                              className="addon3-edit"
-                              id="basic-addon3"
-                            >
-                              Product Name :
-                            </InputGroup.Text>
-                          </InputGroup.Append>
-                          <FormControl
-                            required
-                            onChange={this.productTitleHandler}
-                            aria-label="Amount (to the nearest dollar)"
-                          />
-                        </InputGroup>
-                        <InputGroup className="mb-3 product-add-pic input-groupe-product margin-fix-input">
-                          <InputGroup.Append>
-                            <InputGroup.Text
-                              id="basic-addon3  "
-                              className="addon3-edit desc"
-                            >
-                              Description :
-                            </InputGroup.Text>
-                          </InputGroup.Append>
-                          <FormControl
-                            as="textarea"
-                            aria-label="Amount (to the nearest dollar)"
-                            onChange={this.productDescriptionHandler}
-                          />
-                        </InputGroup>
-                        <Form inline className="margin-bottom">
-                          <InputGroup.Text
-                            className="addon3-edit product-add-category border-rad-none margin-fix-input"
-                            id="basic-addon3"
-                          >
-                            Size :
-                          </InputGroup.Text>
-                          <Form.Control
-                            as="select"
-                            className="my-1 mr-sm-2 border-rad-none "
-                            custom
-                            onChange={this.sizeOnChangeHandler}
-                          >
-                            {" "}
-                            <option value={""}>Choose Cover Size ...</option>
-                            <option value={"Small"}>Small Cover</option>
-                            <option value={"Medium"}>Medium Cover</option>
-                            <option value={"Large"}>Large Cover</option>
-                          </Form.Control>
-                        </Form>
-                        <InputGroup className="mb-3 input-groupe-product margin-fix-input">
-                          <InputGroup.Append>
-                            <InputGroup.Text
-                              className="addon3-edit"
-                              id="basic-addon3"
-                            >
-                              Price :
-                            </InputGroup.Text>
-                          </InputGroup.Append>
-                          <FormControl
-                            required
-                            onChange={this.productPriceHandler}
-                            aria-label="Amount (to the nearest dollar)"
-                          />
-                          <InputGroup.Append>
-                            <InputGroup.Text className="addon3-edit">
-                              $
-                            </InputGroup.Text>
-                          </InputGroup.Append>
-                        </InputGroup>
-                        <InputGroup className="mb-3 input-groupe-product margin-fix-input">
-                          <InputGroup.Append>
-                            <InputGroup.Text
-                              className="addon3-edit"
-                              id="basic-addon3"
-                            >
-                              Quantity :
-                            </InputGroup.Text>
-                          </InputGroup.Append>
-                          <FormControl
-                            required
-                            onChange={this.productQuantityHandler}
-                            aria-label="Amount (to the nearest dollar)"
-                          />
-                        </InputGroup>
-                        <Form.Group>
-                          <Form.File
-                            className="product-add-pic"
-                            required
-                            name="file"
-                            id="validationFormik107"
-                            feedbackTooltip
-                            onChange={this.productImgHandler}
-                          />
-                        </Form.Group>
-                        <FontAwesomeIcon
-                          className={state.next ? "back-btn" : "hide"}
-                          //id="category-add-btn"
-                          onClick={() => {
-                            this.setState({
-                              next: false,
-                            });
-                          }}
-                          icon={faArrowCircleLeft}
-                        />
-                        <Button
-                          className="btn-submit-product"
-                          variant="success"
-                          onClick={this.AddProductHandler}
-                        >
-                          Submit
-                        </Button>
-                      </div>
-                    </Col>
-                  </Row>
-                </Container>
+                          Quantity :
+                        </InputGroup.Text>
+                      </InputGroup.Append>
+                      <FormControl
+                        onChange={this.productQuantityHandler}
+                        aria-label="Amount (to the nearest dollar)"
+                      />
+                    </InputGroup>
+                    <Form.Group>
+                      <Form.File
+                        className="product-add-pic"
+                        required
+                        name="file"
+                        id="validationFormik107"
+                        feedbackTooltip
+                        //value={this.state.productImg}
+                        onChange={this.productImgHandler}
+                      />
+                    </Form.Group>
+                    <Button
+                      className="btn-submit-product"
+                      variant="success"
+                      onClick={this.AddProductHandler}
+                    >
+                      Submit
+                    </Button>
+                  </div>
+                </Card.Body>
               </Card>
               {/*----------------Edit Product-------------------------------*/}
               <Card
@@ -972,7 +832,20 @@ export default class Products extends Component {
                   <Card.Text className="product-details">
                     Available Quantity : {state.productQuantity} piece(s)
                   </Card.Text>
-
+                  <InputGroup className="mb-3 input-groupe-product">
+                    <InputGroup.Append>
+                      <InputGroup.Text
+                        className="addon3-edit"
+                        id="basic-addon3"
+                      >
+                        Quantity :
+                      </InputGroup.Text>
+                    </InputGroup.Append>
+                    <FormControl
+                      value={this.state.Quantity}
+                      onChange={this.QteDeleteHandler}
+                    />
+                  </InputGroup>
                   <Button
                     className="btn-submit-product"
                     variant="success"
@@ -994,21 +867,6 @@ function renderTooltip(props) {
   return (
     <Tooltip id="button-tooltip" {...props}>
       Add a new Product
-    </Tooltip>
-  );
-}
-function renderCategoryTooltip(props) {
-  return (
-    <Tooltip id="button-tooltip" {...props}>
-      Add a new Category
-    </Tooltip>
-  );
-}
-
-function renderTypeTooltip(props) {
-  return (
-    <Tooltip id="button-tooltip" {...props}>
-      Add a new Type
     </Tooltip>
   );
 }
