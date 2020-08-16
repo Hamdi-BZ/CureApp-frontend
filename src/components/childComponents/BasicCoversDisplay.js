@@ -35,6 +35,34 @@ export default class CoversDisplay extends Component {
       .catch((err) => {
         console.log(err);
       });
+
+
+      Axios.get(`http://localhost:8080/api/test/category`)
+      .then((Response) => {
+        let data = Response.data;
+        var i;
+        for (i = 0; i < data.length; i++) {
+          if (data[i].title === "Special Covers") {
+            this.setState({
+              specialEdition: data[i],
+            });
+          }
+        }
+        Axios.get(
+          `http://localhost:8080/api/test/type/${this.state.specialEdition.id}`
+        )
+          .then((response) => {
+            this.setState({
+              specialEdition: response.data,
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
   openModal = () => {
     this.setState({ setModalShow: true });

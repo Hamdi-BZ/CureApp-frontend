@@ -36,6 +36,7 @@ import EmailVerification from "./components/childComponents/EmailVerification";
 import CoversDisplay from "./components/childComponents/BasicCoversDisplay";
 import ShopCategories from "./components/ShopCategories";
 import { Navbar } from "react-bootstrap";
+import OurStory from "./components/OurStory";
 //---------------------------------------------------------------------
 class Header extends Component {
   constructor(props) {
@@ -219,6 +220,7 @@ class Header extends Component {
               />
               <Route exact path={"/signupclient"} component={SignupClient} />
               <Route exact path={"/supercart"} component={SuperheroCart} />
+              <Route exact path={"/ourstroy"} component={OurStory} />
             </div>
           </Switch>
         </div>
