@@ -458,7 +458,7 @@ label {
 .split {
   height: 155%;
   width: 15%;
-  position: absolute;
+  position: fixed;
   z-index: 1;
   top: 3.5rem;
   overflow-x: hidden;
@@ -466,7 +466,7 @@ label {
   color: white;
   align-items: center;
   flex-wrap: wrap;
-  background-image: linear-gradient(to top, #b4cee9, #007bff, #086cd8);
+  background-image: linear-gradient(to bottom, #343a40, #2567ad, #007bff);
 }
 .left {
   left: 0;
@@ -701,7 +701,14 @@ label {
   align-self: center;
 }
 .product-manager-card {
-  background-image: linear-gradient(to top, #1d77d6, #007bff, #007bff, #2e91fb);
+  background-image: linear-gradient(
+    to top,
+    #343a40,
+    #255d99,
+    #1b77d8,
+    #007bff,
+    #2e91fb
+  );
   color: white;
 }
 .product-details {
@@ -1250,4 +1257,13 @@ hr {
 }
 .shop-footer {
   margin-top: 3rem;
+}
+.line-design {
+  width: 100%;
+  height: 0;
+  border-top: 10px solid black;
+  border-left: 700px solid transparent;
+}
+.row-3-ourstory {
+  background-color: #f7f7f7;
 }

@@ -483,7 +483,7 @@ export default class Products extends Component {
                         <ScrollTo>
                           {({ scroll }) => (
                             <Button
-                              variant="outline-light"
+                              variant="primary"
                               onClick={() => {
                                 this.setState({
                                   editShow: !this.state.editShow,
@@ -506,7 +506,7 @@ export default class Products extends Component {
                         </ScrollTo>
                         <Button
                           className="float-right-btn"
-                          variant="outline-danger"
+                          variant="danger"
                           onClick={() => {
                             this.setState({
                               deleteShow: !this.state.deleteShow,

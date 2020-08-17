@@ -37,6 +37,7 @@ import CoversDisplay from "./components/childComponents/BasicCoversDisplay";
 import ShopCategories from "./components/ShopCategories";
 import { Navbar } from "react-bootstrap";
 import OurStory from "./components/OurStory";
+import Arm from "./components/Arm";
 //---------------------------------------------------------------------
 class Header extends Component {
   constructor(props) {
@@ -108,7 +109,16 @@ class Header extends Component {
                   Shop
                 </Link>
               </li>
-
+              <li className="nav-item">
+                <Link to={"/ourstroy"} className="nav-link">
+                  Our Story
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to={"/arm"} className="nav-link">
+                  Super Arm
+                </Link>
+              </li>
               {showModeratorBoard && (
                 <li className="nav-item">
                   <Link to={"/mod"} className="nav-link">
@@ -202,6 +212,7 @@ class Header extends Component {
               <Route path="/upload" component={ReactUploadImage} />
               <Route path="/registerr" component={Register} />
               <Route path="/contentmanager" component={Content} />
+              <Route path="/arm" component={Arm} />
               <Route path="/email" component={EmailVerification} />
 
               <Route exact path="/cart" component={Cart} />
