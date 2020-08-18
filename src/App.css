@@ -643,7 +643,7 @@ label {
 }
 #profileCard,
 #cardPassword {
-  background-image: linear-gradient(to top, #2e46cc, #1d77d6, #007bff, #007bff);
+  background-image: linear-gradient(to bottom, #343a40, #2567ad, #007bff);
 }
 #profileRole,
 #profileEmail,
@@ -687,8 +687,11 @@ label {
   color: white;
 }
 #login-card {
-  background-image: linear-gradient(to top, #2e46cc, #1d77d6, #007bff, #007bff);
+  background-image: linear-gradient(to bottom, #314253, #386faa);
   color: white;
+  margin-top: 3rem;
+  width: 23rem;
+  font-size: 20px;
 }
 /*Product manager component*/
 .products-manager {

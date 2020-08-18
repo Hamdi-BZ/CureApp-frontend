@@ -234,8 +234,8 @@ class Employees extends Component {
                     <FontAwesomeIcon icon={faPhone} /> {edit.employeePhone}
                   </Card.Text>
                   <Form className="form-role">
+                    <Form.Label>Roles :</Form.Label>
                     <div>
-                      <Form.Label>Roles :</Form.Label>
                       <Form.Check
                         inlines
                         aria-label="Admin"
