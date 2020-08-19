@@ -184,7 +184,7 @@ export default class Products extends Component {
     } else {
       Axios.post(`http://localhost:8080/api/test/category/type`, {
         title: this.state.newtypetitle,
-        categorieId: this.state.category,
+        categorieId: this.state.categorieId,
       })
         .then((data) => {
           this.setState({
@@ -295,13 +295,14 @@ export default class Products extends Component {
   addNewType = () => {
     Axios.post(`http://localhost:8080/api/test/category/type`, {
       title: this.state.newtypetitle,
-      categorieId: this.state.category,
+      categorieId: this.state.categorieId,
     })
       .then((data) => {
+        console.log(this.state.category);
+
         this.setState({
           typeId: data.data.id,
         });
-        console.log("created new type");
       })
       .catch((err) => {
         console.log(err);
@@ -342,6 +343,7 @@ export default class Products extends Component {
       next: true,
       title: "Type",
     });
+    console.log(this.state);
     this.getSpecifiedTypes();
   };
   //-----------------------------------
@@ -560,14 +562,14 @@ export default class Products extends Component {
                           ? categories.map((categorie) => (
                               <div>
                                 <Form.Check
-                                  className="category-select"
-                                  inline
-                                  aria-label="Special Cover"
                                   onClick={() => {
                                     this.setState({
                                       categorieId: categorie.id,
                                     });
                                   }}
+                                  className="category-select"
+                                  inline
+                                  aria-label="Special Cover"
                                   checked={
                                     state.categorieId === categorie.id
                                       ? true

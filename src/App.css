@@ -787,10 +787,16 @@ label {
 }
 /* SuperCArt styling */
 .cart-superhero {
+  margin-top: 2rem;
   display: flex;
   position: relative;
   flex-wrap: wrap;
-  background-image: linear-gradient(to top, #1d77d6, #007bff, #007bff, #2e91fb);
+  background-image: linear-gradient(
+    to top,
+    rgb(42, 189, 167),
+    #53dab8,
+    #8fe2cd
+  );
 }
 .supercart-img {
   width: 9rem;

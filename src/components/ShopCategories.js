@@ -1,6 +1,7 @@
 import React, { Component, useState } from "react";
+import { Link } from "react-router-dom";
+
 import Axios from "axios";
-import Carousel from "react-bootstrap/Carousel";
 import Accordion from "react-bootstrap/Accordion";
 import {
   Container,
@@ -20,6 +21,8 @@ export default class ShopCategories extends Component {
       categories: [],
       categoryId: "",
       types: [],
+      products: [],
+      test: "",
     };
   }
   componentDidMount = () => {
@@ -51,9 +54,13 @@ export default class ShopCategories extends Component {
     var item = this.state.categoryId;
     localStorage.setItem("categoryId", item);
   };
+  /*productsHandler = ()=>{
+    Axios.get(`http://localhost:8080/api/products/${}`)
+  }*/
   render() {
     var categories = this.state.categories;
     var types = this.state.types;
+    var products = this.state.products;
     return (
       <div>
         <Image
@@ -169,8 +176,24 @@ export default class ShopCategories extends Component {
                                         card title and make up the bulk of the
                                         card's content.
                                       </Card.Text>
-                                      <Button variant="primary">
-                                        Go somewhere
+                                      <Button
+                                        variant="primary"
+                                        onClick={() => {
+                                          Axios.get(
+                                            `http://localhost:8080/api/products/${type.id}`
+                                          )
+                                            .then((data) => {
+                                              this.setState({
+                                                products: data.data,
+                                              });
+                                              console.log(this.state.products);
+                                            })
+                                            .catch((err) => {
+                                              console.log(err);
+                                            });
+                                        }}
+                                      >
+                                        Explore
                                       </Button>
                                     </Card.Body>
                                   </Card>
@@ -183,6 +206,124 @@ export default class ShopCategories extends Component {
                   : null}
               </Accordion>
             </Col>
+          </Row>
+          <Row
+            style={{
+              marginTop: "2rem",
+              display: "wrap",
+              flexWrap: "wrap",
+              background: "#e9ecef",
+              padding: "1rem",
+            }}
+          >
+            {products.length
+              ? products.map((product) => (
+                  <Col>
+                    <Card
+                      style={{
+                        width: "21rem",
+                        float: "left",
+                      }}
+                    >
+                      <Card.Img
+                        id="product-img-card"
+                        variant="top"
+                        src={`${process.env.PUBLIC_URL}/assets/wristcover/openbionics.png`}
+                      />
+                      <Card.Body>
+                        <Card.Text
+                          style={{
+                            fontSize: "1.5vw",
+                            fontWeight: "400",
+                            color: "#007bff",
+                          }}
+                        >
+                          <span>Product Name : </span> <br />
+                          <span
+                            style={{
+                              color: "#343a40",
+                              marginLeft: "0.5rem",
+                              fontWeight: "500",
+                              textTransform: "capitalize",
+                            }}
+                          >
+                            {" "}
+                            {product.productTitle}
+                          </span>
+                        </Card.Text>
+                        <Card.Text
+                          style={{
+                            fontSize: "1.5vw",
+                            fontWeight: "400",
+                            color: "#007bff",
+                          }}
+                        >
+                          <span>Description : </span>
+                          <br />
+                          <span
+                            style={{
+                              color: "#343a40",
+                              marginLeft: "0.5rem",
+                              fontWeight: "500",
+                              textTransform: "capitalize",
+                            }}
+                          >
+                            {" "}
+                            {product.productDescription}
+                          </span>
+                        </Card.Text>
+
+                        <Card.Text
+                          style={{
+                            fontSize: "1.5vw",
+                            fontWeight: "400",
+                            color: "#007bff",
+                          }}
+                        >
+                          <span>Price : </span>
+                          <br />
+                          <span
+                            style={{
+                              color: "#343a40",
+                              marginLeft: "0.5rem",
+                              fontWeight: "500",
+                              textTransform: "capitalize",
+                            }}
+                          >
+                            {" "}
+                            {product.productPrice}${" "}
+                          </span>
+                        </Card.Text>
+                        <Link to="/shop/display">
+                          <Button
+                            style={{
+                              float: "right",
+                              marginRight: "0.5rem",
+                              marginTop: "1rem",
+                            }}
+                            variant="outline-primary"
+                            onClick={() => {
+                              var prod = {
+                                id: product.id,
+                                title: product.productTitle,
+                                price: product.productPrice,
+                                type: product.typeId,
+                              };
+                              localStorage.setItem(
+                                "product",
+                                JSON.stringify(prod)
+                              );
+                            }}
+                          >
+                            {" "}
+                            Explore
+                          </Button>
+                        </Link>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                ))
+              : null}
           </Row>
         </Container>
         <Container className="shop-footer" fluid>

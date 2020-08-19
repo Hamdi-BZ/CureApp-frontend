@@ -22,10 +22,13 @@ export default class CoversDisplay extends Component {
       confirmingChoice: false,
       submitted: false,
       producttype: props.producttype,
+      product: localStorage.getItem("product"),
+      orderId: "",
     };
   }
   componentDidMount = () => {
-    Axios.get(`http://localhost:8080/api/products/${this.state.producttype}`)
+    //let product= localStorage.getItem("product")
+    /*Axios.get(`http://localhost:8080/api/products/${this.state.producttype}`)
       .then((Response) => {
         this.setState({
           products: Response.data,
@@ -62,7 +65,7 @@ export default class CoversDisplay extends Component {
       })
       .catch((err) => {
         console.log(err);
-      });
+      });*/
   };
   openModal = () => {
     this.setState({ setModalShow: true });
@@ -104,28 +107,51 @@ export default class CoversDisplay extends Component {
   };
 
   handleConfirmClick = () => {
-    if (this.state.currentUser === null) {
-      this.setState({
-        setModalShow: true,
-      });
-    } else {
-      var cartitem = {
-        productId: this.state.coverid,
-        clientId: this.state.currentUser.id,
-        side: this.state.side,
-        size: this.state.size,
+    const product = JSON.parse(this.state.product);
+    const orderStorage = JSON.parse(localStorage.getItem("orderId"));
+    if (!orderStorage) {
+      var order = {
+        clientid: this.state.currentUser.id,
+        total: product.price,
       };
-      Axios.post(`http://localhost:8080/api/cart/`, cartitem)
+      Axios.post(`http://localhost:8080/api/orders/`, order)
         .then((Response) => {
-          console.log(Response.data);
+          let id = Response.data.id;
+          var cartitem = {
+            productId: product.id,
+            clientId: this.state.currentUser.id,
+            productTitle: product.title,
+            productPrice: product.price,
+            productType: product.typeId,
+            side: this.state.side,
+            size: this.state.size,
+            orderId: id,
+          };
+          localStorage.setItem("order", JSON.stringify(cartitem));
+          localStorage.setItem("orderId", JSON.stringify(id));
         })
         .catch((err) => {
           console.log(err);
         });
-
+    } else {
+      var cartitem = {
+        productId: product.id,
+        clientId: this.state.currentUser.id,
+        productTitle: product.title,
+        productPrice: product.price,
+        productType: product.typeId,
+        side: this.state.side,
+        size: this.state.size,
+        orderId: JSON.parse(localStorage.getItem("orderId")),
+      };
       localStorage.setItem("order", JSON.stringify(cartitem));
     }
+
+    // nasn3o fi order jdid .... lazemni nrod hethy te5dem ken wa9t tebda belha9 order jdid mouch kol win ynzel add to cart bch nasna3 wahda jdida
+    // 3ana order id mb3ed na3mloo beha update wa9t el client y3mel checkout
+    // bon courage
   };
+
   // Data Service
   /*saveOrder = () => {
     const data = {
@@ -161,6 +187,7 @@ export default class CoversDisplay extends Component {
     const confirmingChoice = this.state.confirmingChoice;
     const side = this.state.side;
     const size = this.state.size;
+    const product = JSON.parse(this.state.product);
     return (
       <div>
         <img
@@ -171,7 +198,7 @@ export default class CoversDisplay extends Component {
         <Container fluid className="containercustom">
           <Row className="justify-content-md-center ">
             <Col md="auto">
-              <h3 className="title">{this.props.title}</h3>
+              <h3 className="title">{product.title}title</h3>
             </Col>
           </Row>
           <Row className="justify-content-md-center ">
@@ -266,7 +293,7 @@ export default class CoversDisplay extends Component {
             <Col sm={5} className="sideimage">
               <img
                 className="img"
-                src={`${process.env.PUBLIC_URL}${this.props.imgpath}`}
+                src={`${process.env.PUBLIC_URL}/assets/TypesImages/ironman.png`}
                 alt="Ironman Cover"
               />
               <Row className="justify-content-md-center confirmation">

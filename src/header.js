@@ -38,6 +38,7 @@ import ShopCategories from "./components/ShopCategories";
 import { Navbar } from "react-bootstrap";
 import OurStory from "./components/OurStory";
 import Arm from "./components/Arm";
+import tmages from "./components/childComponents/images";
 //---------------------------------------------------------------------
 class Header extends Component {
   constructor(props) {
@@ -232,6 +233,7 @@ class Header extends Component {
               <Route exact path={"/signupclient"} component={SignupClient} />
               <Route exact path={"/supercart"} component={SuperheroCart} />
               <Route exact path={"/ourstroy"} component={OurStory} />
+              <Route exact path={"/images"} component={tmages} />
             </div>
           </Switch>
         </div>
