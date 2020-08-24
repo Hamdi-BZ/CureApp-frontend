@@ -474,8 +474,10 @@ export default class Products extends Component {
                           <span className={"product-details-titles"}>
                             Price :{" "}
                           </span>
-                          {prod.productPrice}$
+                          {prod.productPrice}
+                          <span style={{ fontSize: "10px" }}>TND</span>
                         </Card.Text>
+
                         <Card.Text className="product-details">
                           <span className={"product-details-titles"}>
                             Quantity :{" "}

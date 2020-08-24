@@ -107,45 +107,12 @@ export default class CoversDisplay extends Component {
   };
 
   handleConfirmClick = () => {
+    var countCart = JSON.parse(localStorage.getItem("cart"));
+    var cart = countCart + 1;
+    localStorage.setItem("cart", cart);
+
     const product = JSON.parse(this.state.product);
     const orderStorage = JSON.parse(localStorage.getItem("orderId"));
-    if (!orderStorage) {
-      var order = {
-        clientid: this.state.currentUser.id,
-        total: product.price,
-      };
-      Axios.post(`http://localhost:8080/api/orders/`, order)
-        .then((Response) => {
-          let id = Response.data.id;
-          var cartitem = {
-            productId: product.id,
-            clientId: this.state.currentUser.id,
-            productTitle: product.title,
-            productPrice: product.price,
-            productType: product.typeId,
-            side: this.state.side,
-            size: this.state.size,
-            orderId: id,
-          };
-          localStorage.setItem("order", JSON.stringify(cartitem));
-          localStorage.setItem("orderId", JSON.stringify(id));
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    } else {
-      var cartitem = {
-        productId: product.id,
-        clientId: this.state.currentUser.id,
-        productTitle: product.title,
-        productPrice: product.price,
-        productType: product.typeId,
-        side: this.state.side,
-        size: this.state.size,
-        orderId: JSON.parse(localStorage.getItem("orderId")),
-      };
-      localStorage.setItem("order", JSON.stringify(cartitem));
-    }
 
     // nasn3o fi order jdid .... lazemni nrod hethy te5dem ken wa9t tebda belha9 order jdid mouch kol win ynzel add to cart bch nasna3 wahda jdida
     // 3ana order id mb3ed na3mloo beha update wa9t el client y3mel checkout
@@ -173,6 +140,19 @@ export default class CoversDisplay extends Component {
   };*/
   //-------------
   render() {
+    var cartItems = JSON.parse(localStorage.getItem("cartItems"));
+    cartItems[cartItems.length - 1].side = this.state.side;
+    cartItems[cartItems.length - 1].size = this.state.size;
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+    var count = localStorage.getItem("cart");
+    var cart = {
+      position: "fixed",
+      top: "10%",
+      left: "94%",
+      fontSize: "30px",
+      listStyleType: "none",
+    };
+
     const customStyles = {
       content: {
         top: "50%",
@@ -317,6 +297,14 @@ export default class CoversDisplay extends Component {
               </Link>
             </Col>
           </Row>
+          <li style={cart}>
+            <Link to="/supercart">
+              <i class="fa fa-shopping-cart"></i>
+              <span class="badge badge-warning" id="lblCartCount">
+                {count}
+              </span>
+            </Link>
+          </li>
         </Container>
         {/*---------- Login if Not*/}
         {setModalShow && (

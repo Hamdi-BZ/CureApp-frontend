@@ -462,11 +462,16 @@ label {
   z-index: 1;
   top: 3.5rem;
   overflow-x: hidden;
-  background-color: #007bff;
   color: white;
   align-items: center;
   flex-wrap: wrap;
-  background-image: linear-gradient(to bottom, #343a40, #2567ad, #007bff);
+  background-image: linear-gradient(
+    to bottom,
+    #282c34,
+    rgb(36, 138, 122),
+    #20ac97,
+    #41cab6
+  );
 }
 .left {
   left: 0;
@@ -486,7 +491,7 @@ label {
   padding-right: 10px;
   padding-top: 1rem;
   padding-bottom: 1rem;
-  font-size: large;
+  font-size: 20px;
   cursor: pointer;
 }
 .sidebar-bars {
@@ -497,7 +502,7 @@ label {
 }
 .selected {
   background-color: lavender;
-  color: #007bff;
+  color: black;
 }
 .employees-list {
   width: 70%;
@@ -643,7 +648,29 @@ label {
 }
 #profileCard,
 #cardPassword {
-  background-image: linear-gradient(to bottom, #343a40, #2567ad, #007bff);
+  background-image: linear-gradient(
+    to top,
+    #282c34,
+    rgb(42, 189, 167),
+    #53dab8,
+    #8fe2cd
+  );
+}
+.Overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rebeccapurple;
+}
+.login-background {
+  padding: 0;
+  margin: 0;
+}
+
+.row-login {
+  margin: 0;
 }
 #profileRole,
 #profileEmail,
@@ -687,16 +714,33 @@ label {
   color: white;
 }
 #login-card {
-  background-image: linear-gradient(to bottom, #314253, #386faa);
-  color: white;
+  color: #282c34;
   margin-top: 3rem;
-  width: 23rem;
+  width: 21rem;
   font-size: 20px;
+  background-image: linear-gradient(
+    to top,
+    rgb(42, 189, 167),
+    #53dab8,
+    #8fe2cd
+  );
 }
 /*Product manager component*/
 .products-manager {
   display: flex;
   flex-wrap: wrap;
+}
+.label-warning[href],
+.badge-warning[href] {
+  background-color: #c67605;
+}
+#lblCartCount {
+  font-size: 12px;
+  background: #ff0000;
+  color: #fff;
+  padding: 0 5px;
+  vertical-align: top;
+  margin-left: -11px;
 }
 #product-img-card {
   /*transform: rotate(90deg);*/
@@ -705,18 +749,18 @@ label {
 }
 .product-manager-card {
   background-image: linear-gradient(
-    to top,
-    #343a40,
-    #255d99,
-    #1b77d8,
-    #007bff,
-    #2e91fb
+    to bottom,
+    rgb(42, 189, 167),
+    #53dab8,
+    #8fe2cd
   );
-  color: white;
+  color: black;
+  font-size: 18px;
 }
 .product-details {
   margin-left: 1rem;
-  font-weight: 500;
+  font-weight: 700;
+  font-size: 18px;
 }
 #product-add-btn,
 #product-add-btn-2 {
@@ -791,12 +835,7 @@ label {
   display: flex;
   position: relative;
   flex-wrap: wrap;
-  background-image: linear-gradient(
-    to top,
-    rgb(42, 189, 167),
-    #53dab8,
-    #8fe2cd
-  );
+  background: #fff;
 }
 .supercart-img {
   width: 9rem;
@@ -813,8 +852,8 @@ label {
 .details {
   text-align: left;
   color: #000;
-  font-weight: 400;
-  font-size: 24px;
+  font-weight: 500;
+  font-size: 20px;
 }
 .cart-total {
   padding-left: 3rem;
@@ -823,8 +862,11 @@ label {
   margin-left: 1rem;
 }
 .ordered-prod-details {
-  color: #fff;
-  font-size: large;
+  text-align: left;
+  color: #000;
+  font-weight: 500;
+  font-size: 20px;
+  text-transform: capitalize;
 }
 hr {
   border: 0.5px solid #282c34;
@@ -1275,4 +1317,21 @@ hr {
 }
 .row-3-ourstory {
   background-color: #f7f7f7;
+}
+.Modal {
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  right: 40px;
+  bottom: 40px;
+  background-color: papayawhip;
+}
+
+.Overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rebeccapurple;
 }

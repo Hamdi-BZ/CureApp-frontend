@@ -214,7 +214,6 @@ class Header extends Component {
               <Route path="/registerr" component={Register} />
               <Route path="/contentmanager" component={Content} />
               <Route path="/arm" component={Arm} />
-              <Route path="/email" component={EmailVerification} />
 
               <Route exact path="/cart" component={Cart} />
               <Route

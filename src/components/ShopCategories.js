@@ -1,6 +1,8 @@
 import React, { Component, useState } from "react";
 import { Link } from "react-router-dom";
+//------REDUX
 
+//---------------------------
 import Axios from "axios";
 import Accordion from "react-bootstrap/Accordion";
 import {
@@ -54,10 +56,48 @@ export default class ShopCategories extends Component {
     var item = this.state.categoryId;
     localStorage.setItem("categoryId", item);
   };
-  /*productsHandler = ()=>{
-    Axios.get(`http://localhost:8080/api/products/${}`)
-  }*/
+  cartItemHandler = (product) => {
+    var data = JSON.parse(localStorage.getItem("cartItems"));
+    if (data === null) {
+      var cart = [];
+      var prod = {
+        id: product.id,
+        title: product.productTitle,
+        price: product.productPrice,
+        type: product.typeId,
+      };
+      cart.push(prod);
+      var JSONreadyCart = JSON.stringify(cart);
+      localStorage.setItem("cartItems", JSONreadyCart);
+    } else {
+      var cart = [data];
+      var prod = {
+        id: product.id,
+        title: product.productTitle,
+        price: product.productPrice,
+        type: product.typeId,
+      };
+      cart.push(prod);
+      var JSONreadyCart = JSON.stringify(cart);
+      localStorage.setItem("cartItems", JSONreadyCart);
+    }
+    /* localStorage.setItem(
+      "product",
+      JSON.stringify(prod)
+    );*/
+  };
+
   render() {
+    var count = localStorage.getItem("cart");
+    var cart = {
+      position: "fixed",
+      top: "10%",
+      left: "94%",
+
+      fontSize: "30px",
+      listStyleType: "none",
+    };
+
     var categories = this.state.categories;
     var types = this.state.types;
     var products = this.state.products;
@@ -303,16 +343,52 @@ export default class ShopCategories extends Component {
                             }}
                             variant="outline-primary"
                             onClick={() => {
+                              var data = JSON.parse(
+                                localStorage.getItem("cartItems")
+                              );
+                              var cart = JSON.parse(
+                                localStorage.getItem("cart")
+                              );
                               var prod = {
+                                index: cart,
                                 id: product.id,
                                 title: product.productTitle,
                                 price: product.productPrice,
                                 type: product.typeId,
+                                side: "",
+                                size: "",
+                                qty: 0,
+                                total: 0,
                               };
-                              localStorage.setItem(
-                                "product",
-                                JSON.stringify(prod)
-                              );
+                              var cart = [];
+                              var readyProd = JSON.stringify(prod);
+                              localStorage.setItem("product", readyProd);
+                              if (data === null) {
+                                cart.push(prod);
+                                var JSONreadyCart = JSON.stringify(cart);
+                                localStorage.setItem(
+                                  "cartItems",
+                                  JSONreadyCart
+                                );
+                              } else {
+                                var cartItems = JSON.parse(
+                                  localStorage.getItem("cartItems")
+                                );
+
+                                cartItems[cartItems.length - 1].itemId =
+                                  cartItems[cartItems.length - 1].itemId + 1;
+                                localStorage.setItem(
+                                  "cartItems",
+                                  JSON.stringify(cartItems)
+                                );
+                                cart = data;
+                                cart.push(prod);
+                                var JSONreadyCart = JSON.stringify(cart);
+                                localStorage.setItem(
+                                  "cartItems",
+                                  JSONreadyCart
+                                );
+                              }
                             }}
                           >
                             {" "}
@@ -325,6 +401,14 @@ export default class ShopCategories extends Component {
                 ))
               : null}
           </Row>
+          <li style={cart}>
+            <Link to="/supercart">
+              <i class="fa fa-shopping-cart"></i>
+              <span class="badge badge-warning" id="lblCartCount">
+                {count}
+              </span>
+            </Link>
+          </li>
         </Container>
         <Container className="shop-footer" fluid>
           <Row>
