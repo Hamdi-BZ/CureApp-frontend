@@ -406,7 +406,7 @@ export default class Products extends Component {
     const categories = this.state.categories;
     const state = this.state;
     return (
-      <div>
+      <div style={{ marginTop: "2rem" }}>
         <Container>
           <Row className="justify-content-md-cente">
             <Col></Col>
@@ -440,96 +440,106 @@ export default class Products extends Component {
             <Col className="products-manager">
               {/**************Products************************/}
 
-              {products.length
-                ? products.map((prod) => (
-                    <Card
-                      className="product-manager-card"
-                      style={{ width: "20rem" }}
-                    >
-                      <Card.Img
-                        id="product-img-card"
-                        variant="top"
-                        src={`${process.env.PUBLIC_URL}/assets/wristcover/openbionics.png`}
-                      />
-                      <Card.Body>
-                        <Card.Text className="product-details">
-                          <span className={"product-details-titles"}>
-                            Product Name :{" "}
-                          </span>
-                          {prod.productTitle}
-                        </Card.Text>
-                        <Card.Text className="product-details">
-                          <span className={"product-details-titles"}>
-                            Size :{" "}
-                          </span>
-                          {prod.productSize}
-                        </Card.Text>
-                        <Card.Text className="product-details">
-                          <span className={"product-details-titles"}>
-                            Type :{" "}
-                          </span>
-                          {prod.typeId}
-                        </Card.Text>
-                        <Card.Text className="product-details">
-                          <span className={"product-details-titles"}>
-                            Price :{" "}
-                          </span>
-                          {prod.productPrice}
-                          <span style={{ fontSize: "10px" }}>TND</span>
-                        </Card.Text>
+              {products.length ? (
+                products.map((prod) => (
+                  <Card
+                    className="product-manager-card"
+                    style={{ width: "20rem" }}
+                  >
+                    <Card.Img
+                      id="product-img-card"
+                      variant="top"
+                      src={`${process.env.PUBLIC_URL}/assets/wristcover/openbionics.png`}
+                    />
+                    <Card.Body>
+                      <Card.Text className="product-details">
+                        <span className={"product-details-titles"}>
+                          Product Name :{" "}
+                        </span>
+                        {prod.productTitle}
+                      </Card.Text>
+                      <Card.Text className="product-details">
+                        <span className={"product-details-titles"}>
+                          Size :{" "}
+                        </span>
+                        {prod.productSize}
+                      </Card.Text>
+                      <Card.Text className="product-details">
+                        <span className={"product-details-titles"}>
+                          Type :{" "}
+                        </span>
+                        {prod.typeId}
+                      </Card.Text>
+                      <Card.Text className="product-details">
+                        <span className={"product-details-titles"}>
+                          Price :{" "}
+                        </span>
+                        {prod.productPrice}
+                        <span style={{ fontSize: "10px" }}>TND</span>
+                      </Card.Text>
 
-                        <Card.Text className="product-details">
-                          <span className={"product-details-titles"}>
-                            Quantity :{" "}
-                          </span>
-                          {prod.productQuantity} piece(s)
-                        </Card.Text>
-                        <ScrollTo>
-                          {({ scroll }) => (
-                            <Button
-                              variant="primary"
-                              onClick={() => {
-                                this.setState({
-                                  editShow: !this.state.editShow,
-                                  addShow: false,
-                                  editId: prod.id,
-                                  productReference: prod.productReference,
-                                  productTitle: prod.productTitle,
-                                  productCategory: prod.productCategory,
-                                  productDescription: prod.productDescription,
-                                  productImgPath: prod.productImgPath,
-                                  productQuantity: prod.productQuantity,
-                                  productPrice: prod.productPrice,
-                                });
-                                scroll({ x: 100, y: 2000, smooth: true });
-                              }}
-                            >
-                              Edit
-                            </Button>
-                          )}
-                        </ScrollTo>
-                        <Button
-                          className="float-right-btn"
-                          variant="danger"
-                          onClick={() => {
-                            this.setState({
-                              deleteShow: !this.state.deleteShow,
-                              editId: prod.id,
-                              productReference: prod.productReference,
-                              productTitle: prod.productTitle,
-                              productCategory: prod.productCategory,
-                              productDescription: prod.productDescription,
-                              productImg: prod.productImg,
-                              productQuantity: prod.productQuantity,
-                            });
-                          }}
-                        >
-                          Delete
-                        </Button>
-                      </Card.Body>
-                    </Card>
-                  ))
-                : null}
+                      <Card.Text className="product-details">
+                        <span className={"product-details-titles"}>
+                          Quantity :{" "}
+                        </span>
+                        {prod.productQuantity} piece(s)
+                      </Card.Text>
+                      <ScrollTo>
+                        {({ scroll }) => (
+                          <Button
+                            variant="primary"
+                            onClick={() => {
+                              this.setState({
+                                editShow: !this.state.editShow,
+                                addShow: false,
+                                editId: prod.id,
+                                productReference: prod.productReference,
+                                productTitle: prod.productTitle,
+                                productCategory: prod.productCategory,
+                                productDescription: prod.productDescription,
+                                productImgPath: prod.productImgPath,
+                                productQuantity: prod.productQuantity,
+                                productPrice: prod.productPrice,
+                              });
+                              scroll({ x: 100, y: 2000, smooth: true });
+                            }}
+                          >
+                            Edit
+                          </Button>
+                        )}
+                      </ScrollTo>
+                      <Button
+                        className="float-right-btn"
+                        variant="danger"
+                        onClick={() => {
+                          this.setState({
+                            deleteShow: !this.state.deleteShow,
+                            editId: prod.id,
+                            productReference: prod.productReference,
+                            productTitle: prod.productTitle,
+                            productCategory: prod.productCategory,
+                            productDescription: prod.productDescription,
+                            productImg: prod.productImg,
+                            productQuantity: prod.productQuantity,
+                          });
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    </Card.Body>
+                  </Card>
+                ))
+              ) : (
+                <Row
+                  className="justify-content-center"
+                  style={{ margin: "auto" }}
+                >
+                  <Col md="auto">
+                    {" "}
+                    <h3>There's no products to display please Add products</h3>
+                  </Col>
+                </Row>
+              )}
 
               {/**************ENd Products***********************/}
             </Col>

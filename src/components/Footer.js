@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Newsletter from "./../components/Newsletter";
 import { Container, Row, Col } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -150,13 +151,11 @@ export default class Footer extends Component {
                 </Col>
                 <Col>CONTACT@CUREBIONICS.COM</Col>
               </Row>
-              <Row className="row-footer">
+
+              <Row style={{ marginTop: "2rem" }} className="row-footer">
                 <Col>
-                  <h5>SIGN UP TO OUR NEWSLETTER</h5>{" "}
+                  <Newsletter />{" "}
                 </Col>
-              </Row>
-              <Row className="row-footer">
-                <Col>Newsletter Form here </Col>
               </Row>
             </Col>
             <Col sm={2} style={{ marginLeft: "3rem" }}>

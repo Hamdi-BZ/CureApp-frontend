@@ -119,7 +119,7 @@ class Employees extends Component {
     const edit = this.state.edit;
     let edited = [];
     return (
-      <div className="employees-list">
+      <div style={{ marginTop: "2rem" }} className="employees-list">
         <Container fluid>
           <Row>
             <Col id="table-col">

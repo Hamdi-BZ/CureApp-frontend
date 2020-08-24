@@ -35,10 +35,11 @@ import SuperheroCart from "./components/Superhero.cart";
 import EmailVerification from "./components/childComponents/EmailVerification";
 import CoversDisplay from "./components/childComponents/BasicCoversDisplay";
 import ShopCategories from "./components/ShopCategories";
-import { Navbar } from "react-bootstrap";
+import { Navbar, Button } from "react-bootstrap";
 import OurStory from "./components/OurStory";
 import Arm from "./components/Arm";
 import tmages from "./components/childComponents/images";
+import Newsletter from "./components/Newsletter";
 //---------------------------------------------------------------------
 class Header extends Component {
   constructor(props) {
@@ -186,6 +187,17 @@ class Header extends Component {
                 </li>
               </div>
             )}
+            {showUserBoard && (
+              <li className="nav-item" style={{ listStyleType: "none" }}>
+                <Link
+                  to={"/user"}
+                  className="nav-link"
+                  style={{ padding: "0" }}
+                >
+                  <Button variant="success">Get Your SuperArm</Button>
+                </Link>
+              </li>
+            )}
           </Navbar>
           <Switch>
             <div className="containe">
@@ -233,6 +245,7 @@ class Header extends Component {
               <Route exact path={"/supercart"} component={SuperheroCart} />
               <Route exact path={"/ourstroy"} component={OurStory} />
               <Route exact path={"/images"} component={tmages} />
+              <Route exact path={"/newsletter"} component={Newsletter} />
             </div>
           </Switch>
         </div>

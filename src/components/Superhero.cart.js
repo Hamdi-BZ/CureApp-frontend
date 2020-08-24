@@ -63,7 +63,7 @@ export default class SuperheroCart extends Component {
   };
   //-------------------------------------
   cartsDataHandler = () => {
-    if (this.state.currentUser.id === null) {
+    if (this.state.currentUser === null) {
       alert("login or signup to checkout");
     } else {
       //calcul total produits
@@ -91,7 +91,7 @@ export default class SuperheroCart extends Component {
               side: cartItems[index].side,
               size: cartItems[index].size,
               title: cartItems[index].title,
-              orderid: id,
+              orderId: id,
             };
             //post method in carts table
             Axios.post(`http://localhost:8080/api/cart/`, item)

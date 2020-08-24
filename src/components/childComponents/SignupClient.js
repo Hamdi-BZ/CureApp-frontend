@@ -152,11 +152,12 @@ export default class SignupEmployee extends Component {
           <Row className="justify-content-md-center">
             {" "}
             <Col className="form-col-signup" md="auto" xs={2} lg={6}>
-              <Jumbotron className="jumbotron-signup">
-                <Container>
+              <Row className="justify-content-center">
+                <Col md="auto">
                   <h1>Sign Up</h1>
-                </Container>
-              </Jumbotron>
+                </Col>
+              </Row>
+
               <Form>
                 <Form.Row className="formcheck-margin-fix">
                   <Col>

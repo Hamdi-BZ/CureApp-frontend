@@ -1,7 +1,7 @@
-import React, { Component, useState, ren } from "react";
+import React, { Component } from "react";
 import AuthService from "./../../services/auth-service";
 import Axios from "axios";
-import ReactModal from "react-modal";
+
 //---BootStrap Components
 import Table from "react-bootstrap/Table";
 //-----------------------
@@ -40,20 +40,48 @@ export default class ClientOrders extends Component {
       approved: "",
       showEdit: false,
       status: "",
+      orderID: null,
+      date: "",
+      newStatus: "",
+      show: false,
     };
   }
-
-  componentDidMount() {
-    const userid = this.state.currentUser.id;
-    Axios.get(`http://localhost:8080/api/orders/`)
-      .then((Response) => {
-        this.setState({
-          orders: Response.data,
-        });
-      })
-      .catch((err) => {
-        console.log(err);
+  roleManager = () => {
+    if (this.state.currentUser.roles[0] === "ROLE_USER") {
+      this.setState({
+        show: false,
       });
+    } else {
+      this.setState({
+        show: true,
+      });
+    }
+  };
+  componentDidMount() {
+    this.roleManager();
+    if (!this.state.show) {
+      const userid = this.state.currentUser.id;
+      Axios.get(`http://localhost:8080/api/orders/client/${userid}`)
+        .then((Response) => {
+          this.setState({
+            orders: Response.data,
+            show: false,
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      Axios.get(`http://localhost:8080/api/orders/`)
+        .then((Response) => {
+          this.setState({
+            orders: Response.data,
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   }
   handleClose = () => {
     this.setState({
@@ -66,12 +94,14 @@ export default class ClientOrders extends Component {
     });
   };
   //-----------Edit
-  editClickHandler = (order) => {
-    var id = order.id;
-    Axios.put(`http://localhost:8080/api/orders/${id}`)
+  editClickHandler = (id) => {
+    var order = {
+      status: this.state.status,
+    };
+    Axios.put(`http://localhost:8080/api/orders/${id}`, order)
       .then((Response) => {
-        alert("Status Update");
-        window.location.reload(false);
+        //alert("Status Update");
+        //window.location.reload(false);
       })
       .catch((err) => {
         console.log(err);
@@ -94,12 +124,14 @@ export default class ClientOrders extends Component {
         console.log(err);
       });
   };
+
   //-------------------------
   pendingStatusClick = () => {
     this.setState({
       pending: true,
       approved: false,
       processing: false,
+      status: "Pending",
     });
   };
   ApprovedStatusClick = () => {
@@ -107,6 +139,7 @@ export default class ClientOrders extends Component {
       processing: false,
       pending: false,
       approved: true,
+      status: "Approved",
     });
   };
   processingStatusClick = () => {
@@ -114,6 +147,7 @@ export default class ClientOrders extends Component {
       approved: false,
       pending: false,
       processing: true,
+      status: "Processing",
     });
   };
   //-----------------------
@@ -124,9 +158,10 @@ export default class ClientOrders extends Component {
     var email = this.state.Email;
     var phone = this.state.Phone;
     var name = this.state.FirstName + " " + this.state.LastName;
+    //---------Status
 
     return (
-      <div>
+      <div style={{ marginTop: "2rem" }}>
         <Container fluid>
           <Row>
             <Col>
@@ -163,21 +198,63 @@ export default class ClientOrders extends Component {
                                   this.viewClickHandler(order);
                                 }}
                               >
-                                View
+                                Details
                               </Button>
                               <Button
+                                className={this.state.show ? "" : "hide"}
                                 onClick={() => {
                                   this.setState({
                                     showEdit: true,
                                     status: order.status,
+                                    orderID: order.id,
+                                    date: order.createdAt,
                                   });
                                 }}
                                 variant="success"
                               >
                                 Edit
                               </Button>
-                              <Button variant="primary">Email</Button>
-                              <Button variant="danger">Delete</Button>
+                              <Button
+                                className={this.state.show ? "" : "hide"}
+                                variant="primary"
+                                onClick={() => {
+                                  this.setState({
+                                    Email: order.clientEmail,
+                                    FirstName: order.clientFirstName,
+                                    LastName: order.clientLastName,
+                                    newStatus: order.status,
+                                  });
+                                  var email = this.state.Email;
+                                  var name = this.state.FirstName;
+                                  window.open("mailto:test@example.com");
+                                }}
+                              >
+                                Email
+                              </Button>
+                              <Button
+                                className={this.state.show ? "" : "hide"}
+                                variant="danger"
+                                onClick={() => {
+                                  this.setState({
+                                    orderID: order.id,
+                                    deleteShow: true,
+                                  });
+                                }}
+                              >
+                                Delete
+                              </Button>
+                              <Button
+                                className={this.state.show ? "hide" : ""}
+                                variant="danger"
+                                onClick={() => {
+                                  this.setState({
+                                    orderID: order.id,
+                                    deleteShow: true,
+                                  });
+                                }}
+                              >
+                                Cancel
+                              </Button>
                             </ButtonGroup>
                           </td>
                         </tr>
@@ -187,7 +264,10 @@ export default class ClientOrders extends Component {
               </Table>
             </Col>
             <Col sm={4}>
-              <Card style={{ width: "18rem" }}>
+              <Card
+                className={this.state.showEdit ? "" : "hide"}
+                style={{ width: "18rem" }}
+              >
                 <Row className="justify-content-center">
                   <Col md="auto">
                     <FontAwesomeIcon
@@ -205,18 +285,25 @@ export default class ClientOrders extends Component {
                       marginBottom: "1rem",
                     }}
                   >
+                    Order N° : {this.state.orderID}
+                    <hr />
+                    <span style={{ fontSize: "20px" }}>
+                      Date : {this.state.date.substr(0, 10)}
+                      <br />
+                      Time : {this.state.date.substr(11, 5)}
+                    </span>
+                    <hr />
                     Edit Status
                   </Card.Title>
                   <Row>
-                    <Form style={{ margin: "1rem" }} className="form-role">
+                    <Form
+                      style={{ margin: "1rem", fontSize: "22px" }}
+                      className="form-role"
+                    >
                       <div>
                         <Form.Check
                           checked={this.state.pending}
                           onClick={() => {
-                            this.setState({
-                              status: "Pending",
-                            });
-
                             this.pendingStatusClick();
                           }}
                           value="Pending"
@@ -228,9 +315,6 @@ export default class ClientOrders extends Component {
                         <Form.Check
                           checked={this.state.approved}
                           onClick={() => {
-                            this.setState({
-                              status: "Pending",
-                            });
                             this.ApprovedStatusClick();
                           }}
                           value="Approved"
@@ -242,9 +326,6 @@ export default class ClientOrders extends Component {
                         <Form.Check
                           checked={this.state.processing}
                           onClick={() => {
-                            this.setState({
-                              status: "Pending",
-                            });
                             this.processingStatusClick();
                           }}
                           inline
@@ -254,7 +335,26 @@ export default class ClientOrders extends Component {
                       </div>
                     </Form>
                   </Row>
-                  <Button style={{ float: "right" }} variant="primary">
+                  <Button
+                    style={{ float: "right" }}
+                    variant="primary"
+                    onClick={() => {
+                      var order = {
+                        status: this.state.status,
+                      };
+                      Axios.put(
+                        `http://localhost:8080/api/orders/${this.state.orderID}`,
+                        order
+                      )
+                        .then((Response) => {
+                          alert("Status Update");
+                          window.location.reload(false);
+                        })
+                        .catch((err) => {
+                          console.log(err);
+                        });
+                    }}
+                  >
                     Save
                   </Button>
                 </Card.Body>
@@ -273,19 +373,20 @@ export default class ClientOrders extends Component {
                 <Modal.Title>Order Details</Modal.Title>
               </Modal.Header>
               <Modal.Body>
-                <Row>
-                  <Row>
-                    <Col>
-                      <Col>Client: {name}</Col>
-                    </Col>
+                <Container>
+                  <Row
+                    style={{
+                      fontSize: "1.5vw",
+                      color: "black",
+                    }}
+                    className="justify-content-center"
+                  >
+                    <Col md="auto"> Client: {name}</Col>
+                    <Col md="auto">Email: {email}</Col>
+                    <Col md="auto">Phone: {phone}</Col>
                   </Row>
-                  <Row>
-                    <Col>Email: {email} </Col>
-                  </Row>
-                  <Row>
-                    <Col>Phone: {phone}</Col>
-                  </Row>
-                </Row>
+                  <hr />
+                </Container>
 
                 <Row>
                   <Col>
@@ -321,6 +422,64 @@ export default class ClientOrders extends Component {
               <Modal.Footer>
                 <Button variant="secondary" onClick={this.handleClose}>
                   Close
+                </Button>
+              </Modal.Footer>
+            </Modal>
+          </Row>
+          <Row>
+            <Modal
+              size="sm"
+              centered
+              style={{ width: "100%" }}
+              show={this.state.deleteShow}
+              onHide={this.handleClose}
+            >
+              <Modal.Body>
+                <Container>
+                  <Row
+                    style={{
+                      fontSize: "1.5vw",
+                      color: "black",
+                      marginTop: "1rem",
+                      marginBottom: "2rem",
+                    }}
+                    className="justify-content-center"
+                  >
+                    <Col md="auto"> Delete Order N°: {this.state.orderID}</Col>
+                  </Row>
+                </Container>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button
+                  variant="secondary"
+                  onClick={() => {
+                    this.setState({
+                      deleteShow: false,
+                    });
+                  }}
+                >
+                  Close
+                </Button>
+                <Button
+                  variant="danger"
+                  style={{ marginLeft: "1rem" }}
+                  onClick={() => {
+                    Axios.delete(
+                      `http://localhost:8080/api/orders/destroy/${this.state.orderID}`
+                    )
+                      .then(() => {
+                        console.log("deleted");
+                      })
+                      .catch((err) => {
+                        console.log(err);
+                      });
+                    this.setState({
+                      deleteShow: false,
+                    });
+                    window.location.reload();
+                  }}
+                >
+                  Delete
                 </Button>
               </Modal.Footer>
             </Modal>

@@ -594,16 +594,15 @@ label {
 
 .jumbotron-signup {
   text-align: center;
-  background-color: #007bff7c;
-  padding: 1rem;
-  color: rgba(255, 255, 255, 0.678);
+  padding: 0.5rem;
   font-size: 32px;
   font-weight: 600;
 }
 .form-col-signup {
-  color: white;
+  color: black;
+  font-size: large;
   margin-bottom: 2rem;
-  background-image: linear-gradient(to top, #2e46cc, #1d77d6, #007bff, #007bff);
+  background-image: linear-gradient(to top, rgb(42, 189, 167), #53dab8);
 }
 .form-col-signup {
   -webkit-box-shadow: 0px 3px 7px 8px rgba(230, 230, 230, 0.63);
@@ -1334,4 +1333,22 @@ hr {
   right: 0;
   bottom: 0;
   background-color: rebeccapurple;
+}
+.newsletter-form button {
+  background-color: #4caf50; /* Green */
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+.newsletter-form input {
+  padding: 8px 20px;
+  font-size: 16px;
+}
+.sticky-top {
+  position: fixed;
+  width: 100%;
 }
