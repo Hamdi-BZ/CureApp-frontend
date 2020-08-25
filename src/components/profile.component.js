@@ -116,7 +116,7 @@ export default class Profile extends Component {
       address = currentEmployee.employeeProfileImage;
     }
     return (
-      <div>
+      <div style={{ marginTop: "4rem" }}>
         <Card id="profileCard" style={{ width: "40rem" }}>
           <div>
             <Card.Img

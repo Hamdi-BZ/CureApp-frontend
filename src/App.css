@@ -925,7 +925,13 @@ hr {
 }
 /*---------------------------*/
 .add-product-card {
-  background-image: linear-gradient(to top, #1d77d6, #007bff, #007bff, #2e91fb);
+  background-image: linear-gradient(
+    to bottom,
+    #282c34,
+    rgb(36, 138, 122),
+    #20ac97,
+    #41cab6
+  );
 }
 .add-product-card .form-label {
   font-size: 23px;
@@ -933,12 +939,14 @@ hr {
   margin-left: -0.5rem;
   margin-bottom: 1rem;
 }
-
+.add-product-card .card-title {
+  color: white;
+}
 .category-select {
   margin-top: 0.3rem;
   margin-left: 0.01rem;
   font-size: 23px;
-  color: #282c34;
+  color: white;
   font-weight: 500;
   margin-bottom: 1rem;
 }

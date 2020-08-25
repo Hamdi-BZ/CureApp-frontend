@@ -59,7 +59,7 @@ export default class ClientOrders extends Component {
   };
   componentDidMount() {
     this.roleManager();
-    if (!this.state.show) {
+    if (this.state.show) {
       const userid = this.state.currentUser.id;
       Axios.get(`http://localhost:8080/api/orders/client/${userid}`)
         .then((Response) => {

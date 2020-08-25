@@ -125,7 +125,7 @@ export default class Content extends Component {
                     <option value="null">Choose page</option>
                     <option value="Home Page">Home Page</option>
                     <option value="News Page">News Page</option>
-                    <option value="Our Story Page">Our Story Page</option>
+                    <option value="Actualities Page">Actualities Page</option>
                   </Form.Control>
                 </Form.Group>
               </Form>
@@ -165,7 +165,6 @@ export default class Content extends Component {
                           showEdit: true,
                           editTitle: item.title,
                           editDescription: item.description,
-                          //editImage: item.image,
                         });
                       }}
                     >
@@ -234,7 +233,7 @@ export default class Content extends Component {
               >
                 <option value="Home Page">Home Page</option>
                 <option value="News Page">News Page</option>
-                <option value="Our Story Page">Our Story Page</option>
+                <option value="Actualities Page">Actualities Page</option>
               </Form.Control>
             </Form.Group>
 

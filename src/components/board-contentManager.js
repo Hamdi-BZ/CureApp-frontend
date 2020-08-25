@@ -23,7 +23,7 @@ import Stock from "./childComponents/Stock.manager";
 import AuthService from "./../services/auth-service";
 
 //-----------------
-export default class boardAdmin extends Component {
+export default class boardContentManager extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -91,15 +91,9 @@ export default class boardAdmin extends Component {
     let component;
     if (selected === "dashboard") {
       component = <Statics />;
-    } else if (selected === "employees") {
-      component = <Employees />;
-    } else if (selected === "products") {
-      component = <Products />;
     } else if (selected === "profile") {
       //with user props to (id)
       component = <Profile />;
-    } else if (selected === "orders") {
-      component = <ClientOrders />;
     } else {
       component = <Content />;
     }
@@ -118,37 +112,6 @@ export default class boardAdmin extends Component {
             }
           >
             <FontAwesomeIcon icon={faChartPie} /> Dashboard
-          </div>
-          <div
-            onClick={this.ordersClick}
-            className={
-              this.state.selected === "orders"
-                ? "sidebar-item selected"
-                : "sidebar-item  "
-            }
-          >
-            <FontAwesomeIcon icon={faArchive} /> Orders
-          </div>
-          <div
-            onClick={this.productsClick}
-            className={
-              this.state.selected === "products"
-                ? "sidebar-item selected"
-                : "sidebar-item  "
-            }
-          >
-            <FontAwesomeIcon icon={faCartPlus} /> Products
-          </div>
-
-          <div
-            onClick={this.employeesClick}
-            className={
-              this.state.selected === "employees"
-                ? "sidebar-item selected"
-                : "sidebar-item  "
-            }
-          >
-            <FontAwesomeIcon icon={faUsers} /> Emlpoyees
           </div>
 
           <div

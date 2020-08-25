@@ -274,8 +274,8 @@ export default class ShopCategories extends Component {
                         <Card.Text
                           style={{
                             fontSize: "1.5vw",
-                            fontWeight: "400",
-                            color: "#007bff",
+                            fontWeight: "600",
+                            color: "black",
                           }}
                         >
                           <span>Product Name : </span> <br />
@@ -283,7 +283,7 @@ export default class ShopCategories extends Component {
                             style={{
                               color: "#343a40",
                               marginLeft: "0.5rem",
-                              fontWeight: "500",
+                              fontWeight: "600",
                               textTransform: "capitalize",
                             }}
                           >
@@ -294,8 +294,8 @@ export default class ShopCategories extends Component {
                         <Card.Text
                           style={{
                             fontSize: "1.5vw",
-                            fontWeight: "400",
-                            color: "#007bff",
+                            fontWeight: "600",
+                            color: "black",
                           }}
                         >
                           <span>Description : </span>
@@ -304,7 +304,7 @@ export default class ShopCategories extends Component {
                             style={{
                               color: "#343a40",
                               marginLeft: "0.5rem",
-                              fontWeight: "500",
+                              fontWeight: "600",
                               textTransform: "capitalize",
                             }}
                           >
@@ -316,8 +316,8 @@ export default class ShopCategories extends Component {
                         <Card.Text
                           style={{
                             fontSize: "1.5vw",
-                            fontWeight: "400",
-                            color: "#007bff",
+                            fontWeight: "600",
+                            color: "black",
                           }}
                         >
                           <span>Price : </span>
@@ -326,12 +326,13 @@ export default class ShopCategories extends Component {
                             style={{
                               color: "#343a40",
                               marginLeft: "0.5rem",
-                              fontWeight: "500",
+                              fontWeight: "600",
                               textTransform: "capitalize",
                             }}
                           >
                             {" "}
-                            {product.productPrice}${" "}
+                            {product.productPrice}
+                            <span style={{ fontSize: "10px" }}> TND</span>
                           </span>
                         </Card.Text>
                         <Link to="/shop/display">

@@ -39,7 +39,11 @@ import { Navbar, Button } from "react-bootstrap";
 import OurStory from "./components/OurStory";
 import Arm from "./components/Arm";
 import tmages from "./components/childComponents/images";
+import Actualities from "./components/childComponents/Actualities";
 import Newsletter from "./components/Newsletter";
+import News from "./components/childComponents/News";
+import boardContentManager from "./components/board-contentManager";
+import boardSalesManager from "./components/board-moderator.component";
 //---------------------------------------------------------------------
 class Header extends Component {
   constructor(props) {
@@ -117,6 +121,16 @@ class Header extends Component {
                 </Link>
               </li>
               <li className="nav-item">
+                <Link to={"/actualities"} className="nav-link">
+                  Actualities
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to={"/news"} className="nav-link">
+                  News
+                </Link>
+              </li>
+              <li className="nav-item">
                 <Link to={"/arm"} className="nav-link">
                   Super Arm
                 </Link>
@@ -145,7 +159,7 @@ class Header extends Component {
               )}
               {showSalesBoard && (
                 <li className="nav-item">
-                  <Link to={"/ordersmanager"} className="nav-link">
+                  <Link to={"/salesmanager"} className="nav-link">
                     Sales Board
                   </Link>
                 </li>
@@ -221,11 +235,13 @@ class Header extends Component {
               <Route path="/user" component={BoardUser} />
               <Route path="/mod" component={BoardModerator} />
               <Route path="/admin" component={BoardAdmin} />
-              <Route path="/ordersmanager" component={Orders} />
+              <Route path="/salesmanager" component={boardSalesManager} />
               <Route path="/upload" component={ReactUploadImage} />
               <Route path="/registerr" component={Register} />
-              <Route path="/contentmanager" component={Content} />
+              <Route path="/contentmanager" component={boardContentManager} />
               <Route path="/arm" component={Arm} />
+              <Route path="/actualities" component={Actualities} />
+              <Route path="/news" component={News} />
 
               <Route exact path="/cart" component={Cart} />
               <Route
