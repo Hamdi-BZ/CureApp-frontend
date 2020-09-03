@@ -38,7 +38,7 @@ import ShopCategories from "./components/ShopCategories";
 import { Navbar, Button } from "react-bootstrap";
 import OurStory from "./components/OurStory";
 import Arm from "./components/Arm";
-import tmages from "./components/childComponents/images";
+import images from "./components/childComponents/images";
 import Actualities from "./components/childComponents/Actualities";
 import Newsletter from "./components/Newsletter";
 import News from "./components/childComponents/News";
@@ -260,7 +260,7 @@ class Header extends Component {
               <Route exact path={"/signupclient"} component={SignupClient} />
               <Route exact path={"/supercart"} component={SuperheroCart} />
               <Route exact path={"/ourstroy"} component={OurStory} />
-              <Route exact path={"/images"} component={tmages} />
+              <Route exact path={"/images"} component={images} />
               <Route exact path={"/newsletter"} component={Newsletter} />
             </div>
           </Switch>

@@ -7,7 +7,7 @@ import Jumbotron from "react-bootstrap/Jumbotron";
 //---Component ReactStrap ----
 import { FormGroup, Label, Input } from "reactstrap";
 import Alert from "react-bootstrap/Alert";
-
+import Image from "./images";
 //---NPM Packages-------------
 //import "react-phone-number-input/style.css";
 //import PhoneInput from "react-phone-number-input";
@@ -36,6 +36,7 @@ export default class SignupEmployee extends Component {
       passwordLength: false,
       CpasswordLength: false,
       message: "",
+      image: "",
     };
   }
   //-----Google Signup/Login
@@ -77,7 +78,8 @@ export default class SignupEmployee extends Component {
     this.setState({ roleId: event.target.value });
   };
   handleChangePic = (event) => {
-    this.setState({ clientProfileImage: event.target.value });
+    console.log(event.target.files);
+    this.setState({ image: event.target.files });
   };
   handleChangeCountry = (event) => {
     this.setState({ clientAddressCountry: event.target.value });
@@ -87,6 +89,20 @@ export default class SignupEmployee extends Component {
   };
   handleChangeZip = (event) => {
     this.setState({ clientAddressZip: event.target.value });
+  };
+  //------Image
+
+  ImageHandler = () => {
+    let formData = new FormData(); //formdata object
+    formData.append("file", this.state.image); //append the values with key, value pair
+
+    Axios.post("http://localhost:8080/upload", formData)
+      .then((Response) => {
+        console.log("res:" + Response);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
   SubmitHandler = (event) => {
     event.preventDefault();
@@ -111,13 +127,26 @@ export default class SignupEmployee extends Component {
         console.log(this.state);
       }
       console.log(this.state);
-
-      Axios.post("http://localhost:8080/api/clients/", this.state)
+      const client = {
+        clientFirstName: this.state.clientFirstName,
+        clientLastName: this.state.clientLastName,
+        clientUserName: this.state.clientUserName,
+        clientEmail: this.state.clientEmail,
+        clientPhone: this.state.clientPhone,
+        clientPassword: this.state.clientPassword,
+        clientProfileImage: this.state.image,
+        clientBirthdate: this.state.clientBirthdate,
+        clientAddress:
+          this.state.clientAddressCountry +
+          "/" +
+          this.state.clientAddressState +
+          "/" +
+          this.state.clientAddressZip,
+        roleId: this.state.roleId,
+      };
+      Axios.post("http://localhost:8080/api/clients/", client)
         .then(
           (response) => {
-            console.log(response);
-            //console.log(response.data);
-            console.log("//////////////////////////");
             alert("account created with successfully");
           },
           (error) => {
@@ -298,7 +327,7 @@ export default class SignupEmployee extends Component {
                   </Form.Group>
                 </Form.Row>
                 <Form.Row>
-                  <Form.File id="formcheck-api-regular">
+                  {/*<Form.File id="formcheck-api-regular">
                     <Form.File.Label id="formcheck-label">
                       Profile Picture
                     </Form.File.Label>
@@ -306,7 +335,34 @@ export default class SignupEmployee extends Component {
                       value={this.state.clientProfileImage}
                       onChange={this.handleChangePic}
                     />
-                  </Form.File>
+                  </Form.File>*}
+
+                  <div class="form-group">
+                    <input
+                      onChange={this.handleChangePic}
+                      type="file"
+                      name="file"
+                      id="input-files"
+                      class="form-control-file border"
+                    />
+                  </div>
+                  <form
+                    class="mt-4"
+                    action="http://localhost:8080/upload"
+                    method="POST"
+                    enctype="multipart/form-data"
+                  >
+                    <div class="form-group">
+                      <input
+                        type="file"
+                        name="file"
+                        id="input-files"
+                        class="form-control-file border"
+                        onChange={this.handleChangePic}
+                      />
+                    </div>
+                  </form>*/}
+                  <Image />
                 </Form.Row>
                 <Alert
                   className={this.state.alertPassword === true ? "" : "hide"}

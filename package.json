@@ -17,6 +17,7 @@
     "cloudinary-react": "^1.6.6",
     "dotenv": "^8.2.0",
     "http-proxy-middleware": "^1.0.5",
+    "jquery": "^3.5.1",
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.1",
     "react-burger-menu": "^2.6.17",
