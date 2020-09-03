@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Button, FormControl } from "react-bootstrap";
+import { Card, Button, FormControl, Form } from "react-bootstrap";
 import InputGroup from "react-bootstrap/InputGroup";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Axios from "axios";
@@ -11,6 +11,7 @@ import {
   faEdit,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
+import Images from "./childComponents/images";
 export default class Profile extends Component {
   constructor(props) {
     super(props);
@@ -22,6 +23,8 @@ export default class Profile extends Component {
       newPhone: "",
       newAddress: "",
       currentEmployee: "",
+      showImage: false,
+      addresHide: false,
     };
   }
   //-----------------------------------------------
@@ -39,6 +42,7 @@ export default class Profile extends Component {
           console.log(response.data);
           this.setState({
             currentEmployee: response.data,
+            addresHide: true,
           });
         }
       );
@@ -97,11 +101,13 @@ export default class Profile extends Component {
     var email;
     var phone;
     var address;
+    var image;
     if (usernow.roles[0] === "ROLE_USER") {
       name = currentUser.clientFirstName + " " + currentUser.clientLastName;
       email = currentUser.clientEmail;
       phone = currentUser.clientPhone;
       address = currentUser.clientAddress;
+      image = currentUser.clientProfileImage;
     } else if (
       usernow.roles[0] === "ROLE_ADMIN" ||
       usernow.roles[0] === "ROLE_SALES_MANAGER" ||
@@ -113,7 +119,8 @@ export default class Profile extends Component {
         currentEmployee.employeeLastName;
       email = currentEmployee.employeeEmail;
       phone = currentEmployee.employeePhone;
-      address = currentEmployee.employeeProfileImage;
+      address = currentEmployee.employeeAddress;
+      image = currentEmployee.employeeProfileImage;
     }
     return (
       <div style={{ marginTop: "4rem" }}>
@@ -122,9 +129,22 @@ export default class Profile extends Component {
             <Card.Img
               id="profileImage"
               variant="top"
-              src={`${process.env.PUBLIC_URL}/assets/images/employee.jpg`}
+              src={`${process.env.PUBLIC_URL}/assets/clients/${image}`}
             />
-            <FontAwesomeIcon id="imageEdit" icon={faEdit} />
+            <FontAwesomeIcon
+              onClick={() => {
+                this.setState({
+                  showImage: !this.state.showImage,
+                });
+              }}
+              id="imageEdit"
+              icon={faEdit}
+            />
+            <div className={this.state.showImage ? "" : "hide"}>
+              <Form.Group>
+                <Images />
+              </Form.Group>
+            </div>
           </div>
           <Card.Title id="profileUsername">{name}</Card.Title>
           <Card.Body>
@@ -156,14 +176,17 @@ export default class Profile extends Component {
               />
               <InputGroup.Append>
                 <Button
-                  variant="outline-light"
+                  variant="outline-success"
                   onClick={this.updatePhoneHandler}
                 >
                   Update
                 </Button>
               </InputGroup.Append>
             </InputGroup>
-            <Card.Text id="profileAddress">
+            <Card.Text
+              className={this.state.addresHide ? "hide" : ""}
+              id="profileAddress"
+            >
               <FontAwesomeIcon icon={faAddressCard} /> {address}{" "}
               <FontAwesomeIcon
                 className="editIcon"
@@ -187,7 +210,7 @@ export default class Profile extends Component {
               />
               <InputGroup.Append>
                 <Button
-                  variant="outline-light"
+                  variant="outline-success"
                   onClick={this.updateAddressHandler}
                 >
                   Update
@@ -196,7 +219,7 @@ export default class Profile extends Component {
             </InputGroup>
 
             <Link to={"/passwordupdate/" + userid}>
-              <Button id="profileBtn" variant="outline-light">
+              <Button id="profileBtn" variant="outline-success">
                 Change Password
               </Button>
             </Link>

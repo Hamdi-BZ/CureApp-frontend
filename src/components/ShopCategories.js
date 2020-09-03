@@ -1,6 +1,15 @@
 import React, { Component, useState } from "react";
 import { Link } from "react-router-dom";
 //------REDUX
+import {
+  Element,
+  Events,
+  animateScroll as scroll,
+  scroller,
+} from "react-scroll";
+//---------------------------
+import { faLevelUpAlt } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 //---------------------------
 import Axios from "axios";
@@ -26,6 +35,7 @@ export default class ShopCategories extends Component {
       products: [],
       test: "",
     };
+    this.scrollToTop = this.scrollToTop.bind(this);
   }
   componentDidMount = () => {
     Axios.get(`http://localhost:8080/api/test/category`)
@@ -35,6 +45,13 @@ export default class ShopCategories extends Component {
           categories: data,
         });
         console.log(this.state.categories);
+        Events.scrollEvent.register("begin", function () {
+          console.log("begin", arguments);
+        });
+
+        Events.scrollEvent.register("end", function () {
+          console.log("end", arguments);
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -86,7 +103,43 @@ export default class ShopCategories extends Component {
       JSON.stringify(prod)
     );*/
   };
+  scrollToTop() {
+    scroll.scrollToTop();
+  }
+  scrollTo() {
+    scroller.scrollTo("scroll-to-element", {
+      duration: 800,
+      delay: 0,
+      smooth: "easeInOutQuart",
+    });
+  }
+  scrollToWithContainer() {
+    let goToContainer = new Promise((resolve, reject) => {
+      Events.scrollEvent.register("end", () => {
+        resolve();
+        Events.scrollEvent.remove("end");
+      });
 
+      scroller.scrollTo("scroll-container", {
+        duration: 800,
+        delay: 0,
+        smooth: "easeInOutQuart",
+      });
+    });
+
+    goToContainer.then(() =>
+      scroller.scrollTo("this-element", {
+        duration: 800,
+        delay: 0,
+        smooth: "easeInOutQuart",
+        containerId: "scroll-container",
+      })
+    );
+  }
+  componentWillUnmount() {
+    Events.scrollEvent.remove("begin");
+    Events.scrollEvent.remove("end");
+  }
   render() {
     var count = localStorage.getItem("cart");
     var cart = {
@@ -101,6 +154,7 @@ export default class ShopCategories extends Component {
     var categories = this.state.categories;
     var types = this.state.types;
     var products = this.state.products;
+    var index = 300;
     return (
       <div>
         <Image
@@ -180,15 +234,22 @@ export default class ShopCategories extends Component {
                                   <Row>
                                     <Col></Col>
                                     <Col sm={4}>
-                                      <Button
-                                        className="btn-type-show"
+                                      <a
                                         onClick={() => {
-                                          this.typesHandler(category.id);
+                                          scroll.scrollMore(index);
+                                          index = index + 200;
                                         }}
-                                        variant="success"
                                       >
-                                        See More
-                                      </Button>
+                                        <Button
+                                          className="btn-type-show"
+                                          onClick={() => {
+                                            this.typesHandler(category.id);
+                                          }}
+                                          variant="success"
+                                        >
+                                          See More
+                                        </Button>
+                                      </a>
                                     </Col>
                                   </Row>
                                 </Col>
@@ -198,24 +259,29 @@ export default class ShopCategories extends Component {
                         </Card.Header>
 
                         <Accordion.Collapse eventKey={category.id}>
-                          <Card.Body className="accordion-types">
-                            {types.length
-                              ? types.map((type) => (
-                                  <Card
-                                    className="types-cards-display"
-                                    style={{ width: "18rem" }}
-                                  >
-                                    <Card.Img
-                                      variant="top"
-                                      src={`${process.env.PUBLIC_URL}/assets/TypesImages/rsz_ironman.png`}
-                                    />
-                                    <Card.Body>
-                                      <Card.Title>{type.title}</Card.Title>
-                                      <Card.Text>
-                                        Some quick example text to build on the
-                                        card title and make up the bulk of the
-                                        card's content.
-                                      </Card.Text>
+                          <Card.Body
+                            id="this-element"
+                            style={{ display: "wrap", float: "left" }}
+                            className="accordion-types"
+                          >
+                            {types.length ? (
+                              types.map((type) => (
+                                <Card
+                                  className="types-cards-display"
+                                  style={{ width: "18rem" }}
+                                >
+                                  <Card.Img
+                                    variant="top"
+                                    src={`${process.env.PUBLIC_URL}/assets/TypesImages/rsz_ironman.png`}
+                                  />
+                                  <Card.Body>
+                                    <Card.Title>{type.title}</Card.Title>
+                                    <Card.Text>
+                                      Some quick example text to build on the
+                                      card title and make up the bulk of the
+                                      card's content.
+                                    </Card.Text>
+                                    <a onClick={() => scroll.scrollMore(400)}>
                                       <Button
                                         variant="primary"
                                         onClick={() => {
@@ -235,10 +301,16 @@ export default class ShopCategories extends Component {
                                       >
                                         Explore
                                       </Button>
-                                    </Card.Body>
-                                  </Card>
-                                ))
-                              : null}
+                                    </a>
+                                  </Card.Body>
+                                </Card>
+                              ))
+                            ) : (
+                              <h1>
+                                There's no availbale products at the moment
+                                please visit us later{" "}
+                              </h1>
+                            )}
                           </Card.Body>
                         </Accordion.Collapse>
                       </Card>
@@ -252,164 +324,162 @@ export default class ShopCategories extends Component {
               marginTop: "2rem",
               display: "wrap",
               flexWrap: "wrap",
-              background: "#e9ecef",
+
               padding: "1rem",
             }}
           >
-            {products.length
-              ? products.map((product) => (
-                  <Col>
-                    <Card
-                      style={{
-                        width: "21rem",
-                        float: "left",
-                      }}
-                    >
-                      <Card.Img
-                        id="product-img-card"
-                        variant="top"
-                        src={`${process.env.PUBLIC_URL}/assets/wristcover/openbionics.png`}
-                      />
-                      <Card.Body>
-                        <Card.Text
+            {products.length ? (
+              products.map((product) => (
+                <Col>
+                  <Card
+                    style={{
+                      width: "21rem",
+                      float: "left",
+                    }}
+                  >
+                    <Card.Img
+                      id="product-img-card"
+                      variant="top"
+                      src={`${process.env.PUBLIC_URL}/assets/wristcover/openbionics.png`}
+                    />
+                    <Card.Body>
+                      <Card.Text
+                        style={{
+                          fontSize: "1.5vw",
+                          fontWeight: "600",
+                          color: "black",
+                        }}
+                      >
+                        <span>Product Name : </span> <br />
+                        <span
                           style={{
-                            fontSize: "1.5vw",
+                            color: "#343a40",
+                            marginLeft: "0.5rem",
                             fontWeight: "600",
-                            color: "black",
+                            textTransform: "capitalize",
                           }}
                         >
-                          <span>Product Name : </span> <br />
-                          <span
-                            style={{
-                              color: "#343a40",
-                              marginLeft: "0.5rem",
-                              fontWeight: "600",
-                              textTransform: "capitalize",
-                            }}
-                          >
-                            {" "}
-                            {product.productTitle}
-                          </span>
-                        </Card.Text>
-                        <Card.Text
+                          {" "}
+                          {product.productTitle}
+                        </span>
+                      </Card.Text>
+                      <Card.Text
+                        style={{
+                          fontSize: "1.5vw",
+                          fontWeight: "600",
+                          color: "black",
+                        }}
+                      >
+                        <span>Description : </span>
+                        <br />
+                        <span
                           style={{
-                            fontSize: "1.5vw",
+                            color: "#343a40",
+                            marginLeft: "0.5rem",
                             fontWeight: "600",
-                            color: "black",
+                            textTransform: "capitalize",
                           }}
                         >
-                          <span>Description : </span>
-                          <br />
-                          <span
-                            style={{
-                              color: "#343a40",
-                              marginLeft: "0.5rem",
-                              fontWeight: "600",
-                              textTransform: "capitalize",
-                            }}
-                          >
-                            {" "}
-                            {product.productDescription}
-                          </span>
-                        </Card.Text>
+                          {" "}
+                          {product.productDescription}
+                        </span>
+                      </Card.Text>
 
-                        <Card.Text
+                      <Card.Text
+                        style={{
+                          fontSize: "1.5vw",
+                          fontWeight: "600",
+                          color: "black",
+                        }}
+                      >
+                        <span>Price : </span>
+                        <br />
+                        <span
                           style={{
-                            fontSize: "1.5vw",
+                            color: "#343a40",
+                            marginLeft: "0.5rem",
                             fontWeight: "600",
-                            color: "black",
+                            textTransform: "capitalize",
                           }}
                         >
-                          <span>Price : </span>
-                          <br />
-                          <span
-                            style={{
-                              color: "#343a40",
-                              marginLeft: "0.5rem",
-                              fontWeight: "600",
-                              textTransform: "capitalize",
-                            }}
-                          >
-                            {" "}
-                            {product.productPrice}
-                            <span style={{ fontSize: "10px" }}> TND</span>
-                          </span>
-                        </Card.Text>
-                        <Link to="/shop/display">
-                          <Button
-                            style={{
-                              float: "right",
-                              marginRight: "0.5rem",
-                              marginTop: "1rem",
-                            }}
-                            variant="outline-primary"
-                            onClick={() => {
-                              var data = JSON.parse(
+                          {" "}
+                          {product.productPrice}
+                          <span style={{ fontSize: "10px" }}> TND</span>
+                        </span>
+                      </Card.Text>
+                      <Link to="/shop/display">
+                        <Button
+                          style={{
+                            float: "right",
+                            marginRight: "0.5rem",
+                            marginTop: "1rem",
+                          }}
+                          variant="outline-primary"
+                          onClick={() => {
+                            var data = JSON.parse(
+                              localStorage.getItem("cartItems")
+                            );
+                            var cart = JSON.parse(localStorage.getItem("cart"));
+                            var prod = {
+                              index: cart,
+                              id: product.id,
+                              title: product.productTitle,
+                              price: product.productPrice,
+                              type: product.typeId,
+                              side: "",
+                              size: "",
+                              qty: 0,
+                              total: 0,
+                            };
+                            var cart = [];
+                            var readyProd = JSON.stringify(prod);
+                            localStorage.setItem("product", readyProd);
+                            if (data === null) {
+                              cart.push(prod);
+                              var JSONreadyCart = JSON.stringify(cart);
+                              localStorage.setItem("cartItems", JSONreadyCart);
+                            } else {
+                              var cartItems = JSON.parse(
                                 localStorage.getItem("cartItems")
                               );
-                              var cart = JSON.parse(
-                                localStorage.getItem("cart")
-                              );
-                              var prod = {
-                                index: cart,
-                                id: product.id,
-                                title: product.productTitle,
-                                price: product.productPrice,
-                                type: product.typeId,
-                                side: "",
-                                size: "",
-                                qty: 0,
-                                total: 0,
-                              };
-                              var cart = [];
-                              var readyProd = JSON.stringify(prod);
-                              localStorage.setItem("product", readyProd);
-                              if (data === null) {
-                                cart.push(prod);
-                                var JSONreadyCart = JSON.stringify(cart);
-                                localStorage.setItem(
-                                  "cartItems",
-                                  JSONreadyCart
-                                );
-                              } else {
-                                var cartItems = JSON.parse(
-                                  localStorage.getItem("cartItems")
-                                );
 
-                                cartItems[cartItems.length - 1].itemId =
-                                  cartItems[cartItems.length - 1].itemId + 1;
-                                localStorage.setItem(
-                                  "cartItems",
-                                  JSON.stringify(cartItems)
-                                );
-                                cart = data;
-                                cart.push(prod);
-                                var JSONreadyCart = JSON.stringify(cart);
-                                localStorage.setItem(
-                                  "cartItems",
-                                  JSONreadyCart
-                                );
-                              }
-                            }}
-                          >
-                            {" "}
-                            Explore
-                          </Button>
-                        </Link>
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                ))
-              : null}
+                              cartItems[cartItems.length - 1].itemId =
+                                cartItems[cartItems.length - 1].itemId + 1;
+                              localStorage.setItem(
+                                "cartItems",
+                                JSON.stringify(cartItems)
+                              );
+                              cart = data;
+                              cart.push(prod);
+                              var JSONreadyCart = JSON.stringify(cart);
+                              localStorage.setItem("cartItems", JSONreadyCart);
+                            }
+                          }}
+                        >
+                          {" "}
+                          Explore
+                        </Button>
+                      </Link>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              ))
+            ) : (
+              <h3 style={{ marginLeft: "15%" }}>
+                There's no availbale products please select a category and a
+                type
+              </h3>
+            )}
           </Row>
-          <li style={cart}>
-            <Link to="/supercart">
-              <i class="fa fa-shopping-cart"></i>
-              <span class="badge badge-warning" id="lblCartCount">
-                {count}
-              </span>
-            </Link>
-          </li>
+          <a onClick={this.scrollToTop}>
+            <FontAwesomeIcon
+              style={{
+                float: "right",
+                fontSize: "x-large",
+              }}
+              icon={faLevelUpAlt}
+            />{" "}
+          </a>
         </Container>
         <Container className="shop-footer" fluid>
           <Row>

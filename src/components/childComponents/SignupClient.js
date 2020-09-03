@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import Axios from "axios";
 //---Component BootStrap -----
 import Form from "react-bootstrap/Form";
@@ -37,6 +38,8 @@ export default class SignupEmployee extends Component {
       CpasswordLength: false,
       message: "",
       image: "",
+      next: false,
+      back: true,
     };
   }
   //-----Google Signup/Login
@@ -92,31 +95,9 @@ export default class SignupEmployee extends Component {
   };
   //------Image
 
-  ImageHandler = () => {
-    let formData = new FormData(); //formdata object
-    formData.append("file", this.state.image); //append the values with key, value pair
-
-    Axios.post("http://localhost:8080/upload", formData)
-      .then((Response) => {
-        console.log("res:" + Response);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
   SubmitHandler = (event) => {
     event.preventDefault();
-    if (this.state.clientPassword.length < 6) {
-      this.setState({
-        alert: true,
-        message: "password should be between 6-20",
-      });
-    } else if (this.state.clientPassword.length > 20) {
-      this.setState({
-        alert: true,
-        message: "password should be between 6-20",
-      });
-    } else if (this.state.clientPassword === this.state.clientconfirmpassword) {
+    if (this.state.clientPassword === this.state.clientconfirmpassword) {
       const state = this.state.clientAddressState;
       const zip = this.state.clientAddressZip;
       const country = this.state.clientAddressCountry;
@@ -127,6 +108,7 @@ export default class SignupEmployee extends Component {
         console.log(this.state);
       }
       console.log(this.state);
+      const imagepath = localStorage.getItem("imagepath");
       const client = {
         clientFirstName: this.state.clientFirstName,
         clientLastName: this.state.clientLastName,
@@ -134,7 +116,7 @@ export default class SignupEmployee extends Component {
         clientEmail: this.state.clientEmail,
         clientPhone: this.state.clientPhone,
         clientPassword: this.state.clientPassword,
-        clientProfileImage: this.state.image,
+        clientProfileImage: imagepath,
         clientBirthdate: this.state.clientBirthdate,
         clientAddress:
           this.state.clientAddressCountry +
@@ -146,8 +128,8 @@ export default class SignupEmployee extends Component {
       };
       Axios.post("http://localhost:8080/api/clients/", client)
         .then(
-          (response) => {
-            alert("account created with successfully");
+          () => {
+            window.location.href = "/login";
           },
           (error) => {
             const resMessage =
@@ -164,7 +146,7 @@ export default class SignupEmployee extends Component {
           }
         )
         .catch((err) => {
-          alert("something went wrong !");
+          alert("please verify your infos");
           console.log(err);
         });
     } else {
@@ -173,6 +155,19 @@ export default class SignupEmployee extends Component {
       });
     }
   };
+  changeProfileImage = (event) => {
+    console.log(event.target.files[0]);
+
+    this.setState({
+      uploadedFile: event.target.files[0],
+    });
+  };
+  UpdateProfileHandler = (e) => {
+    e.preventDefault();
+    //create obj of form data
+    const formData = new FormData();
+    formData.append("profileImage", this.state.uploadedFile);
+  };
   render() {
     let message = this.state.message;
     return (
@@ -180,7 +175,7 @@ export default class SignupEmployee extends Component {
         <div id="signup-employee-container">
           <Row className="justify-content-md-center">
             {" "}
-            <Col className="form-col-signup" md="auto" xs={2} lg={6}>
+            <Col className="form-col-signup" md="auto" xs={4} lg={8}>
               <Row className="justify-content-center">
                 <Col md="auto">
                   <h1>Sign Up</h1>
@@ -188,69 +183,73 @@ export default class SignupEmployee extends Component {
               </Row>
 
               <Form>
-                <Form.Row className="formcheck-margin-fix">
-                  <Col>
-                    <Form.Label>First Name</Form.Label>
-
-                    <Form.Control
-                      placeholder="First name"
-                      value={this.state.clientFirstName}
-                      onChange={this.handleChangeFirstname}
-                    />
-                  </Col>
-                  <Col>
-                    <Form.Label>Last Name</Form.Label>
-
-                    <Form.Control
-                      placeholder="Last name"
-                      value={this.state.clientLastName}
-                      onChange={this.handleChangeLastname}
-                    />
-                  </Col>
-                </Form.Row>
-                <Form.Row>
-                  <Form.Group as={Col} controlId="formGridUsername">
-                    <Form.Label>Username</Form.Label>
-                    <Form.Control
-                      type="text"
-                      placeholder="Enter Username"
-                      value={this.state.clientUserName}
-                      onChange={this.handleChangeUsername}
-                    />
-                  </Form.Group>
-                </Form.Row>
-                <Form.Row>
-                  <Form.Group as={Col} controlId="formGridEmail">
-                    <Form.Label>Email</Form.Label>
-                    <Form.Control
-                      type="email"
-                      placeholder="Enter email"
-                      value={this.state.clientEmail}
-                      onChange={this.handleChangeEmail}
-                    />
-                  </Form.Group>
-                </Form.Row>
-                <Form.Group>
+                <div className={this.state.back ? "" : "hide"}>
                   <Form.Row>
                     <Col>
-                      <Form.Label>Password</Form.Label>
-                      <Form.Control
-                        id={
-                          this.state.clientPassword.length < 6 &&
-                          this.state.passwordLength === true
-                            ? "border-red"
-                            : ""
-                        }
-                        type="password"
-                        placeholder="Password"
-                        value={this.state.clientPassword}
-                        onChange={this.handleChangePassword}
-                      />
-                      <Form.Text id="passwordHelpBlock" muted>
-                        Your password must be 6-20 characters long
-                      </Form.Text>
+                      <Form.Group as={Col} controlId="formGridUsername">
+                        <Form.Label>First Name</Form.Label>
+
+                        <Form.Control
+                          placeholder="First name"
+                          value={this.state.clientFirstName}
+                          onChange={this.handleChangeFirstname}
+                        />
+                      </Form.Group>
                     </Col>
+                    <Form.Group as={Col} controlId="formGridEmail">
+                      <Form.Label>Last Name</Form.Label>
+
+                      <Form.Control
+                        placeholder="Last name"
+                        value={this.state.clientLastName}
+                        onChange={this.handleChangeLastname}
+                      />
+                    </Form.Group>
+                  </Form.Row>
+                  <Form.Row>
                     <Col>
+                      <Form.Group as={Col} controlId="formGridUsername">
+                        <Form.Label>Username</Form.Label>
+                        <Form.Control
+                          type="text"
+                          placeholder="Enter Username"
+                          value={this.state.clientUserName}
+                          onChange={this.handleChangeUsername}
+                        />
+                      </Form.Group>
+                    </Col>
+                    <Form.Group as={Col} controlId="formGridEmail">
+                      <Form.Label>Email</Form.Label>
+                      <Form.Control
+                        type="email"
+                        placeholder="Enter email"
+                        value={this.state.clientEmail}
+                        onChange={this.handleChangeEmail}
+                      />
+                    </Form.Group>
+                  </Form.Row>
+                  <Form.Row>
+                    <Col>
+                      <Form.Group as={Col} controlId="formGridUsername">
+                        <Form.Label>Password</Form.Label>
+                        <Form.Control
+                          id={
+                            this.state.clientPassword.length < 6 &&
+                            this.state.passwordLength === true
+                              ? "border-red"
+                              : ""
+                          }
+                          type="password"
+                          placeholder="Password"
+                          value={this.state.clientPassword}
+                          onChange={this.handleChangePassword}
+                        />
+                        <Form.Text id="passwordHelpBlock" muted>
+                          Your password must be 6-20 characters long
+                        </Form.Text>
+                      </Form.Group>
+                    </Col>
+                    <Form.Group as={Col} controlId="formGridEmail">
                       <Form.Label>Confirm Password</Form.Label>
 
                       <Form.Control
@@ -265,125 +264,140 @@ export default class SignupEmployee extends Component {
                         value={this.state.clientconfirmpassword}
                         onChange={this.handleChangeConfirmPassword}
                       />
+                    </Form.Group>
+                  </Form.Row>
+                  <Alert
+                    className={this.state.alertPassword === true ? "" : "hide"}
+                    variant={"danger"}
+                  >
+                    Password dosen't match
+                  </Alert>
+                  <Alert
+                    className={this.state.alert === true ? "" : "hide"}
+                    variant={"danger"}
+                  >
+                    {message}
+                  </Alert>
+                  <Button
+                    className="formcheck-fixbtn"
+                    variant="success"
+                    style={{ float: "right" }}
+                    onClick={() => {
+                      this.setState({});
+                      if (
+                        this.state.clientPassword.length < 6 ||
+                        this.state.clientconfirmpassword.length > 20
+                      ) {
+                        this.setState({
+                          alert: true,
+                          message: "password should be between 6-20",
+                        });
+                      } else if (
+                        this.state.clientPassword ===
+                        this.state.clientconfirmpassword
+                      ) {
+                        this.setState({
+                          next: true,
+                          back: false,
+                        });
+                      } else {
+                        this.setState({
+                          alertPassword: true,
+                          alert: false,
+                        });
+                      }
+                    }}
+                  >
+                    Next
+                  </Button>
+                </div>
+                <div className={this.state.next ? "" : "hide"}>
+                  <Form.Row>
+                    <Col className="formcheck-margin-fix">
+                      <Form.Label>Phone</Form.Label>
+
+                      <Form.Control
+                        placeholder="Phone"
+                        value={this.state.clientPhone}
+                        onChange={this.handleChangePhone}
+                      />
+                    </Col>
+                    <Col>
+                      <FormGroup>
+                        <Label for="exampleDate">Birthdate</Label>
+                        <Input
+                          type="date"
+                          name="date"
+                          id="exampleDate"
+                          placeholder="date placeholder"
+                          value={this.state.clientBirthdate}
+                          onChange={this.handleChangeDate}
+                        />
+                      </FormGroup>
                     </Col>
                   </Form.Row>
-                </Form.Group>
-                <Form.Row>
-                  <Col className="formcheck-margin-fix">
-                    <Form.Label>Phone</Form.Label>
 
-                    <Form.Control
-                      placeholder="Phone"
-                      value={this.state.clientPhone}
-                      onChange={this.handleChangePhone}
-                    />
-                  </Col>
-                </Form.Row>
-                <Form.Row>
-                  <Col>
-                    <FormGroup>
-                      <Label for="exampleDate">Birthdate</Label>
-                      <Input
-                        type="date"
-                        name="date"
-                        id="exampleDate"
-                        placeholder="date placeholder"
-                        value={this.state.clientBirthdate}
-                        onChange={this.handleChangeDate}
-                      />
-                    </FormGroup>
-                  </Col>
-                </Form.Row>
-                <Form.Row>
-                  <Form.Group as={Col} controlId="formGridState">
-                    <Form.Label>Country</Form.Label>
-                    <Form.Control
-                      as="select"
-                      defaultValue="Tunisia"
-                      onChange={this.handleChangeCountry}
+                  <Form.Row></Form.Row>
+                  <Form.Row>
+                    <Form.Group as={Col} controlId="formGridState">
+                      <Form.Label>Country</Form.Label>
+                      <Form.Control
+                        as="select"
+                        defaultValue="Tunisia"
+                        onChange={this.handleChangeCountry}
+                      >
+                        <option value="Tunisia">Tunisia</option>
+                        <option value="Algeria">Algeria</option>
+                        <option value="Libya">Libya</option>
+                        <option value="Egypt">Egypt</option>
+                      </Form.Control>
+                    </Form.Group>
+                    <Form.Group
+                      as={Col}
+                      controlId="formGridCity"
+                      onChange={this.handleChangeState}
                     >
-                      <option value="Tunisia">Tunisia</option>
-                      <option value="Algeria">Algeria</option>
-                      <option value="Libya">Libya</option>
-                      <option value="Egypt">Egypt</option>
-                    </Form.Control>
-                  </Form.Group>
-                  <Form.Group
-                    as={Col}
-                    controlId="formGridCity"
-                    onChange={this.handleChangeState}
-                  >
-                    <Form.Label>City</Form.Label>
-                    <Form.Control />
-                  </Form.Group>
+                      <Form.Label>City</Form.Label>
+                      <Form.Control />
+                    </Form.Group>
 
-                  <Form.Group
-                    as={Col}
-                    controlId="formGridZip"
-                    onChange={this.handleChangeZip}
-                  >
-                    <Form.Label>Zip</Form.Label>
-                    <Form.Control />
-                  </Form.Group>
-                </Form.Row>
-                <Form.Row>
-                  {/*<Form.File id="formcheck-api-regular">
-                    <Form.File.Label id="formcheck-label">
-                      Profile Picture
-                    </Form.File.Label>
-                    <Form.File.Input
-                      value={this.state.clientProfileImage}
-                      onChange={this.handleChangePic}
-                    />
-                  </Form.File>*}
+                    <Form.Group
+                      as={Col}
+                      controlId="formGridZip"
+                      onChange={this.handleChangeZip}
+                    >
+                      <Form.Label>Zip</Form.Label>
+                      <Form.Control />
+                    </Form.Group>
+                  </Form.Row>
 
-                  <div class="form-group">
-                    <input
-                      onChange={this.handleChangePic}
-                      type="file"
-                      name="file"
-                      id="input-files"
-                      class="form-control-file border"
-                    />
-                  </div>
-                  <form
-                    class="mt-4"
-                    action="http://localhost:8080/upload"
-                    method="POST"
-                    enctype="multipart/form-data"
-                  >
-                    <div class="form-group">
-                      <input
-                        type="file"
-                        name="file"
-                        id="input-files"
-                        class="form-control-file border"
-                        onChange={this.handleChangePic}
-                      />
-                    </div>
-                  </form>*/}
                   <Image />
-                </Form.Row>
-                <Alert
-                  className={this.state.alertPassword === true ? "" : "hide"}
-                  variant={"danger"}
-                >
-                  Passwords Don't match !
-                </Alert>
-                <Alert
-                  className={this.state.alert === true ? "" : "hide"}
-                  variant={"danger"}
-                >
-                  {message}
-                </Alert>
-                <Button
-                  className="formcheck-fixbtn"
-                  variant="outline-light"
-                  type="submit"
-                  onClick={this.SubmitHandler}
-                >
-                  Submit
-                </Button>
+
+                  <Button
+                    style={{
+                      float: "left",
+                    }}
+                    variant="outline-danger"
+                    onClick={() => {
+                      this.setState({
+                        next: false,
+                        back: true,
+                      });
+                    }}
+                  >
+                    Back
+                  </Button>
+                  <Link to="/">
+                    <Button
+                      className="formcheck-fixbtn"
+                      variant="success"
+                      type="submit"
+                      onClick={this.SubmitHandler}
+                    >
+                      Submit
+                    </Button>
+                  </Link>
+                </div>
               </Form>
             </Col>
           </Row>

@@ -36,15 +36,9 @@ export default class boardAdmin extends Component {
       selected: localStorage.getItem("selected"),
     });
   };
-  dashboardClick = () => {
-    localStorage.setItem("selected", this.state.selected);
 
-    this.setState({
-      selected: "dashboard",
-    });
-  };
   employeesClick = () => {
-    localStorage.setItem("selected", this.state.selected);
+    localStorage.setItem("selected", "employees");
 
     this.setState({
       selected: "employees",
@@ -110,7 +104,12 @@ export default class boardAdmin extends Component {
             <Form.Check type="switch" id="custom-switch" label="Menu" />
           </div>*/}
           <div
-            onClick={this.dashboardClick}
+            onClick={() => {
+              localStorage.setItem("selected", "dashboard");
+              this.setState({
+                selected: "dashboard",
+              });
+            }}
             className={
               this.state.selected === "dashboard"
                 ? "sidebar-item selected"
@@ -120,7 +119,12 @@ export default class boardAdmin extends Component {
             <FontAwesomeIcon icon={faChartPie} /> Dashboard
           </div>
           <div
-            onClick={this.ordersClick}
+            onClick={() => {
+              localStorage.setItem("selected", "orders");
+              this.setState({
+                selected: "orders",
+              });
+            }}
             className={
               this.state.selected === "orders"
                 ? "sidebar-item selected"
@@ -130,7 +134,12 @@ export default class boardAdmin extends Component {
             <FontAwesomeIcon icon={faArchive} /> Orders
           </div>
           <div
-            onClick={this.productsClick}
+            onClick={() => {
+              localStorage.setItem("selected", "products");
+              this.setState({
+                selected: "products",
+              });
+            }}
             className={
               this.state.selected === "products"
                 ? "sidebar-item selected"
@@ -141,7 +150,12 @@ export default class boardAdmin extends Component {
           </div>
 
           <div
-            onClick={this.employeesClick}
+            onClick={() => {
+              localStorage.setItem("selected", "employees");
+              this.setState({
+                selected: "employees",
+              });
+            }}
             className={
               this.state.selected === "employees"
                 ? "sidebar-item selected"
@@ -152,7 +166,12 @@ export default class boardAdmin extends Component {
           </div>
 
           <div
-            onClick={this.contentClick}
+            onClick={() => {
+              localStorage.setItem("selected", "content");
+              this.setState({
+                selected: "content",
+              });
+            }}
             className={
               this.state.selected === "content"
                 ? "sidebar-item selected"
@@ -163,7 +182,12 @@ export default class boardAdmin extends Component {
           </div>
 
           <div
-            onClick={this.profileClick}
+            onClick={() => {
+              localStorage.setItem("selected", "profile");
+              this.setState({
+                selected: "profile",
+              });
+            }}
             className={
               this.state.selected === "profile"
                 ? "sidebar-item selected"

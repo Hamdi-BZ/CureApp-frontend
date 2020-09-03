@@ -97,10 +97,16 @@ export default class UpdateUser extends Component {
     //const currentUser = this.state.currentUser;
     return (
       <div className="col-md-12">
-        <div id="cardPassword" className="card card-container">
+        <div
+          style={{ marginTop: "7rem" }}
+          id="cardPassword"
+          className="card card-container"
+        >
           <Form>
             <div className="form-group form-styling">
-              <label htmlFor="password">Current Password</label>
+              <label className="password-change" htmlFor="password">
+                Current Password
+              </label>
               <Input
                 type="password"
                 className="form-control"
@@ -111,7 +117,9 @@ export default class UpdateUser extends Component {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="password">New Password</label>
+              <label className="password-change" htmlFor="password">
+                New Password
+              </label>
               <Input
                 type="password"
                 className="form-control"
@@ -122,7 +130,9 @@ export default class UpdateUser extends Component {
             </div>
 
             <div className="form-group">
-              <label htmlFor="password">Retype Password</label>
+              <label className="password-change" htmlFor="password">
+                Retype Password
+              </label>
               <Input
                 type="password"
                 className="form-control"
@@ -142,14 +152,14 @@ export default class UpdateUser extends Component {
             ) : null}
             {this.state.success === false ? (
               <div className="submit-btn">
-                <Button variant="outline-light" onClick={this.onClickConfirm}>
+                <Button variant="outline-success" onClick={this.onClickConfirm}>
                   Confirm
                 </Button>
               </div>
             ) : (
               <div className="submit-btn">
                 <Link to="/profile">
-                  <Button variant="outline-success" onClick={this.onClickExit}>
+                  <Button variant="outline-primary" onClick={this.onClickExit}>
                     Exit
                   </Button>
                 </Link>

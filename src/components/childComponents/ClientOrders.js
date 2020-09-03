@@ -44,27 +44,42 @@ export default class ClientOrders extends Component {
       date: "",
       newStatus: "",
       show: false,
+      client: false,
     };
   }
   roleManager = () => {
     if (this.state.currentUser.roles[0] === "ROLE_USER") {
       this.setState({
         show: false,
+        client: true,
       });
     } else {
       this.setState({
         show: true,
+        client: false,
       });
     }
   };
   componentDidMount() {
-    this.roleManager();
-    if (this.state.show) {
+    /*if (this.state.currentUser.roles[0] === "ROLE_USER") {
+      this.setState({
+        show: false,
+        client: true,
+      });
+    } else {
+      this.setState({
+        show: true,
+        client: false,
+      });
+    }*/
+    //this.roleManager();
+    if (this.state.currentUser.roles[0] === "ROLE_USER") {
       const userid = this.state.currentUser.id;
       Axios.get(`http://localhost:8080/api/orders/client/${userid}`)
         .then((Response) => {
           this.setState({
             orders: Response.data,
+
             show: false,
           });
         })
@@ -76,6 +91,7 @@ export default class ClientOrders extends Component {
         .then((Response) => {
           this.setState({
             orders: Response.data,
+            show: true,
           });
         })
         .catch((err) => {

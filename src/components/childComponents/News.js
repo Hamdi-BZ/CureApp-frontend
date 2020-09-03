@@ -111,6 +111,7 @@ export default class Actualities extends Component {
                   boxShadow: "none",
                   background: "white",
                   border: "none",
+                  float: "left",
                 }}
               >
                 <Card.Body>
@@ -123,7 +124,7 @@ export default class Actualities extends Component {
                       <Card.Img
                         variant="top"
                         style={{ width: "100%", float: "right" }}
-                        src={`${process.env.PUBLIC_URL}/assets/images/logo.png`}
+                        src={`${process.env.PUBLIC_URL}/assets/clients/${item.image}`}
                       />
                     </Col>
                   </Row>

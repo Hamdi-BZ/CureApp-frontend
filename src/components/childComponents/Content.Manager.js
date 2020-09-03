@@ -2,7 +2,14 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import { Card, Button, Container, Row, Col, Modal } from "react-bootstrap";
 import AuthService from "./../../services/auth-service";
+import Image from "./images";
 
+import {
+  Element,
+  Events,
+  animateScroll as scroll,
+  scroller,
+} from "react-scroll";
 import Axios from "axios";
 export default class Content extends Component {
   constructor(props) {
@@ -30,9 +37,7 @@ export default class Content extends Component {
   descriptionHandler = (event) => {
     this.setState({ description: event.target.value });
   };
-  imageHandler = (event) => {
-    this.setState({ image: event.target.value });
-  };
+
   pageHandler = (event) => {
     this.setState({ page: event.target.value });
     this.getContentHandler(event.target.value);
@@ -52,7 +57,7 @@ export default class Content extends Component {
       editor: this.state.user.id,
       title: this.state.title,
       description: this.state.description,
-      image: this.state.image,
+      image: localStorage.getItem("imagepath"),
       page: this.state.page,
     };
     Axios.post(`http://localhost:8080/api/contents/`, content)
@@ -131,17 +136,19 @@ export default class Content extends Component {
               </Form>
             </Col>
             <Col>
-              <Button
-                style={{ float: "right", margin: "0" }}
-                variant="success"
-                onClick={() => {
-                  this.setState({
-                    showAdd: true,
-                  });
-                }}
-              >
-                Add
-              </Button>
+              <a onClick={() => scroll.scrollMore(400)}>
+                <Button
+                  style={{ float: "right", margin: "0" }}
+                  variant="success"
+                  onClick={() => {
+                    this.setState({
+                      showAdd: true,
+                    });
+                  }}
+                >
+                  Add
+                </Button>
+              </a>
             </Col>
           </Row>
           <Row style={{ display: "flex", flexWrap: "wrap" }}>
@@ -151,25 +158,27 @@ export default class Content extends Component {
                   <Card.Img
                     id="product-img-card"
                     variant="top"
-                    src={`${process.env.PUBLIC_URL}/assets/wristcover/openbionics.png`}
+                    src={`${process.env.PUBLIC_URL}/assets/clients/${item.image}`}
                   />
                   <Card.Title>{item.title}</Card.Title>
                   <Card.Body>
                     <Card.Text>Description: {item.description}</Card.Text>
                     <Card.Text>Page: {item.page}</Card.Text>
-                    <Button
-                      variant="primary"
-                      onClick={() => {
-                        this.setState({
-                          ID: item.id,
-                          showEdit: true,
-                          editTitle: item.title,
-                          editDescription: item.description,
-                        });
-                      }}
-                    >
-                      Edit
-                    </Button>
+                    <a onClick={() => scroll.scrollMore(410)}>
+                      <Button
+                        variant="primary"
+                        onClick={() => {
+                          this.setState({
+                            ID: item.id,
+                            showEdit: true,
+                            editTitle: item.title,
+                            editDescription: item.description,
+                          });
+                        }}
+                      >
+                        Edit
+                      </Button>
+                    </a>
                     <Button
                       style={{ float: "right" }}
                       variant="danger"
@@ -246,12 +255,7 @@ export default class Content extends Component {
               />
             </Form.Group>
             <Form.Group>
-              <Form.File
-                onChange={this.imageHandler}
-                value={this.state.image}
-                id="exampleFormControlFile1"
-                label="Image"
-              />
+              <Image />
             </Form.Group>
             <Button
               style={{ float: "right" }}

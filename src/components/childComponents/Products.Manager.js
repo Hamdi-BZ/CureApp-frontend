@@ -2,6 +2,14 @@ import React, { Component } from "react";
 //----- Axios---------
 import Axios from "axios";
 //--------------------
+import Image from "./images";
+
+import {
+  Element,
+  Events,
+  animateScroll as scroll,
+  scroller,
+} from "react-scroll";
 import { ScrollTo } from "react-scroll-to";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
@@ -121,7 +129,7 @@ export default class Products extends Component {
         this.setState({
           products: Response.data,
         });
-        console.log("types here ===>" + Response.data);
+        console.log(Response.data);
       })
       .catch((err) => {
         console.log(err);
@@ -129,11 +137,13 @@ export default class Products extends Component {
   };
   //*****-------------------------
   SubmitAddProductHandler = () => {
+    const imagepath = localStorage.getItem("imagepath");
+
     var product = {
       productTitle: this.state.productTitle,
       productDescription: this.state.productDescription,
       productPrice: this.state.productPrice,
-      productImgPath: this.state.productImg,
+      productImgPath: imagepath,
       productQuantity: this.state.productQuantity,
       productSize: this.state.productSize,
       productColor: this.state.productColor,
@@ -401,10 +411,17 @@ export default class Products extends Component {
   productColorHandler = (event) => {
     this.setState({ productColor: event.target.value });
   };
+  scrollHandler = () => {
+    scroll.scrollMore(410);
+  };
+  scrollHandlerMore = () => {
+    scroll.scrollMore(610);
+  };
   render() {
     const products = this.state.products;
     const categories = this.state.categories;
     const state = this.state;
+
     return (
       <div style={{ marginTop: "2rem" }}>
         <Container>
@@ -412,28 +429,23 @@ export default class Products extends Component {
             <Col></Col>
             <Col id="col-add-prod">
               {/**********************Add Button ------------------*/}
-              <ScrollTo>
-                {({ scroll }) => (
-                  <OverlayTrigger
-                    placement="top"
-                    delay={{ show: 250, hide: 400 }}
-                    overlay={renderTooltip}
-                  >
-                    <FontAwesomeIcon
-                      id="product-add-btn"
-                      onClick={() => {
-                        this.setState({
-                          addShow: !this.state.addShow,
-                          editShow: false,
-                        });
-
-                        scroll({ x: 20, y: 500, smooth: true });
-                      }}
-                      icon={faPlus}
-                    />
-                  </OverlayTrigger>
-                )}
-              </ScrollTo>
+              <OverlayTrigger
+                placement="top"
+                delay={{ show: 250, hide: 400 }}
+                overlay={renderTooltip}
+              >
+                <FontAwesomeIcon
+                  id="product-add-btn"
+                  onClick={() => {
+                    this.setState({
+                      addShow: !this.state.addShow,
+                      editShow: false,
+                    });
+                    this.scrollHandler();
+                  }}
+                  icon={faPlus}
+                />
+              </OverlayTrigger>
             </Col>
           </Row>
           <Row>
@@ -449,7 +461,8 @@ export default class Products extends Component {
                     <Card.Img
                       id="product-img-card"
                       variant="top"
-                      src={`${process.env.PUBLIC_URL}/assets/wristcover/openbionics.png`}
+                      style={{ width: "80%" }}
+                      src={`${process.env.PUBLIC_URL}/assets/clients/${prod.productImgPath}`}
                     />
                     <Card.Body>
                       <Card.Text className="product-details">
@@ -501,7 +514,7 @@ export default class Products extends Component {
                                 productQuantity: prod.productQuantity,
                                 productPrice: prod.productPrice,
                               });
-                              scroll({ x: 100, y: 2000, smooth: true });
+                              this.scrollHandlerMore();
                             }}
                           >
                             Edit
@@ -519,9 +532,10 @@ export default class Products extends Component {
                             productTitle: prod.productTitle,
                             productCategory: prod.productCategory,
                             productDescription: prod.productDescription,
-                            productImg: prod.productImg,
+                            productImg: prod.productImgPath,
                             productQuantity: prod.productQuantity,
                           });
+                          this.scrollHandlerMore();
                         }}
                       >
                         Delete
@@ -816,7 +830,7 @@ export default class Products extends Component {
                           />
                           <InputGroup.Append>
                             <InputGroup.Text className="addon3-edit">
-                              $
+                              TND
                             </InputGroup.Text>
                           </InputGroup.Append>
                         </InputGroup>
@@ -836,14 +850,7 @@ export default class Products extends Component {
                           />
                         </InputGroup>
                         <Form.Group>
-                          <Form.File
-                            className="product-add-pic"
-                            required
-                            name="file"
-                            id="validationFormik107"
-                            feedbackTooltip
-                            onChange={this.productImgHandler}
-                          />
+                          <Image />
                         </Form.Group>
                         <FontAwesomeIcon
                           className={state.next ? "back-btn" : "hide"}
@@ -879,7 +886,7 @@ export default class Products extends Component {
                 <Card.Img
                   id="product-img-card-edit"
                   variant="top"
-                  src={`${process.env.PUBLIC_URL}/assets/wristcover/openbionics.png`}
+                  src={`${process.env.PUBLIC_URL}/assets/clients/${this.state.productImgPath}`}
                 />
                 <FontAwesomeIcon id="imageEdit" icon={faEdit} />
                 <Card.Body>
@@ -973,7 +980,7 @@ export default class Products extends Component {
                 <Card.Img
                   id="product-img-card-edit"
                   variant="top"
-                  src={`${process.env.PUBLIC_URL}/assets/wristcover/openbionics3.png`}
+                  src={`${process.env.PUBLIC_URL}/assets/clients/${this.state.productImg}`}
                 />
                 <Card.Body>
                   <Card.Title id="product-title">Wrist Cover</Card.Title>

@@ -62,9 +62,12 @@ export default class Login extends Component {
 
     if (this.checkBtn.context._errors.length === 0) {
       AuthService.login(this.state.username, this.state.password).then(
-        () => {
+        /*() => {
           this.props.history.push("/profile");
           window.location.reload();
+        },*/
+        () => {
+          window.location.href = "/";
         },
         (error) => {
           const resMessage =
@@ -92,17 +95,18 @@ export default class Login extends Component {
       <Container fluid className="login-background">
         <Row className="row-login">
           <div className="col-md-12">
-            <div className="card card-container" id="login-card">
-              {/*<img
-            src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
-            alt="profile-img"
-            className="profile-img-card"
-          />*/}
-              <FontAwesomeIcon
-                style={{ fontSize: "5rem" }}
+            <div
+              style={{ boxShadow: "none", width: "20rem", border: "none" }}
+              className="card card-container"
+              id="login-card"
+            >
+              <img
+                style={{ background: "black" }}
+                src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
+                alt="profile-img"
                 className="profile-img-card"
-                icon={faUser}
               />
+
               <Form
                 onSubmit={this.handleLogin}
                 ref={(c) => {
@@ -156,7 +160,7 @@ export default class Login extends Component {
                 <div className="form-group">
                   <button
                     style={{ width: "30%", float: "right" }}
-                    className="btn btn-secondary btn-block"
+                    className="btn btn-success btn-block"
                     disabled={this.state.loading}
                   >
                     {this.state.loading && (

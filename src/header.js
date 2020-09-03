@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 //---BootStrap------------
 import "bootstrap/dist/css/bootstrap.min.css";
+import { Card, Container, Row, Col, Modal } from "react-bootstrap";
 //-----------------------
 import "./App.css";
 //---Components-----
@@ -57,6 +58,7 @@ class Header extends Component {
       showContentBoard: false,
       currentUser: undefined,
       id: "",
+      ShowLogin: false,
     };
   }
 
@@ -81,7 +83,16 @@ class Header extends Component {
     localStorage.clear();
     AuthService.logout();
   }
-
+  handleClose = () => {
+    this.setState({
+      ShowLogin: false,
+    });
+  };
+  handleShow = () => {
+    this.setState({
+      ShowLogin: true,
+    });
+  };
   render() {
     const {
       currentUser,
@@ -181,7 +192,7 @@ class Header extends Component {
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <a href="/login" className="nav-link" onClick={this.logOut}>
+                  <a href="/" className="nav-link" onClick={this.logOut}>
                     LogOut
                   </a>
                 </li>
@@ -189,7 +200,16 @@ class Header extends Component {
             ) : (
               <div className="navbar-nav ml-auto">
                 <li className="nav-item">
-                  <Link to={"/login"} className="nav-link">
+                  {/*<Link to={"/login"} className="nav-link">
+
+                    Login
+                  </Link>*/}
+                  <Link
+                    className="nav-link"
+                    onClick={() => {
+                      this.setState({ ShowLogin: true });
+                    }}
+                  >
                     Login
                   </Link>
                 </li>
@@ -264,6 +284,15 @@ class Header extends Component {
               <Route exact path={"/newsletter"} component={Newsletter} />
             </div>
           </Switch>
+          <Modal
+            style={{ width: "100%" }}
+            id="modal-login"
+            centered
+            show={this.state.ShowLogin}
+            onHide={this.handleClose}
+          >
+            <Login />
+          </Modal>
         </div>
       </Router>
     );
