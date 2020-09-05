@@ -23,11 +23,7 @@ export default class boardAdmin extends Component {
       selected: "dashboard",
     };
   }
-  componentDidMount = () => {
-    this.setState({
-      selected: localStorage.getItem("selected"),
-    });
-  };
+
   dashboardClick = () => {
     localStorage.setItem("selected", this.state.selected);
 
@@ -35,13 +31,7 @@ export default class boardAdmin extends Component {
       selected: "dashboard",
     });
   };
-  employeesClick = () => {
-    localStorage.setItem("selected", this.state.selected);
 
-    this.setState({
-      selected: "employees",
-    });
-  };
   ordersClick = () => {
     localStorage.setItem("selected", this.state.selected);
 
@@ -56,30 +46,12 @@ export default class boardAdmin extends Component {
       selected: "profile",
     });
   };
-  productsClick = () => {
-    localStorage.setItem("selected", this.state.selected);
-
-    this.setState({
-      selected: "products",
-    });
-  };
-  contentClick = () => {
-    localStorage.setItem("selected", this.state.selected);
-
-    this.setState({
-      selected: "content",
-    });
-  };
 
   render() {
     const selected = this.state.selected;
     let component;
     if (selected === "dashboard") {
       component = <Statics />;
-    } else if (selected === "employees") {
-      component = <Employees />;
-    } else if (selected === "products") {
-      component = <Products />;
     } else if (selected === "profile") {
       //with user props to (id)
       component = <Profile />;

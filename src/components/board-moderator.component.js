@@ -12,7 +12,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 //import Form from "react-bootstrap/Form";
 // Child Components
-import Employees from "./childComponents/Employees.Manager";
 import Statics from "./childComponents/Statics";
 import Products from "./childComponents/Products.Manager";
 //import Orders from "./childComponents/Orders.manager";
@@ -36,35 +35,6 @@ export default class boardSalesManager extends Component {
       selected: localStorage.getItem("selected"),
     });
   };
-  dashboardClick = () => {
-    localStorage.setItem("selected", this.state.selected);
-
-    this.setState({
-      selected: "dashboard",
-    });
-  };
-
-  ordersClick = () => {
-    localStorage.setItem("selected", this.state.selected);
-
-    this.setState({
-      selected: "orders",
-    });
-  };
-  profileClick = () => {
-    localStorage.setItem("selected", this.state.selected);
-
-    this.setState({
-      selected: "profile",
-    });
-  };
-  productsClick = () => {
-    localStorage.setItem("selected", this.state.selected);
-
-    this.setState({
-      selected: "products",
-    });
-  };
 
   render() {
     const selected = this.state.selected;
@@ -74,7 +44,6 @@ export default class boardSalesManager extends Component {
     } else if (selected === "products") {
       component = <Products />;
     } else if (selected === "profile") {
-      //with user props to (id)
       component = <Profile />;
     } else if (selected === "orders") {
       component = <ClientOrders />;
@@ -86,7 +55,12 @@ export default class boardSalesManager extends Component {
             <Form.Check type="switch" id="custom-switch" label="Menu" />
           </div>*/}
           <div
-            onClick={this.dashboardClick}
+            onClick={() => {
+              localStorage.setItem("selected", "dashboard");
+              this.setState({
+                selected: "dashboard",
+              });
+            }}
             className={
               this.state.selected === "dashboard"
                 ? "sidebar-item selected"
@@ -96,7 +70,12 @@ export default class boardSalesManager extends Component {
             <FontAwesomeIcon icon={faChartPie} /> Dashboard
           </div>
           <div
-            onClick={this.ordersClick}
+            onClick={() => {
+              localStorage.setItem("selected", "orders");
+              this.setState({
+                selected: "orders",
+              });
+            }}
             className={
               this.state.selected === "orders"
                 ? "sidebar-item selected"
@@ -106,7 +85,12 @@ export default class boardSalesManager extends Component {
             <FontAwesomeIcon icon={faArchive} /> Orders
           </div>
           <div
-            onClick={this.productsClick}
+            onClick={() => {
+              localStorage.setItem("selected", "products");
+              this.setState({
+                selected: "products",
+              });
+            }}
             className={
               this.state.selected === "products"
                 ? "sidebar-item selected"
@@ -117,7 +101,13 @@ export default class boardSalesManager extends Component {
           </div>
 
           <div
-            onClick={this.profileClick}
+            onClick={() => {
+              localStorage.setItem("selected", "profile");
+
+              this.setState({
+                selected: "profile",
+              });
+            }}
             className={
               this.state.selected === "profile"
                 ? "sidebar-item selected"

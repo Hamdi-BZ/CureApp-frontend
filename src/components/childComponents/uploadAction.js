@@ -14,5 +14,6 @@ export const uploadAction = async (image) => {
     localStorage.setItem("imagepath", ph);
   } catch (err) {
     console.log(err);
+    //alert("Couldn't upload picture");
   }
 };

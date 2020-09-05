@@ -43,13 +43,7 @@ export default class boardContentManager extends Component {
       selected: "dashboard",
     });
   };
-  employeesClick = () => {
-    localStorage.setItem("selected", this.state.selected);
 
-    this.setState({
-      selected: "employees",
-    });
-  };
   ordersClick = () => {
     localStorage.setItem("selected", this.state.selected);
 
@@ -62,27 +56,6 @@ export default class boardContentManager extends Component {
 
     this.setState({
       selected: "profile",
-    });
-  };
-  productsClick = () => {
-    localStorage.setItem("selected", this.state.selected);
-
-    this.setState({
-      selected: "products",
-    });
-  };
-  stockClick = () => {
-    localStorage.setItem("selected", this.state.selected);
-
-    this.setState({
-      selected: "stock",
-    });
-  };
-  contentClick = () => {
-    localStorage.setItem("selected", this.state.selected);
-
-    this.setState({
-      selected: "content",
     });
   };
 

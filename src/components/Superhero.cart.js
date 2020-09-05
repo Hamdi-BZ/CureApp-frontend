@@ -21,7 +21,6 @@ export default class SuperheroCart extends Component {
     super(props, context);
     this.state = {
       currentUser: AuthService.getCurrentUser(),
-      order: localStorage.getItem("order"),
       price: null,
       qty: null,
       side: "",
@@ -30,14 +29,16 @@ export default class SuperheroCart extends Component {
       clientid: "",
       coverid: "",
       itemId: "",
-      totalofall: 0,
+      totalofall: null,
       cartITems: [JSON.stringify(localStorage.getItem("cartItems"))],
+      image: localStorage.getItem("imagepath"),
     };
   }
   qtyChangeHandler = (event) => {
     this.setState({
       qty: event.target.value,
     });
+    //localStorage.getItem("")
   };
   componentDidMount = () => {
     var cartItems = JSON.parse(localStorage.getItem("cartItems"));
@@ -106,11 +107,14 @@ export default class SuperheroCart extends Component {
                   JSON.stringify(newOrderDetails)
                 );
                 console.log("Cart Item added");
+
+                localStorage.setItem("selected", "orders");
               })
               .catch((err) => {
                 console.log(err);
               });
           }
+          window.location.href = "/user";
         })
         .catch((err) => {
           console.log(err);
@@ -121,19 +125,30 @@ export default class SuperheroCart extends Component {
   //-------------------------------------
   render() {
     var cartItems = JSON.parse(localStorage.getItem("cartItems"));
-
+    var totalofall = 0;
     if (Array.isArray(cartItems) && cartItems.length > 0) {
       cartItems[cartItems.length - 1].qty = this.state.qty;
       var prodPrice = cartItems[cartItems.length - 1].price;
-      var total = prodPrice * this.state.qty;
+      var total = prodPrice * cartItems[cartItems.length - 1].qty;
+      //localStorage.setItem("total", totalofall);
       cartItems[cartItems.length - 1].total = total;
       localStorage.setItem("cartItems", JSON.stringify(cartItems));
+
+      for (let index = 0; index < cartItems.length; index++) {
+        totalofall += cartItems[index].total;
+      }
+    } else {
+      for (let index = 0; index < cartItems.length; index++) {
+        totalofall += cartItems[index].total;
+      }
     }
+    localStorage.setItem("total", totalofall);
+
     return (
       <div>
         {Array.isArray(cartItems) && cartItems.length > 0 ? (
           cartItems.map((item) => (
-            <Container fluid>
+            <Container style={{ marginTop: "1rem" }} fluid>
               <Row className="justify-content-md-center">
                 <Col md="auto">
                   <Card
@@ -143,9 +158,10 @@ export default class SuperheroCart extends Component {
                     <Row>
                       <Col>
                         <Card.Img
+                          style={{ width: "110%", transformRotate: "20deg" }}
                           className="supercart-img"
                           variant="top"
-                          src={`${process.env.PUBLIC_URL}/assets/images/superman.png`}
+                          src={`${process.env.PUBLIC_URL}/assets/clients/${item.image}`}
                         />
                       </Col>
                       <Col xs={9}>
@@ -206,7 +222,7 @@ export default class SuperheroCart extends Component {
                                   aria-label="Default"
                                   aria-describedby="inputGroup-sizing-default"
                                   onChange={this.qtyChangeHandler}
-                                  value={item.qty}
+                                  defaultValue={item.qty}
                                 />
                               </InputGroup>
                             </Col>
@@ -248,29 +264,6 @@ export default class SuperheroCart extends Component {
                   }}
                 ></Col>
               </Row>
-              <Row fluid>
-                <Col xs={7}>
-                  <Button variant="outline-danger">Delete All</Button>{" "}
-                </Col>
-                <Col>
-                  <Link to="/shop">
-                    <Button
-                      //onClick={this.continueShoppingHandler}
-                      className="super-cart-btns"
-                      variant="success"
-                    >
-                      Continue Shopping
-                    </Button>{" "}
-                  </Link>
-                  <Button
-                    className="super-cart-btns"
-                    variant="primary"
-                    onClick={this.cartsDataHandler}
-                  >
-                    Checkout
-                  </Button>{" "}
-                </Col>
-              </Row>
             </Container>
           ))
         ) : (
@@ -282,6 +275,38 @@ export default class SuperheroCart extends Component {
             </Row>
           </Container>
         )}
+        <Container fluid>
+          <Row>
+            <Col sm={7}></Col>
+            <Col>Total: {totalofall}</Col>
+          </Row>
+          <Row fluid>
+            <Col xs={7}></Col>
+            <Col>
+              <Link to="/shop">
+                <Button
+                  onClick={() => {
+                    const count = JSON.parse(localStorage.getItem("cart"));
+                    var newcount = count + 1;
+                    localStorage.setItem("cart", newcount);
+                    localStorage.setItem("product", "");
+                  }}
+                  className="super-cart-btns"
+                  variant="success"
+                >
+                  Continue Shopping
+                </Button>{" "}
+              </Link>
+              <Button
+                className="super-cart-btns"
+                variant="primary"
+                onClick={this.cartsDataHandler}
+              >
+                Checkout
+              </Button>{" "}
+            </Col>
+          </Row>
+        </Container>
       </div>
     );
   }

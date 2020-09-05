@@ -34,7 +34,7 @@ export default class Profile extends Component {
     console.log(usernow.roles);
     if (
       usernow.roles[0] === "ROLE_ADMIN" ||
-      usernow.roles[0] === "ROLE_SALES_MANAGER" ||
+      usernow.roles[0] === "ROLE_SALESMANAGER" ||
       usernow.roles[0] === "ROLE_CONTENTMANAGER"
     ) {
       Axios.get(`http://localhost:8080/api/employees/${id}`).then(
@@ -110,7 +110,7 @@ export default class Profile extends Component {
       image = currentUser.clientProfileImage;
     } else if (
       usernow.roles[0] === "ROLE_ADMIN" ||
-      usernow.roles[0] === "ROLE_SALES_MANAGER" ||
+      usernow.roles[0] === "ROLE_SALESMANAGER" ||
       usernow.roles[0] === "ROLE_CONTENTMANAGER"
     ) {
       name =
@@ -120,7 +120,7 @@ export default class Profile extends Component {
       email = currentEmployee.employeeEmail;
       phone = currentEmployee.employeePhone;
       address = currentEmployee.employeeAddress;
-      image = currentEmployee.employeeProfileImage;
+      image = localStorage.getItem("imagepath");
     }
     return (
       <div style={{ marginTop: "4rem" }}>
@@ -141,7 +141,7 @@ export default class Profile extends Component {
               icon={faEdit}
             />
             <div className={this.state.showImage ? "" : "hide"}>
-              <Form.Group>
+              <Form.Group style={{ margin: "auto" }}>
                 <Images />
               </Form.Group>
             </div>

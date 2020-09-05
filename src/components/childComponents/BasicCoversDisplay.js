@@ -23,6 +23,7 @@ export default class CoversDisplay extends Component {
       submitted: false,
       producttype: props.producttype,
       product: localStorage.getItem("product"),
+      image: localStorage.getItem("imagepath"),
       orderId: "",
     };
   }
@@ -67,6 +68,12 @@ export default class CoversDisplay extends Component {
         console.log(err);
       });*/
   };
+  changeHandler = () => {
+    var product = JSON.parse(localStorage.getItem("product"));
+    product.side = this.state.side;
+    product.size = this.state.size;
+    localStorage.setItem("product", JSON.stringify(product));
+  };
   openModal = () => {
     this.setState({ setModalShow: true });
   };
@@ -84,11 +91,13 @@ export default class CoversDisplay extends Component {
     this.setState({
       side: "left",
     });
+    this.changeHandler();
   };
   handleRightSideClick = () => {
     this.setState({
       side: "right",
     });
+    this.changeHandler();
   };
   handleSmallSizeClick = () => {
     this.setState({
@@ -105,14 +114,57 @@ export default class CoversDisplay extends Component {
       size: "large",
     });
   };
-
+  SaveDataToLocalStorage = (data) => {
+    var a = [];
+    // Parse the serialized data back into an aray of objects
+    a = JSON.parse(localStorage.getItem("cartItems")) || [];
+    // Push the new data (whether it be an object or anything else) onto the array
+    a.push(data);
+    // Alert the array value
+    // Re-serialize the array back into a string and store it in localStorage
+    localStorage.setItem("cartItems", JSON.stringify(a));
+  };
   handleConfirmClick = () => {
     var countCart = JSON.parse(localStorage.getItem("cart"));
     var cart = countCart + 1;
     localStorage.setItem("cart", cart);
+    localStorage.setItem("total", 0);
+    const product = JSON.parse(localStorage.getItem("product"));
 
-    const product = JSON.parse(this.state.product);
-    const orderStorage = JSON.parse(localStorage.getItem("orderId"));
+    var prod = {
+      index: cart,
+      id: product.id,
+      title: product.title,
+      price: product.price,
+      type: product.typeId,
+      side: this.state.side,
+      size: this.state.size,
+      qty: 0,
+      total: 0,
+      image: localStorage.imagepath,
+    };
+
+    var readyProd = JSON.stringify(prod);
+    if (localStorage.getItem("cartItems") === null) {
+      /* localStorage.setItem("product", readyProd);
+      cart.push(prod);
+      var readyCart = JSON.stringify(cart);
+      localStorage.setItem("cartItems", readyCart);*/
+      var a = [];
+      a.push(prod);
+      localStorage.setItem("cartItems", JSON.stringify(a));
+    } else {
+      /* cart = localStorage.getItem("cartItems");
+      cart.push(prod);
+      var readyCart = JSON.stringify(cart);
+      localStorage.setItem("cartItems", readyCart);*/
+      this.SaveDataToLocalStorage(prod);
+      var cartItems = JSON.parse(localStorage.getItem("cartItems"));
+      var rows = cartItems.length;
+      cartItems[rows - 1].side = this.state.side;
+      cartItems[rows - 1].size = this.state.size;
+      cartItems[rows - 1].price = product.productPrice;
+    }
 
     // nasn3o fi order jdid .... lazemni nrod hethy te5dem ken wa9t tebda belha9 order jdid mouch kol win ynzel add to cart bch nasna3 wahda jdida
     // 3ana order id mb3ed na3mloo beha update wa9t el client y3mel checkout
@@ -140,10 +192,10 @@ export default class CoversDisplay extends Component {
   };*/
   //-------------
   render() {
-    var cartItems = JSON.parse(localStorage.getItem("cartItems"));
-    cartItems[cartItems.length - 1].side = this.state.side;
-    cartItems[cartItems.length - 1].size = this.state.size;
-    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+    var product = JSON.parse(localStorage.getItem("product"));
+    product.side = this.state.side;
+    product.size = this.state.size;
+    localStorage.setItem("product", JSON.stringify(product));
     var count = localStorage.getItem("cart");
     var cart = {
       position: "fixed",
@@ -167,7 +219,7 @@ export default class CoversDisplay extends Component {
     const confirmingChoice = this.state.confirmingChoice;
     const side = this.state.side;
     const size = this.state.size;
-    const product = JSON.parse(this.state.product);
+    //const product = JSON.parse(this.state.product);
     return (
       <div>
         <img
@@ -178,7 +230,7 @@ export default class CoversDisplay extends Component {
         <Container fluid className="containercustom">
           <Row className="justify-content-md-center ">
             <Col md="auto">
-              <h3 className="title">{product.title}title</h3>
+              <h3 className="title">{product.title}</h3>
             </Col>
           </Row>
           <Row className="justify-content-md-center ">
@@ -206,7 +258,11 @@ export default class CoversDisplay extends Component {
                               ? "btns left active"
                               : "btns left "
                           }
-                          onClick={this.handleLeftSideClick}
+                          onClick={() => {
+                            this.handleLeftSideClick();
+
+                            this.changeHandler();
+                          }}
                         >
                           Left Hand
                         </button>
@@ -216,7 +272,11 @@ export default class CoversDisplay extends Component {
                               ? "btns right active"
                               : "btns right"
                           }
-                          onClick={this.handleRightSideClick}
+                          onClick={() => {
+                            this.handleRightSideClick();
+
+                            this.changeHandler();
+                          }}
                         >
                           Right Hand
                         </button>
@@ -273,7 +333,7 @@ export default class CoversDisplay extends Component {
             <Col sm={5} className="sideimage">
               <img
                 className="img"
-                src={`${process.env.PUBLIC_URL}/assets/TypesImages/ironman.png`}
+                src={`${process.env.PUBLIC_URL}/assets/clients/${this.state.image}`}
                 alt="Ironman Cover"
               />
               <Row className="justify-content-md-center confirmation">

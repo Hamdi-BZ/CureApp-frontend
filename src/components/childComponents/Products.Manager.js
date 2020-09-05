@@ -31,12 +31,13 @@ export default class Products extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
+      showAddProduct: false,
       typetitle: "",
       next: false,
       products: [],
       references: [],
       editShow: false,
-      addShow: false,
+      addShow: localStorage.getItem("add"),
       addRefShow: false,
       deleteShow: false,
       addCategoryShow: false,
@@ -59,7 +60,7 @@ export default class Products extends Component {
       newcategorytitle: "",
       newtypetitle: "",
       categorieadded: false,
-      categorieId: "",
+      categorieId: null,
       types: [],
       Specifiedtypes: [],
       Alltypes: [],
@@ -123,11 +124,13 @@ export default class Products extends Component {
   componentDidMount = () => {
     this.getCategoriesApi();
     this.getTypesApi();
+
     //this.getAllTypes();
     Axios.get(`http://localhost:8080/api/products/`)
       .then((Response) => {
         this.setState({
           products: Response.data,
+          //showAddProduct: localStorage.getItem("show"),
         });
         console.log(Response.data);
       })
@@ -158,7 +161,7 @@ export default class Products extends Component {
           console.log(msg);
           msg = response.message;
           alert("product add to database with success");
-          //  window.location.reload(true);
+          window.location.reload(true);
         },
         (error) => {
           const resMessage =
@@ -244,6 +247,7 @@ export default class Products extends Component {
           window.location.reload(true);
         } else {
           alert("Couldn't Update this Product");
+          window.location.reload(true);
         }
       })
       .catch((err) => {
@@ -259,12 +263,14 @@ export default class Products extends Component {
       })
       .catch((err) => {
         console.log(err);
-        alert("Couldn't delete this product");
+        alert("Couldn't delete this product please try again");
       });
     this.setState({
       deleteShow: false,
+      addShow: false,
+      editShow: false,
     });
-    window.location.reload();
+    window.location.reload(true);
   };
   //-----------------------------
 
@@ -283,6 +289,7 @@ export default class Products extends Component {
   //----------
   addNewCategoryHandler = (e) => {
     e.preventDefault();
+    localStorage.setItem("add", true);
     Axios.post(`http://localhost:8080/api/test/category`, {
       title: this.state.newcategorytitle,
     })
@@ -299,7 +306,8 @@ export default class Products extends Component {
     this.setState({
       addCategoryShow: false,
     });
-    //window.location.reload(true);
+    localStorage.setItem("show", true);
+    window.location.reload(true);
   };
   //------ Add new Type if there's a new category added
   addNewType = () => {
@@ -412,7 +420,7 @@ export default class Products extends Component {
     this.setState({ productColor: event.target.value });
   };
   scrollHandler = () => {
-    scroll.scrollMore(410);
+    scroll.scrollMore(1000);
   };
   scrollHandlerMore = () => {
     scroll.scrollMore(610);
@@ -426,9 +434,13 @@ export default class Products extends Component {
       <div style={{ marginTop: "2rem" }}>
         <Container>
           <Row className="justify-content-md-cente">
-            <Col></Col>
+            <Col>
+              {" "}
+              <h4 style={{ float: "right" }}>Add Products</h4>{" "}
+            </Col>
             <Col id="col-add-prod">
               {/**********************Add Button ------------------*/}
+
               <OverlayTrigger
                 placement="top"
                 delay={{ show: 250, hide: 400 }}
@@ -441,6 +453,8 @@ export default class Products extends Component {
                       addShow: !this.state.addShow,
                       editShow: false,
                     });
+                    localStorage.setItem("add", true);
+                    localStorage.setItem("selected", "products");
                     this.scrollHandler();
                   }}
                   icon={faPlus}
@@ -504,6 +518,7 @@ export default class Products extends Component {
                             onClick={() => {
                               this.setState({
                                 editShow: !this.state.editShow,
+                                deleteShow: false,
                                 addShow: false,
                                 editId: prod.id,
                                 productReference: prod.productReference,
@@ -527,6 +542,8 @@ export default class Products extends Component {
                         onClick={() => {
                           this.setState({
                             deleteShow: !this.state.deleteShow,
+                            editShow: false,
+                            addShow: false,
                             editId: prod.id,
                             productReference: prod.productReference,
                             productTitle: prod.productTitle,
@@ -558,14 +575,37 @@ export default class Products extends Component {
               {/**************ENd Products***********************/}
             </Col>
           </Row>
-          <Row>
+          <Row className={state.addShow ? "" : "hide"}>
             <Col>
               {/*----------------Add Product-------------------------------*/}
-              <Card
-                className={state.addShow ? "add-product-card" : "hide"}
-                style={{ width: "40rem" }}
-              >
-                <Card.Title>Add Product</Card.Title>
+              <Card className="add-product-card" style={{ width: "40rem" }}>
+                <Row>
+                  <Col>
+                    <Card.Title>Add Product</Card.Title>
+                  </Col>
+                  <Col>
+                    <Button
+                      variant="danger"
+                      onClick={() => {
+                        this.setState({
+                          addShow: false,
+                        });
+                        localStorage.setItem("add", false);
+
+                        scroll.scrollToTop();
+                      }}
+                      style={{
+                        float: "right",
+                        fontSize: "25px",
+                        fontWeight: "600",
+                        paddingTop: "0",
+                        paddingBottom: "0",
+                      }}
+                    >
+                      X
+                    </Button>
+                  </Col>
+                </Row>
                 <Container>
                   <Row>
                     <Col xs={10}>
@@ -584,28 +624,55 @@ export default class Products extends Component {
                           !state.next ? "category-select form-role" : "hide"
                         }
                       >
-                        {categories.length
-                          ? categories.map((categorie) => (
-                              <div>
-                                <Form.Check
-                                  onClick={() => {
-                                    this.setState({
-                                      categorieId: categorie.id,
-                                    });
-                                  }}
-                                  className="category-select"
-                                  inline
-                                  aria-label="Special Cover"
-                                  checked={
-                                    state.categorieId === categorie.id
-                                      ? true
-                                      : false
-                                  }
-                                />
-                                {categorie.title}
-                              </div>
-                            ))
-                          : null}
+                        {categories.length ? (
+                          categories.map((categorie) => (
+                            <div>
+                              <Form.Check
+                                onClick={() => {
+                                  this.setState({
+                                    categorieId: categorie.id,
+                                  });
+                                }}
+                                className="category-select"
+                                inline
+                                aria-label="Special Cover"
+                                checked={
+                                  state.categorieId === categorie.id
+                                    ? true
+                                    : false
+                                }
+                              />
+                              {categorie.title}
+                            </div>
+                          ))
+                        ) : (
+                          <Form>
+                            <Form.Row
+                              className={
+                                state.addCategoryShow || categories.length === 0
+                                  ? "align-items-center "
+                                  : "align-items-center hide"
+                              }
+                            >
+                              <Col xs="auto">
+                                <InputGroup className="mb-3 add-category-filed">
+                                  <FormControl
+                                    onChange={this.categoryTitleHandler}
+                                    placeholder="New Category"
+                                  />
+                                  <InputGroup.Append>
+                                    <Button
+                                      onClick={this.addNewCategoryHandler}
+                                      variant="secondary"
+                                    >
+                                      Add
+                                    </Button>
+                                  </InputGroup.Append>
+                                </InputGroup>
+                              </Col>
+                            </Form.Row>
+                          </Form>
+                        )}
                       </Form>
                       <Form>
                         <Form.Row
@@ -624,7 +691,7 @@ export default class Products extends Component {
                               <InputGroup.Append>
                                 <Button
                                   onClick={this.addNewCategoryHandler}
-                                  variant="outline-light"
+                                  variant="secondary"
                                 >
                                   Add
                                 </Button>
@@ -695,7 +762,7 @@ export default class Products extends Component {
                               <InputGroup.Append>
                                 <Button
                                   onClick={this.addNewType}
-                                  variant="outline-light"
+                                  variant="secondary"
                                 >
                                   Add
                                 </Button>
@@ -987,13 +1054,6 @@ export default class Products extends Component {
                   <Card.Text className="product-details">
                     Product Name : {state.productTitle}
                   </Card.Text>
-                  <Card.Text className="product-details">
-                    Product Type : {state.productType}
-                  </Card.Text>
-                  <Card.Text className="product-details">
-                    Available Quantity : {state.productQuantity} piece(s)
-                  </Card.Text>
-
                   <Button
                     className="btn-submit-product"
                     variant="success"

@@ -22,6 +22,7 @@ import {
   Col,
   Jumbotron,
   Image,
+  CardDeck,
 } from "react-bootstrap";
 import Footer from "./Footer";
 
@@ -34,6 +35,7 @@ export default class ShopCategories extends Component {
       types: [],
       products: [],
       test: "",
+      cart: localStorage.getItem("cart"),
     };
     this.scrollToTop = this.scrollToTop.bind(this);
   }
@@ -82,6 +84,7 @@ export default class ShopCategories extends Component {
         title: product.productTitle,
         price: product.productPrice,
         type: product.typeId,
+        image: product.productImgPath,
       };
       cart.push(prod);
       var JSONreadyCart = JSON.stringify(cart);
@@ -93,6 +96,7 @@ export default class ShopCategories extends Component {
         title: product.productTitle,
         price: product.productPrice,
         type: product.typeId,
+        image: product.productImgPath,
       };
       cart.push(prod);
       var JSONreadyCart = JSON.stringify(cart);
@@ -141,12 +145,11 @@ export default class ShopCategories extends Component {
     Events.scrollEvent.remove("end");
   }
   render() {
-    var count = localStorage.getItem("cart");
+    var count = this.state.cart;
     var cart = {
       position: "fixed",
       top: "10%",
       left: "94%",
-
       fontSize: "30px",
       listStyleType: "none",
     };
@@ -227,7 +230,7 @@ export default class ShopCategories extends Component {
                                   <Row>
                                     <Col>
                                       <img
-                                        src={`${process.env.PUBLIC_URL}/assets/TypesImages/ironman.png`}
+                                        src={`${process.env.PUBLIC_URL}/assets/clients/img1.jpeg`}
                                       />
                                     </Col>
                                   </Row>
@@ -272,7 +275,7 @@ export default class ShopCategories extends Component {
                                 >
                                   <Card.Img
                                     variant="top"
-                                    src={`${process.env.PUBLIC_URL}/assets/TypesImages/rsz_ironman.png`}
+                                    src={`${process.env.PUBLIC_URL}/assets/clients/img1.jpeg`}
                                   />
                                   <Card.Body>
                                     <Card.Title>{type.title}</Card.Title>
@@ -319,6 +322,8 @@ export default class ShopCategories extends Component {
               </Accordion>
             </Col>
           </Row>
+        </Container>
+        <Container fluid>
           <Row
             style={{
               marginTop: "2rem",
@@ -330,22 +335,24 @@ export default class ShopCategories extends Component {
           >
             {products.length ? (
               products.map((product) => (
-                <Col>
+                <CardDeck>
                   <Card
                     style={{
                       width: "21rem",
                       float: "left",
+                      marginLeft: "5rem",
+                      marginBottom: "2rem",
                     }}
                   >
                     <Card.Img
                       id="product-img-card"
                       variant="top"
-                      src={`${process.env.PUBLIC_URL}/assets/wristcover/openbionics.png`}
+                      src={`${process.env.PUBLIC_URL}/assets/clients/${product.productImgPath}`}
                     />
                     <Card.Body>
                       <Card.Text
                         style={{
-                          fontSize: "1.5vw",
+                          fontSize: "1.2vw",
                           fontWeight: "600",
                           color: "black",
                         }}
@@ -353,8 +360,9 @@ export default class ShopCategories extends Component {
                         <span>Product Name : </span> <br />
                         <span
                           style={{
-                            color: "#343a40",
+                            color: "balck",
                             marginLeft: "0.5rem",
+                            marginTop: "0.5rem",
                             fontWeight: "600",
                             textTransform: "capitalize",
                           }}
@@ -365,7 +373,7 @@ export default class ShopCategories extends Component {
                       </Card.Text>
                       <Card.Text
                         style={{
-                          fontSize: "1.5vw",
+                          fontSize: "1.2vw",
                           fontWeight: "600",
                           color: "black",
                         }}
@@ -374,14 +382,17 @@ export default class ShopCategories extends Component {
                         <br />
                         <span
                           style={{
-                            color: "#343a40",
+                            color: "black",
                             marginLeft: "0.5rem",
                             fontWeight: "600",
                             textTransform: "capitalize",
                           }}
                         >
                           {" "}
-                          {product.productDescription}
+                          {product.productDescription.substring(
+                            product.productDescription.length - 100,
+                            product.productDescription.length
+                          )}
                         </span>
                       </Card.Text>
 
@@ -419,6 +430,8 @@ export default class ShopCategories extends Component {
                             var data = JSON.parse(
                               localStorage.getItem("cartItems")
                             );
+                            const image = product.productImgPath;
+                            localStorage.setItem("imagepath", image);
                             var cart = JSON.parse(localStorage.getItem("cart"));
                             var prod = {
                               index: cart,
@@ -430,15 +443,20 @@ export default class ShopCategories extends Component {
                               size: "",
                               qty: 0,
                               total: 0,
+                              image: localStorage.imagepath,
                             };
-                            var cart = [];
+
                             var readyProd = JSON.stringify(prod);
+
                             localStorage.setItem("product", readyProd);
-                            if (data === null) {
-                              cart.push(prod);
-                              var JSONreadyCart = JSON.stringify(cart);
-                              localStorage.setItem("cartItems", JSONreadyCart);
-                            } else {
+
+                            /*  
+                            cart.push(prod);
+                            var readyCart = JSON.stringify(cart);
+
+                            if (localStorage.getItem("cartItems") === null) {
+                              localStorage.setItem("cartItems", readyCart);
+                            }} else {
                               var cartItems = JSON.parse(
                                 localStorage.getItem("cartItems")
                               );
@@ -453,7 +471,7 @@ export default class ShopCategories extends Component {
                               cart.push(prod);
                               var JSONreadyCart = JSON.stringify(cart);
                               localStorage.setItem("cartItems", JSONreadyCart);
-                            }
+                            }*/
                           }}
                         >
                           {" "}
@@ -462,7 +480,7 @@ export default class ShopCategories extends Component {
                       </Link>
                     </Card.Body>
                   </Card>
-                </Col>
+                </CardDeck>
               ))
             ) : (
               <h3 style={{ marginLeft: "15%" }}>
@@ -471,6 +489,7 @@ export default class ShopCategories extends Component {
               </h3>
             )}
           </Row>
+
           <a onClick={this.scrollToTop}>
             <FontAwesomeIcon
               style={{
@@ -480,6 +499,14 @@ export default class ShopCategories extends Component {
               icon={faLevelUpAlt}
             />{" "}
           </a>
+          <li style={cart}>
+            <Link to="/supercart">
+              <i class="fa fa-shopping-cart"></i>
+              <span class="badge badge-warning" id="lblCartCount">
+                {count}
+              </span>
+            </Link>
+          </li>
         </Container>
         <Container className="shop-footer" fluid>
           <Row>

@@ -15,7 +15,7 @@ import BoardUser from "./components/board-user.component";
 import BoardModerator from "./components/board-moderator.component";
 import BoardAdmin from "./components/board-admin.component";
 import Content from "./components/childComponents/Content.Manager";
-import Orders from "./components/childComponents/Orders.manager";
+
 import Shop from "./components/Shop";
 import ArmFirst from "./components/armFifth";
 import armSecond from "./components/armSecond.js";
@@ -81,6 +81,7 @@ class Header extends Component {
 
   logOut() {
     localStorage.clear();
+    localStorage.setItem("selected", "dashboard");
     AuthService.logout();
   }
   handleClose = () => {
@@ -187,7 +188,11 @@ class Header extends Component {
             {currentUser ? (
               <div className="navbar-nav ml-auto">
                 <li className="nav-item">
-                  <Link to={"/profile"} className="nav-link">
+                  <Link
+                    style={{ textTransform: "capitalize" }}
+                    to={"/profile"}
+                    className="nav-link"
+                  >
                     {currentUser.username}
                   </Link>
                 </li>

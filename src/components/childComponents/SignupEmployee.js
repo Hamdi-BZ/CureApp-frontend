@@ -12,7 +12,7 @@ import { FormGroup, Label, Input } from "reactstrap";
 //import PhoneInput from "react-phone-number-input";
 //import flags from "react-phone-number-input/flags";
 //----------------------------
-
+import Image from "./images";
 export default class SignupEmployee extends Component {
   constructor(props) {
     super(props);
@@ -98,6 +98,9 @@ export default class SignupEmployee extends Component {
             //console.log(response.data);
             console.log("//////////////////////////");
             alert("account created with successfully");
+
+            localStorage.setItem("selected", "employees");
+            window.location.href = "/admin  ";
           },
           (error) => {
             const resMessage =
@@ -268,10 +271,7 @@ export default class SignupEmployee extends Component {
                     <Form.File.Label id="formcheck-label">
                       Profile Picture
                     </Form.File.Label>
-                    <Form.File.Input
-                      value={this.state.employeeProfileImage}
-                      onChange={this.handleChangePic}
-                    />
+                    <Image />
                   </Form.File>
                 </Form.Row>
 

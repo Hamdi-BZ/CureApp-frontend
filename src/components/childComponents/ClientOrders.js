@@ -220,7 +220,7 @@ export default class ClientOrders extends Component {
                                 className={this.state.show ? "" : "hide"}
                                 onClick={() => {
                                   this.setState({
-                                    showEdit: true,
+                                    showEdit: !this.state.showEdit,
                                     status: order.status,
                                     orderID: order.id,
                                     date: order.createdAt,
@@ -362,9 +362,12 @@ export default class ClientOrders extends Component {
                         `http://localhost:8080/api/orders/${this.state.orderID}`,
                         order
                       )
-                        .then((Response) => {
+                        .then(() => {
                           alert("Status Update");
                           window.location.reload(false);
+                          this.setState({
+                            showEdit: false,
+                          });
                         })
                         .catch((err) => {
                           console.log(err);

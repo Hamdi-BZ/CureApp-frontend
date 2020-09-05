@@ -834,6 +834,9 @@ label {
 .supercart-img {
   width: 9rem;
 }
+.myStyle {
+  transform: rotate(90deg);
+}
 .super-cart-title {
   text-align: left;
   color: #000;
@@ -1107,7 +1110,7 @@ hr {
   width: 80%;
 }
 .category-accordion img {
-  width: 60%;
+  width: 80%;
   float: right;
   margin-right: 1rem;
 }

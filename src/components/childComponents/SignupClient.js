@@ -128,6 +128,7 @@ export default class SignupEmployee extends Component {
       };
       Axios.post("http://localhost:8080/api/clients/", client)
         .then(
+          localStorage.setItem("imagepath", ""),
           () => {
             window.location.href = "/login";
           },
